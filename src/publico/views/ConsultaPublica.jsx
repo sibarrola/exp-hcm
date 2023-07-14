@@ -22,12 +22,13 @@ const ConsultaPublica = () => {
         <Grid container direction='row' justifyContent='space-between' sx={{ mb: 1}}>
             <Grid item xs={12} >
                 <Typography fontSize={25}  >Consulta Expediente del Cuidadano</Typography>
-                <hr/>
+                git push --set-upstream origin main
             </Grid>
             <Grid item >
                 {/*-- buscador */}
                 <Buscador listadoState={listadoState} setListadoState={setListadoState} />
             </Grid>
+            <hr/>
             <Grid item xs={6} >
                 {expedienteSeleccionado ? (
                     <ExpedienteDetalle expediente={expedienteSeleccionado} />

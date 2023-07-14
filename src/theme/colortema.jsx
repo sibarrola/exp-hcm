@@ -4,6 +4,7 @@ import {red} from '@mui/material/colors';
 // PONER COLOR #aea9eb EN GOOGLE Y TRAE UN SELECTOR DE COLOR , QUE ESTA BUENO
 
 /* defino aqui lo que quiera */
+/* AGREGAR MAS SETEOS */
 export const colortema =createTheme({
     palette:{
         primary:{
