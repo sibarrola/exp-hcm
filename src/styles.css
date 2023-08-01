@@ -1,5 +1,14 @@
- 
+body {
+  
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+  }
 
 .box-shadow {
     box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.2);
+}
+
+.fondo {
+    background-color: #eee6ff;
 }

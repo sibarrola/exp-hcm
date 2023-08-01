@@ -1,28 +1,34 @@
-import { Route, Routes } from 'react-router-dom'
-import AuthRoutes from '../auth/routes/AuthRoutes'
-import PublicoRoutes from '../publico/routes/PublicoRoutes'
-import PrivadoRoutes from '../privado/routes/PrivadoRoutes'
+import { Navigate, Route, Routes } from 'react-router-dom'
+
 import LoginPage from '../auth/pages/LoginPage'
 import RegisterPage from '../auth/pages/RegisterPage'
- 
+import PaginaPrivada from '../privado/pages/PaginaPrivada'
+import PaginaPublica from '../publico/pages/PaginaPublica'
+import PaginaConsultaCiudadano from '../publico/pages/PaginaConsultaCiudadano'
+import CargaExpedientes from '../privado/pages/CargaExpedientes'
+import Tablas from '../privado/pages/Tablas'
 const AppRouter = () => {
     return (
         <Routes>
 
-            
+
             {/* Privada................................................ */}
-             <Route path='/privado/*'  element={<PrivadoRoutes/>}/>  
+            <Route path='/privado/menu' element={<PaginaPrivada />} />
+            <Route path='/privado/tablas' element={<Tablas />} />
+            <Route path='/privado/ingresos' element={<CargaExpedientes />} />
+ 
 
             {/* Login y Registro......................................... */}
-              <Route path='/auth/login' element ={<LoginPage/>}/>    
-              <Route path='/auth/register' element ={<RegisterPage/>}/>  
-             <Route path='/auth/*'  element={<AuthRoutes/>}/>       {/* esto no me funcionó...... */}
-            
- 
+            <Route path='/auth/login' element={<LoginPage />} />
+            <Route path='/auth/register' element={<RegisterPage />} />
+            <Route path='/auth/*' element={<LoginPage />} />
+
             {/* public */}
-          {/*   <Route path='/expedientes' element={<PublicoRoutes/>}/> */}
-            <Route path='/*' element={<PublicoRoutes/>}/>
-       
+            {/*   <Route path='/expedientes' element={<PublicoRoutes/>}/> */}
+            <Route path='/' element={<PaginaPublica />} />
+            <Route path='/expedientes' element={<PaginaConsultaCiudadano />} />
+            <Route path='/*' element={<Navigate to="/" />} />
+
 
         </Routes>
     )
@@ -30,4 +36,3 @@ const AppRouter = () => {
 
 export default AppRouter
 
- 

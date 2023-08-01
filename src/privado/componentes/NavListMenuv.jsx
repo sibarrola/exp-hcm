@@ -4,20 +4,22 @@ import logo1 from '../../assets/logo-160px.fw.png'
 /* import ArticleIcon from '@mui/icons-material/Article'; */
 import { PropTypes } from 'prop-types';
  
-export const NavListDrawer = ({ navVectLinks,navVectCiudadanos, NavLink,setOpen }) => {
+export const NavListMenu = ({ navVectLinks,navVectGestion, NavLink,setOpen }) => {
+
+    console.log("navVectGestion",navVectGestion)
      return (
-       /*  <Box sx={{ bgcolor: '#ede7f6', height: '100vh', width:'170px'}}  >  */
-        <Box sx={{ bgcolor:  "#fffde7" , height: '100vh', width:'170px'   }}   >
+     
+        <Box sx={{ bgcolor: '#ede7f6', height: '100vh', width:'160px'}}  >
             <Box sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center', boxSizing: 'border-box', color: 'black' }} >
                 <img src={logo1} alt="logo" height={80} />
             </Box>
-            <Typography variant="body2" sx={{ mb:2, display: 'flex', justifyContent: 'center', fontWeight: 900 }}>HCM S.J. del Rincón</Typography>
-             <Divider color="#red" />  
+            <Typography sx={{ display: 'flex', justifyContent: 'center', fontWeight: 900 }}>HCM</Typography>
+            <Divider />
             <Typography variant="body1" fontWeight="bold" sx={{mt:3,ml:1,mr:1, justifyContent:'center'}} >Ciudadanos</Typography>
          
                 <List>
-                      {/* slice(1) para obtener una nueva matriz que excluye el primer elemento del vector. Luego, aplicamos map a esa nueva matriz  */}
-                    {navVectCiudadanos.map((item) => (
+           
+                    { navVectGestion.map((item) => (
                         <ListItem disablePadding key={item.title}>
 
                             <ListItemButton
@@ -76,9 +78,9 @@ export const NavListDrawer = ({ navVectLinks,navVectCiudadanos, NavLink,setOpen 
     )
 }
 
-NavListDrawer.propTypes = {
+NavListMenu.propTypes = {
     navVectLinks: PropTypes.array,
-    navVectCiudadanos:PropTypes.array,
+    navVectGestion:PropTypes.array,
     NavLink:PropTypes.any,
     setOpen: PropTypes.any
 }

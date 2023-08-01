@@ -46,10 +46,10 @@ const LoginPage = () => {
                 <Link
                  component={ RouterLink }
                   color='inherit'
-                   to="/"
+                   to="/privado/menu"
                    sx={{ fontSize:'12px', color:'blue'}}>
-                   
-                    Página Pública
+                Pagina Privada
+                    
               </Link>
                 <Link
                  component={ RouterLink }

@@ -3,15 +3,16 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 
 const columns = [
   { field: 'id', headerName: 'ID', width: 70 },
-  { field: 'firstName', headerName: 'First Name', width: 130 },
-  { field: 'lastName', headerName: 'Last Name', width: 130 },
-  { field: 'age', headerName: 'Age', type: 'number', width: 90 },
+  { field: 'Nombre', headerName: 'Nombre', width: 130 },
+  { field: 'Apellido', headerName: 'Apellido', width: 130 },
+  { field: 'DNI', headerName: 'DNI', width: 130 },
+  { field: 'Expediente', headerName: 'Expediente', type: 'number', width: 90 }
 ];
 
 const rows = [
-  { id: 1, firstName: 'John', lastName: 'Doe', age: 35 },
-  { id: 2, firstName: 'Jane', lastName: 'Smith', age: 28 },
-  { id: 3, firstName: 'Bob', lastName: 'Johnson', age: 42 },
+  { id: 1, Nombre: 'Florencia', Apellido: 'Gómez', DNI:'13.589.028', Expediente: 35 },
+  { id: 2, Nombre: 'Pedro', Apellido: 'Gonzales',DNI:'6.458.253', Expediente: 28 },
+  { id: 3, Nombre: 'Maria', Apellido: 'Puentes',DNI:'11.342.121', Expediente: 42 },
   // Agrega más filas si lo deseas
 ];
 
@@ -26,7 +27,7 @@ const MyDataGrid = () => {
   };
 
   return (
-    <div style={{ height: 400, width: '70%' }}>
+    <div style={{ height: 400, width: '50%' }}>
       <DataGrid  
         rows={rows}
         columns={columns}

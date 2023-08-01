@@ -4,7 +4,7 @@ import { NavBarFijo } from '../components/NavBarFijo';
 
 import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
-import AssignmentIcon from '@mui/icons-material/Assignment';
+/* import AssignmentIcon from '@mui/icons-material/Assignment'; */
 import { useState } from 'react';
 import { Article } from '@mui/icons-material';
 import ContactPageIcon from '@mui/icons-material/ContactPage';
@@ -15,13 +15,16 @@ const navVectLinks = [
     },
     {
         title: "Login", path: "/auth/login", icon: <PersonIcon />
-    },
-    {
+    }
+   /*  {
         title: "Registro", path: "/auth/register", icon: <AssignmentIcon />
-    },
+    }, */
 
 ]
 const navVectCiudadanos = [
+    {
+        title: "Inicio", path: "/", icon: <HomeIcon />
+    },
     {
         title: "Expedientes", path: "/expedientes", icon: <Article />
     },

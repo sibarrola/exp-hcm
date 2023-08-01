@@ -12,7 +12,11 @@ export const colortema =createTheme({
         },
         secondary: {
             main:'#aea9eb'
-    },
+          },
+        fondo:{
+            backgroundColor:"#eee6ff"
+        },
+    
        error:{
         main:red.A400   /*red con la intensidad de 400  */
        }

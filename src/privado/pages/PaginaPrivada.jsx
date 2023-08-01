@@ -1,11 +1,16 @@
+
+ import LayoutPrivado  from "../layout/LayoutPrivado"
+ import PrivadoViewNothing from "../views/PrivadoViewNothing";
  
 
+
 const PaginaPrivada = () => {
-  return (
-    <div>
-      <h1>Pagina privada</h1>
-    </div>
-  )
+ return (
+   <LayoutPrivado>
+     <PrivadoViewNothing/>
+ 
+   </LayoutPrivado>
+ )
 }
 
 export default PaginaPrivada
