@@ -56,7 +56,7 @@ export const NavBar = ({navVectLinks, navVectGestion1,navVectGestion2,navVectGes
                         color="error"
                         size="large"
                         onClick={() => setOpen(true)}
-                        sx={{ marginright:2}}>
+                        sx={{ mr:2}}>
                         <LogoutOutlined />
                     </IconButton>
         

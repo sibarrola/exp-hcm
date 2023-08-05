@@ -3,6 +3,7 @@ body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
+    background-color: #c4dcf2;
   }
 
 .box-shadow {
@@ -12,3 +13,8 @@ body {
 .fondo {
     background-color: #eee6ff;
 }
+
+dialogo {
+    width: '70%';  
+    margin-left: 'auto';
+    margin-right: 'auto';}

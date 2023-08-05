@@ -7,6 +7,7 @@ import PaginaPublica from '../publico/pages/PaginaPublica'
 import PaginaConsultaCiudadano from '../publico/pages/PaginaConsultaCiudadano'
 import CargaExpedientes from '../privado/pages/CargaExpedientes'
 import Tablas from '../privado/pages/Tablas'
+ 
 const AppRouter = () => {
     return (
         <Routes>
@@ -14,7 +15,8 @@ const AppRouter = () => {
 
             {/* Privada................................................ */}
             <Route path='/privado/menu' element={<PaginaPrivada />} />
-            <Route path='/privado/tablas' element={<Tablas />} />
+            <Route path="/privado/tablas/:nro" element={<Tablas />} />
+
             <Route path='/privado/ingresos' element={<CargaExpedientes />} />
  
 

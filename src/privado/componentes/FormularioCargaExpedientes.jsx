@@ -1,56 +1,100 @@
 import React, { useState } from 'react';
-import { TextField, Button, Container, Grid, Paper } from '@mui/material';
+import { useForm, Controller } from 'react-hook-form';
+import { TextField, Button, Container, Grid, Paper, Select, MenuItem, FormControl, InputLabel  } from '@mui/material';
+ 
 
-const FormularioCargaExpedientes = () => {
-  const [expediente, setExpediente] = useState({
-    legajo: '',
-    fecha_ingreso: '',
-    motivo: '',
-    categoria: '',
-    descripcion: '',
-    apellido: '',
-    nombre: '',
-    DNI: '',
-    celular: '',
-    domicilio: '',
-    email: '',
-    estado_expediente: false,
-    folios: 0,
-    id_usuario: 0,
+// vector categorias
+const categorias = [
+  'Particular',
+  'D.E.M.',
+  'Concejal',
+  'Organismo público',
+  'Instituciones privadas',
+  'Otro',
+];
 
-  });
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setExpediente({ ...expediente, [name]: value });
-  };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Aquí puedes enviar los datos a la API o realizar cualquier otra acción
-    console.log('Expediente a enviar:', expediente);
-  };
+const FormularioExpedientes = () => {
+    const [expediente, setExpediente] = useState({
+        legajo: '',
+        fecha_ingreso: '',
+        motivo: '',
+        categoria: '',
+        descripcion: '',
+        apellido: '',
+        nombre: '',
+        DNI: '',
+        celular: '',
+        domicilio: '',
+        email: '',
+        estado_expediente: false,
+        folios: 0,
+        id_usuario: 0,
+    
+      });
+    const [motivos, setMotivos] = useState([]);
+
+    const {
+      register,
+      handleSubmit,
+      watch,
+      formState: { errors },
+      control
+    } = useForm();
+
+    const fetchMotivos = async () => {
+        try {
+            const res = await axios.get(`{url}/motivos`);
+            if (Array.isArray(res.data.motivos)) {
+                setMotivos(res.data.motivos);
+                
+            } else {
+                console.error('Server did not return an array');
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+  
+    useEffect(() => {
+      // Función para obtener los datos de la base de datos
+          fetchMotivos();
+    }, []);  
+  
+    const onSubmit = (data) => {
+      console.log(data);
+      // Aquí podrías hacer la lógica para guardar los datos
+    };
+
+ 
 
   return (
     <Container component={Paper} maxWidth="sm" sx={{ padding: 2 }}>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <h3>formulario 2</h3>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Legajo"
+            <Controller
               name="legajo"
-              value={expediente.legajo}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Fecha ingreso"
-              name="fecha_ingreso"
-              value={expediente.fecha_ingreso}
-              onChange={handleChange}
+              control={control}
+              rules={{
+                required: 'El legajo es obligatorio',
+                pattern: {
+                  value: /^[0-9]+$/,
+                  message: 'El legajo debe contener solo números',
+                },
+              }}
+              render={({ field }) => (
+                <TextField
+                  fullWidth
+                  label="Legajo"
+                  {...field}
+                  error={!!errors.legajo}
+                  helperText={errors.legajo?.message}
+                />
+              )}
             />
           </Grid>
           {/* Agrega aquí los demás campos del formulario */}
@@ -65,4 +109,4 @@ const FormularioCargaExpedientes = () => {
   );
 };
 
-export default FormularioCargaExpedientes;
+ 

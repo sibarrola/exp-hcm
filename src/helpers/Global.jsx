@@ -1,3 +1,3 @@
 export const Global ={
-    url:"http://localhost:3900/api/"    /* es un ejemplo */
+    url:"http://localhost:3000/api"    /* es un ejemplo */
 }

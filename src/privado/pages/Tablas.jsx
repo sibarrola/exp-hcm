@@ -1,18 +1,31 @@
  
-import FormularioLista from "../componentes/FormularioLista"
+import FormularioMotivos from "../componentes/FormularioMotivos"
 import LayoutPrivado  from "../layout/LayoutPrivado"
+import CargaExpedientes from "./CargaExpedientes";
 
-
+import { useParams } from 'react-router-dom';
 
 const Tablas = () => {
- return (
-   <LayoutPrivado>
-    <FormularioLista nombre="motivo" />
+  let { nro } = useParams();
+
+  let formulario;
+  switch (nro) {
+    case '1':
+        formulario = <FormularioMotivos />;
+        break;
+    case '2':
+        formulario = <CargaExpedientes />;
+        break;
+    default:
+        formulario = <div>No se especificó un parámetro válido.</div>;
+  }
+
+  return (
      
-   </LayoutPrivado>
- )
+        <LayoutPrivado>
+        {formulario}  
+       
+    </LayoutPrivado>
+  );
 }
-
 export default Tablas
-
-

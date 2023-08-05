@@ -1,4 +1,4 @@
-import { Toolbar } from '@mui/material';
+import { Container, Toolbar } from '@mui/material';
 import { Box } from '@mui/system'
 import { NavBar  } from '../componentes/Navbar';
 import PeopleIcon from '@mui/icons-material/People';
@@ -23,19 +23,21 @@ const navVectLinks = [
  ];
 
 const navVectGestion1 = [
+
+    {
+        title: "Motivos", path: "/privado/tablas/1", icon: <ListAltIcon />
+    },
  
     {
-        title: "Tablas", path: "/privado/tablas", icon: <PeopleIcon />
+        title: "Tablas", path: "/privado/tablas/2", icon: <PeopleIcon />
     },
     {
         title: "Usuarios", path: "/privado/usuarios", icon: <PersonIcon />
     },
     {
         title: "Organismos", path: "/privado/organismos", icon: <CorporateFareIcon />
-    },
-    {
-        title: "Motivos", path: "/privado/motivos", icon: <ListAltIcon />
     }
+  
   ]
 
   const navVectGestion2 = [
@@ -67,12 +69,11 @@ const navVectGestion3 = [
   const LayoutPrivado = ({ children }) => {
 
     const [open, setOpen] = useState(true)
-    /*lo traje  */
-    console.log(open)
-    return (
 
+    return (
+           
         /*EL BOX ES COMO UN DIV  */
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: 'flex' , backgroundColor:"#c8e4fb", height:'950px'}}>
 
             <NavBar  navVectLinks={navVectLinks} navVectGestion1={navVectGestion1} navVectGestion2={navVectGestion2}  navVectGestion3={navVectGestion3}NavLink={NavLink} setOpen={setOpen} />
 
@@ -86,6 +87,7 @@ const navVectGestion3 = [
 
             </Box>
         </Box>
+    
     )
 }
 export default LayoutPrivado

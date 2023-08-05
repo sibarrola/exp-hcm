@@ -16,7 +16,10 @@ export const colortema =createTheme({
         fondo:{
             backgroundColor:"#eee6ff"
         },
-    
+        cabeceraTabla:{
+            backgroundColor:"#3e25fa"
+        },
+      
        error:{
         main:red.A400   /*red con la intensidad de 400  */
        }

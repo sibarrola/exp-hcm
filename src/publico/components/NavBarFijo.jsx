@@ -25,7 +25,6 @@ export const NavBarFijo = ({navVectLinks, navVectCiudadanos,NavLink}) => {
                     <img
                         src={logo1}
                         alt="Logo"
-                        marginRight='0'
                         height='90px'
                     
                     />
@@ -77,7 +76,7 @@ export const NavBarFijo = ({navVectLinks, navVectCiudadanos,NavLink}) => {
                         color="error"
                         size="large"
                         onClick={() => setOpen(true)}
-                        sx={{ marginRight:2}}>
+                        sx={{ mr:2}}>
                         <LogoutOutlined />
                     </IconButton>
         

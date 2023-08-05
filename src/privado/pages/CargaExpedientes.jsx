@@ -1,6 +1,8 @@
 
- import FormularioCargaExpedientes from "../componentes/FormularioCargaExpedientes";
- import FormularioCargaExpedientes2 from "../componentes/FormularioCargaExpedientes2";
+   import ExpedientesCarga from "../componentes/ExpedientesCarga";  
+ 
+ 
+ 
 import LayoutPrivado  from "../layout/LayoutPrivado"
  
 
@@ -8,8 +10,8 @@ import LayoutPrivado  from "../layout/LayoutPrivado"
 const CargaExpedientes = () => {
  return (
    <LayoutPrivado>
-     <FormularioCargaExpedientes/>
-     <FormularioCargaExpedientes2/>
+     <ExpedientesCarga/>
+     
    </LayoutPrivado>
  )
 }
