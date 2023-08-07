@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Container, Paper, Box, Typography } from '@mui/material';
- import {Global} from '../../helpers/Global.jsx';
+import { Global } from '../../helpers/Global.jsx';
 
-const url=Global.url; 
-const FormularioMotivos = () => {
+const url = Global.url;
+const InstitucionesForm = () => {
 
     // estados
-    const [motivos, setMotivos] = useState([]);
+    const [instituciones, setInstituciones] = useState([]);
     const [dialogOpen, setDialogOpen] = useState(false);
-    const [editMotivo, setEditMotivo] = useState(null);
+    const [editInstitucion, setEditInstitucion] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
 
-    const fetchMotivos = async () => {
+    const fetchInstituciones = async () => {
         try {
-            const res = await axios.get(`${url}/motivos`);
-            if (Array.isArray(res.data.motivos)) {
-                setMotivos(res.data.motivos);
-                
+            const res = await axios.get(`${url}/instituciones`);
+            if (Array.isArray(res.data.instituciones)) {
+                setInstituciones(res.data.instituciones);
+                console.log("instituciones", instituciones)
+
             } else {
                 console.error('Server did not return an array');
             }
@@ -26,97 +27,97 @@ const FormularioMotivos = () => {
         }
     };
 
-    const createMotivo = async motivo => {
+    const createInstitucion = async institucion => {
         try {
-            await axios.post(`${url}/motivos`, motivo);
-            fetchMotivos();  // Fetch latest list of 'motivos' after creating a new one
+            await axios.post(`${url}/instituciones`, institucion);
+            fetchInstituciones();
         } catch (error) {
             console.error('Error', error);
         }
     };
-    
-    const updateMotivo = async motivo => {
+
+    const updateInstitucion = async institucion => {
         try {
-            await axios.put(`${url}/motivos/${motivo._id}`, motivo);
-            fetchMotivos();  // Fetch latest list of 'motivos' after updating an existing one
+            await axios.put(`${url}/instituciones/${institucion._id}`, institucion);
+            fetchInstituciones();  // Fetch latest list of 'instituciones' after updating an existing one
         } catch (error) {
             console.error('Error', error);
         }
     };
-    const deleteMotivo = async id => {
-        await axios.delete(`${url}/motivos/${id}`);
-        setMotivos(motivos.filter(m => m._id !== id));
+    const deleteInstitucion = async id => {
+        await axios.delete(`${url}/instituciones/${id}`);
+        setInstituciones(instituciones.filter(m => m._id !== id));
     };
 
     useEffect(() => {
-        fetchMotivos();
+        fetchInstituciones();
     }, []);
 
     useEffect(() => {
-        console.log("motivos", motivos);
-    }, [motivos]);
+        console.log("instituciones", instituciones);
+    }, [instituciones]);
 
-    const handleDialogOpen = (motivo = null) => {
-        setEditMotivo(motivo);
-        setIsEditing(!!motivo);
+    const handleDialogOpen = (institucion = null) => {
+        setEditInstitucion(institucion);
+        setIsEditing(!!institucion);
         setDialogOpen(true);
-        
+
     };
 
     const handleDialogClose = () => {
         setDialogOpen(false);
-        setEditMotivo(null);
+        setEditInstitucion(null);
         setIsEditing(false);
     };
 
     const handleDialogConfirm = () => {
         if (isEditing) {
-            updateMotivo(editMotivo);
+            updateInstitucion(editInstitucion);
         } else {
-            createMotivo({ motivo: editMotivo ? editMotivo.motivo : '' });
+            createInstitucion({ institucion: editInstitucion ? editInstitucion.institucion : '' });
         }
         handleDialogClose();
     };
 
     return (
         <>
-           
+
             <Container component={Paper} maxWidth="sm" sx={{ padding: 2 }}>
-            <Typography variant='h5'>TABLA DE MOTIVOS </Typography>
-            <hr/>
-            <Box sx={{m:'30px',textAlign:'right' }}>
-                <Button variant="contained" color="primary" onClick={() => handleDialogOpen()}>
-                    Nuevo
-                </Button>
-            </Box>
+                <Typography variant='h5'>TABLA DE INSTITUCIONES </Typography>
+                <hr />
+                <Box sx={{ m: '30px', textAlign: 'right' }}>
+                    <Button variant="contained" color="primary" onClick={() => handleDialogOpen()}>
+                        Nuevo
+                    </Button>
+                </Box>
                 <TableContainer>
                     <Table>
-                    <TableHead
+                        <TableHead
                             sx={{
                                 backgroundColor: '#cfd8dc', // Cambia el color de fondo
                                 '& .MuiTableCell-root': {   // Aplica el estilo a todas las celdas de la cabecera
-                                 //   color: 'white',  // Cambia el color del texto
-                                 fontWeight:'900'
+                                    //   color: 'white',  // Cambia el color del texto
+                                    fontWeight: '900'
                                 },
                             }}
                         >
                             <TableRow>
-                                <TableCell>Motivo</TableCell>
+                                <TableCell>Institucion</TableCell>
                                 <TableCell>Editar</TableCell>
                                 <TableCell>Borrar</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {motivos.map(motivo => (
-                                <TableRow key={motivo._id}>
-                                    <TableCell>{motivo.motivo}</TableCell>
+                            {instituciones.map(institucion => (
+                                <TableRow key={institucion._id}>
+                                    <TableCell>{institucion.institucion}</TableCell>
                                     <TableCell>
-                                        <Button size="small" variant="contained" color="primary" onClick={() => handleDialogOpen(motivo)}>
+                                        <Button size="small" variant="contained" color="primary" onClick={() => handleDialogOpen(institucion)}>
                                             Editar
                                         </Button>
                                     </TableCell>
                                     <TableCell>
-                                        <Button size="small" variant="contained" color="error" onClick={() => deleteMotivo(motivo._id)}>
+                                        <Button size="small" variant="contained" color="error" onClick={() => deleteInstitucion(institucion._id)}>
                                             Borrar
                                         </Button>
                                     </TableCell>
@@ -138,20 +139,20 @@ const FormularioMotivos = () => {
                         }
                     }}
                 >
-                    <DialogTitle>{isEditing ? 'Editar Motivo' : 'Nuevo Motivo'}</DialogTitle>
+                    <DialogTitle>{isEditing ? 'Editar Institucion' : 'Nuevo Institucion'}</DialogTitle>
                     <DialogContent >
                         <DialogContentText>
-                            Ingrese el motivo
+                            Ingrese el institucion
                         </DialogContentText>
                         <TextField
                             autoFocus
                             margin="dense"
                             id="name"
-                            label="Motivo"
+                            label="Institucion"
                             type="text"
                             fullWidth
-                            value={editMotivo ? editMotivo.motivo : ''}
-                            onChange={e => setEditMotivo({ ...editMotivo, motivo: e.target.value })}
+                            value={editInstitucion ? editInstitucion.institucion : ''}
+                            onChange={e => setEditInstitucion({ ...editInstitucion, institucion: e.target.value })}
                         />
                     </DialogContent>
                     <DialogActions>
@@ -165,4 +166,4 @@ const FormularioMotivos = () => {
     );
 };
 
-export default FormularioMotivos;
+export default InstitucionesForm;

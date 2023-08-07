@@ -4,19 +4,20 @@ import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRo
  import {Global} from '../../helpers/Global.jsx';
 
 const url=Global.url; 
-const FormularioMotivos = () => {
+const OrganismosForm = () => {
 
     // estados
-    const [motivos, setMotivos] = useState([]);
+    const [organizaciones, setOrganizaciones] = useState([]);
     const [dialogOpen, setDialogOpen] = useState(false);
-    const [editMotivo, setEditMotivo] = useState(null);
+    const [editOrganismo, setEditOrganizaciones] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
 
-    const fetchMotivos = async () => {
+    const fetchOrganismos = async () => {
         try {
-            const res = await axios.get(`${url}/motivos`);
-            if (Array.isArray(res.data.motivos)) {
-                setMotivos(res.data.motivos);
+            const res = await axios.get(`${url}/organizaciones`);
+            if (Array.isArray(res.data.organizaciones)) {
+                setOrganizaciones(res.data.organizaciones);
+                console.log("organizaciones",organizaciones)
                 
             } else {
                 console.error('Server did not return an array');
@@ -26,65 +27,65 @@ const FormularioMotivos = () => {
         }
     };
 
-    const createMotivo = async motivo => {
+    const createOrganismo = async organizacion => {
         try {
-            await axios.post(`${url}/motivos`, motivo);
-            fetchMotivos();  // Fetch latest list of 'motivos' after creating a new one
+            await axios.post(`${url}/organizaciones`, organizacion);
+            fetchOrganismos();   
         } catch (error) {
             console.error('Error', error);
         }
     };
     
-    const updateMotivo = async motivo => {
+    const updateOrganismo = async organizacion => {
         try {
-            await axios.put(`${url}/motivos/${motivo._id}`, motivo);
-            fetchMotivos();  // Fetch latest list of 'motivos' after updating an existing one
+            await axios.put(`${url}/organizaciones/${organizacion._id}`, organizacion);
+            fetchOrganismos();  // Fetch latest list of 'organizaciones' after updating an existing one
         } catch (error) {
             console.error('Error', error);
         }
     };
-    const deleteMotivo = async id => {
-        await axios.delete(`${url}/motivos/${id}`);
-        setMotivos(motivos.filter(m => m._id !== id));
+    const deleteOrganismo = async id => {
+        await axios.delete(`${url}/organizaciones/${id}`);
+        setOrganizaciones(organizaciones.filter(m => m._id !== id));
     };
 
     useEffect(() => {
-        fetchMotivos();
+        fetchOrganismos();
     }, []);
 
     useEffect(() => {
-        console.log("motivos", motivos);
-    }, [motivos]);
+        console.log("organizaciones", organizaciones);
+    }, [organizaciones]);
 
-    const handleDialogOpen = (motivo = null) => {
-        setEditMotivo(motivo);
-        setIsEditing(!!motivo);
+    const handleDialogOpen = (organizacion = null) => {
+        setEditOrganizaciones(organizacion);
+        setIsEditing(!!organizacion);
         setDialogOpen(true);
-        
+      
     };
 
     const handleDialogClose = () => {
         setDialogOpen(false);
-        setEditMotivo(null);
+        setEditOrganizaciones(null);
         setIsEditing(false);
     };
 
     const handleDialogConfirm = () => {
         if (isEditing) {
-            updateMotivo(editMotivo);
+            updateOrganismo(editOrganismo);
         } else {
-            createMotivo({ motivo: editMotivo ? editMotivo.motivo : '' });
+            createOrganismo({ organizacion: editOrganismo ? editOrganismo.organizacion : '' });
         }
         handleDialogClose();
     };
 
     return (
         <>
-           
-            <Container component={Paper} maxWidth="sm" sx={{ padding: 2 }}>
-            <Typography variant='h5'>TABLA DE MOTIVOS </Typography>
+   
+            <Container component={Paper} maxWidth="sm" sx={{ padding: 2 }}>  
+            <Typography variant='h5'>TABLA DE ORGANISMOS PUBLICOS </Typography>
             <hr/>
-            <Box sx={{m:'30px',textAlign:'right' }}>
+            <Box sx={{m:'30px',textAlign:'lefth' }}>
                 <Button variant="contained" color="primary" onClick={() => handleDialogOpen()}>
                     Nuevo
                 </Button>
@@ -101,22 +102,22 @@ const FormularioMotivos = () => {
                             }}
                         >
                             <TableRow>
-                                <TableCell>Motivo</TableCell>
-                                <TableCell>Editar</TableCell>
-                                <TableCell>Borrar</TableCell>
+                                <TableCell>Organismo</TableCell>
+                                <TableCell  width="20%">Editar</TableCell>
+                                <TableCell  width="20%">Borrar</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {motivos.map(motivo => (
-                                <TableRow key={motivo._id}>
-                                    <TableCell>{motivo.motivo}</TableCell>
+                            {organizaciones.map(organizacion => (
+                                <TableRow key={organizacion._id}>
+                                    <TableCell>{organizacion.organizacion}</TableCell>
                                     <TableCell>
-                                        <Button size="small" variant="contained" color="primary" onClick={() => handleDialogOpen(motivo)}>
+                                        <Button size="small" variant="contained" color="primary" onClick={() => handleDialogOpen(organizacion)}>
                                             Editar
                                         </Button>
                                     </TableCell>
                                     <TableCell>
-                                        <Button size="small" variant="contained" color="error" onClick={() => deleteMotivo(motivo._id)}>
+                                        <Button size="small" variant="contained" color="error" onClick={() => deleteOrganismo(organizacion._id)}>
                                             Borrar
                                         </Button>
                                     </TableCell>
@@ -138,31 +139,32 @@ const FormularioMotivos = () => {
                         }
                     }}
                 >
-                    <DialogTitle>{isEditing ? 'Editar Motivo' : 'Nuevo Motivo'}</DialogTitle>
+                    <DialogTitle>{isEditing ? 'Editar Organismo' : 'Nuevo Organismo'}</DialogTitle>
                     <DialogContent >
                         <DialogContentText>
-                            Ingrese el motivo
+                            Ingrese el organizacion
                         </DialogContentText>
                         <TextField
                             autoFocus
                             margin="dense"
                             id="name"
-                            label="Motivo"
+                            label="Organizacion"
                             type="text"
                             fullWidth
-                            value={editMotivo ? editMotivo.motivo : ''}
-                            onChange={e => setEditMotivo({ ...editMotivo, motivo: e.target.value })}
+                            value={editOrganismo ? editOrganismo.organizacion : ''}
+                            onChange={e => setEditOrganizaciones({ ...editOrganismo, organizacion: e.target.value })}
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button size="small" variant="contained" color="primary" onClick={handleDialogConfirm}>Guardar</Button>
-                        <Button size="small" variant="contained" color="secondary" onClick={handleDialogClose}>Cancelar</Button>
-
+                    <Button   size="small" variant="contained" color="primary" onClick={handleDialogConfirm}>Guardar</Button>
+                        <Button   size="small" variant="contained" color="secondary" onClick={handleDialogClose}>Cancelar</Button>
+                       
                     </DialogActions>
                 </Dialog>
-            </Container>
+            </Container>  
+       
         </>
     );
 };
 
-export default FormularioMotivos;
+export default OrganismosForm;

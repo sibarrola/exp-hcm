@@ -29,13 +29,13 @@ const navVectGestion1 = [
     },
  
     {
-        title: "Tablas", path: "/privado/tablas/2", icon: <PeopleIcon />
+        title: "Instituciones", path: "/privado/tablas/2", icon: <ListAltIcon />
     },
     {
-        title: "Usuarios", path: "/privado/usuarios", icon: <PersonIcon />
+        title: "Organismos", path: "/privado/tablas/3", icon: <PersonIcon />
     },
     {
-        title: "Organismos", path: "/privado/organismos", icon: <CorporateFareIcon />
+        title: "DEM", path: "/privado/tablas/4", icon: <CorporateFareIcon />
     }
   
   ]

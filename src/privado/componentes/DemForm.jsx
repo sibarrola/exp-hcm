@@ -1,22 +1,23 @@
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Container, Paper, Box, Typography } from '@mui/material';
  import {Global} from '../../helpers/Global.jsx';
 
 const url=Global.url; 
-const FormularioMotivos = () => {
+const FormularioDem = () => {
 
     // estados
-    const [motivos, setMotivos] = useState([]);
+    const [dems, setDems] = useState([]);
     const [dialogOpen, setDialogOpen] = useState(false);
-    const [editMotivo, setEditMotivo] = useState(null);
+    const [editDem, setEditDem] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
 
-    const fetchMotivos = async () => {
+    const fetchDems = async () => {
         try {
-            const res = await axios.get(`${url}/motivos`);
-            if (Array.isArray(res.data.motivos)) {
-                setMotivos(res.data.motivos);
+            const res = await axios.get(`${url}/dems`);
+            if (Array.isArray(res.data.dems)) {
+                setDems(res.data.dems);
                 
             } else {
                 console.error('Server did not return an array');
@@ -26,54 +27,54 @@ const FormularioMotivos = () => {
         }
     };
 
-    const createMotivo = async motivo => {
+    const createDem = async dem => {
         try {
-            await axios.post(`${url}/motivos`, motivo);
-            fetchMotivos();  // Fetch latest list of 'motivos' after creating a new one
+            await axios.post(`${url}/dems`, dem);
+            fetchDems();  // Fetch latest list of 'dems' after creating a new one
         } catch (error) {
             console.error('Error', error);
         }
     };
     
-    const updateMotivo = async motivo => {
+    const updateDem = async dem => {
         try {
-            await axios.put(`${url}/motivos/${motivo._id}`, motivo);
-            fetchMotivos();  // Fetch latest list of 'motivos' after updating an existing one
+            await axios.put(`${url}/dems/${dem._id}`, dem);
+            fetchDems();  // Fetch latest list of 'dems' after updating an existing one
         } catch (error) {
             console.error('Error', error);
         }
     };
-    const deleteMotivo = async id => {
-        await axios.delete(`${url}/motivos/${id}`);
-        setMotivos(motivos.filter(m => m._id !== id));
+    const deleteDem = async id => {
+        await axios.delete(`${url}/dems/${id}`);
+        setDems(dems.filter(m => m._id !== id));
     };
 
     useEffect(() => {
-        fetchMotivos();
+        fetchDems();
     }, []);
 
     useEffect(() => {
-        console.log("motivos", motivos);
-    }, [motivos]);
+        console.log("dems", dems);
+    }, [dems]);
 
-    const handleDialogOpen = (motivo = null) => {
-        setEditMotivo(motivo);
-        setIsEditing(!!motivo);
+    const handleDialogOpen = (dem = null) => {
+        setEditDem(dem);
+        setIsEditing(!!dem);
         setDialogOpen(true);
         
     };
 
     const handleDialogClose = () => {
         setDialogOpen(false);
-        setEditMotivo(null);
+        setEditDem(null);
         setIsEditing(false);
     };
 
     const handleDialogConfirm = () => {
         if (isEditing) {
-            updateMotivo(editMotivo);
+            updateDem(editDem);
         } else {
-            createMotivo({ motivo: editMotivo ? editMotivo.motivo : '' });
+           createDem({ dem: editDem ? editDem.dem : '' });
         }
         handleDialogClose();
     };
@@ -82,7 +83,7 @@ const FormularioMotivos = () => {
         <>
            
             <Container component={Paper} maxWidth="sm" sx={{ padding: 2 }}>
-            <Typography variant='h5'>TABLA DE MOTIVOS </Typography>
+            <Typography variant='h5'>TABLA DE REPARTICIONES DEL D.E.M </Typography>
             <hr/>
             <Box sx={{m:'30px',textAlign:'right' }}>
                 <Button variant="contained" color="primary" onClick={() => handleDialogOpen()}>
@@ -101,22 +102,22 @@ const FormularioMotivos = () => {
                             }}
                         >
                             <TableRow>
-                                <TableCell>Motivo</TableCell>
+                                <TableCell>D.E.M.</TableCell>
                                 <TableCell>Editar</TableCell>
                                 <TableCell>Borrar</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {motivos.map(motivo => (
-                                <TableRow key={motivo._id}>
-                                    <TableCell>{motivo.motivo}</TableCell>
+                            {dems.map(dem => (
+                                <TableRow key={dem._id}>
+                                    <TableCell>{dem.dem}</TableCell>
                                     <TableCell>
-                                        <Button size="small" variant="contained" color="primary" onClick={() => handleDialogOpen(motivo)}>
+                                        <Button size="small" variant="contained" color="primary" onClick={() => handleDialogOpen(dem)}>
                                             Editar
                                         </Button>
                                     </TableCell>
                                     <TableCell>
-                                        <Button size="small" variant="contained" color="error" onClick={() => deleteMotivo(motivo._id)}>
+                                        <Button size="small" variant="contained" color="error" onClick={() => deleteDem(dem._id)}>
                                             Borrar
                                         </Button>
                                     </TableCell>
@@ -134,24 +135,24 @@ const FormularioMotivos = () => {
                         sx: {
                             width: '30%',
                             maxWidth: 'none',
-                            height: '40%'
+                            height: '30%'
                         }
                     }}
                 >
-                    <DialogTitle>{isEditing ? 'Editar Motivo' : 'Nuevo Motivo'}</DialogTitle>
+                    <DialogTitle>{isEditing ? 'Editar D.E.M.' : 'Nuevo D.E.M.'}</DialogTitle>
                     <DialogContent >
                         <DialogContentText>
-                            Ingrese el motivo
+                            Ingrese el dem
                         </DialogContentText>
                         <TextField
                             autoFocus
                             margin="dense"
                             id="name"
-                            label="Motivo"
+                            label="Dem"
                             type="text"
                             fullWidth
-                            value={editMotivo ? editMotivo.motivo : ''}
-                            onChange={e => setEditMotivo({ ...editMotivo, motivo: e.target.value })}
+                            value={editDem ? editDem.dem : ''}
+                            onChange={e => setEditDem({ ...editDem, dem: e.target.value })}
                         />
                     </DialogContent>
                     <DialogActions>
@@ -165,4 +166,4 @@ const FormularioMotivos = () => {
     );
 };
 
-export default FormularioMotivos;
+export default FormularioDem;

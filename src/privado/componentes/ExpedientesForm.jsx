@@ -101,6 +101,7 @@ alert(data);
 
   return (
     <Container component={Paper} maxWidth="sm" sx={{ padding: 2 }}>
+        {/* FORMULARIO----------------------------------------- */}
     <form onSubmit={handleSubmit(onSubmit)}>
     <h3>CARGA DE EXPEDIENTES</h3>
     <Grid container xs={12} spacing={1}>
@@ -175,7 +176,11 @@ alert(data);
       {/* ... otros campos ... */}
 
       </Grid>
-      <Button type="submit">Enviar</Button>
+      <Grid>
+                        <Button size="small" variant="contained" color="primary" type='submit'>Guardar</Button>
+                        <Button size="small" variant="contained" color="secondary" onClick={handleDialogClose}>Cancelar</Button>
+
+                    </Grid>  
     </form>
     </Container>
   );

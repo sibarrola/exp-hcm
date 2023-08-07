@@ -1,8 +1,10 @@
  
 import FormularioMotivos from "../componentes/FormularioMotivos"
+import InstitucionesForm from "../componentes/InstitucionesForm";
+import OrganismosForm from "../componentes/OrganismosForm";
+import DemForm from "../componentes/DemForm";
 import LayoutPrivado  from "../layout/LayoutPrivado"
-import CargaExpedientes from "./CargaExpedientes";
-
+ 
 import { useParams } from 'react-router-dom';
 
 const Tablas = () => {
@@ -14,8 +16,16 @@ const Tablas = () => {
         formulario = <FormularioMotivos />;
         break;
     case '2':
-        formulario = <CargaExpedientes />;
+        formulario = <InstitucionesForm />;
         break;
+
+        case '3':
+        formulario = <OrganismosForm />;
+        break;
+
+        case '4':
+            formulario = <DemForm />;
+            break;
     default:
         formulario = <div>No se especificó un parámetro válido.</div>;
   }
