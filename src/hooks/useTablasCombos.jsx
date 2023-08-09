@@ -16,7 +16,7 @@ const getData = async(url) => {
         const {data}= await peticion.json();
         console.log(data)
           setTabla({
-              data,
+              datos:data,
               cargando:false
           })
     useEffect(()=>{

@@ -89,7 +89,7 @@ const ExpedientesCarga = () => {
         fetchDem()
     }, []);
 
-
+  /*  cuando se van cargando los campos................ */
     const handleChange = (event) => {
         setValues({
             ...values,
@@ -97,7 +97,7 @@ const ExpedientesCarga = () => {
 
         });
     }
-    /*  cuando cambia la institucion */
+    /*  cuando elije una institucion de la lista */
     const handleInstitucionChange = (event) => {
     const selectedInstitucion = event.target.value;
 
@@ -107,7 +107,7 @@ const ExpedientesCarga = () => {
             institucion: selectedInstitucion,
         });
     };
-
+    /*  cuando agrega una nueva institucion, actualiza tambien el campo solicitante en el estado del formulario (values) */
     const handleInstitucionNueva = (event) => {
         const selectedInstitucionNueva = event.target.value;
         setValues({
@@ -116,6 +116,8 @@ const ExpedientesCarga = () => {
             nuevaInstitucion: selectedInstitucionNueva
         });
     };
+
+        /*  cuando elije un organismo de la lista */
     const handleOrganismoChange = (event) => {
         const selectedOrganismo = event.target.value;
         setValues({
@@ -124,6 +126,7 @@ const ExpedientesCarga = () => {
             organismo: selectedOrganismo,
         });
     };
+     /*  cuando agrega un  nuevo organizmo, actualiza tambien el campo solicitante en el estado del formulario (values) */
     const handleOrganismoNuevo = (event) => {
         const selectedOrganismoNuevo = event.target.value;
         setValues({
@@ -150,10 +153,14 @@ const ExpedientesCarga = () => {
             nuevoDem: selectedDemNuevo
         });
     };
+
+
+    /* limpia los campos del estado del formulario para comenzar a cargar otro expediente */
     const handleLimpio = () => {
            setValues( expedienteLimpio);
     }
 
+     
     const guardarNuevaInstitucionEnBD = async (nuevaInstitucion) => {
         try {
       
