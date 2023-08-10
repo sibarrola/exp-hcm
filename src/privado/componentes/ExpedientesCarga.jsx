@@ -1,5 +1,8 @@
 /* ESTE ES EL FORMULARIO QUE VA PARA LA CARGA DE EXPEDIENTES */
-import React, { useEffect, useState, useRef  } from "react";
+import React, { useEffect, useState, useRef } from "react";
+
+import CelularField from "./CelularField.jsx";
+import DniField from "./DniField.jsx";
 import {
     Select,
     MenuItem,
@@ -13,40 +16,46 @@ import {
     Typography
 } from '@mui/material';
 import { Global } from '../../helpers/Global.jsx';
+import { extractDigits } from "../../helpers/funcionesVarias.jsx";
 import axios from 'axios';
-import { number } from "yup";
+ 
 /*  TRAIGO LA FUNCION-----------------------------------------*/
-import  useFetchCombos  from '../../hooks/useFetchCombos.jsx';  
+import useFetchCombos from '../../hooks/useFetchCombos.jsx';
 
-  
+
+
 
 const ExpedientesCarga = () => {
 
     let url = Global.url;
-    
-   const {
-    motivos,
-    institucionesp,
-    organismos,
-    dems,
-    addMotivo,
-    addInstitucion,
-    addOrganismo,
-    addDem,
-  } = useFetchCombos(url);
- 
-  const legajoRef = useRef(null);
-  const motivoRef = useRef(null);
-  const categoriaRef = useRef(null);
-   /*  const [motivos, setMotivos] = useState([]);
-    const [institucionesp, setInstitucionesp] = useState([]);
-    const [organismos, setOrganismos] = useState([]);
-    const [dems, setDems] = useState([]);
- */
+
+    const {
+        motivos,
+        institucionesp,
+        organismos,
+        dems,
+        addMotivo,
+        addInstitucion,
+        addOrganismo,
+        addDem,
+    } = useFetchCombos(url);
+
+    const legajoRef = useRef(null);
+    const motivoRef = useRef(null);
+    const categoriaRef = useRef(null);
+    /* const emailRef =useRef(null); */
+    const celularRef = useRef(null);
+    const dniRef=useRef(null);
+
+    /*  const [motivos, setMotivos] = useState([]);
+     const [institucionesp, setInstitucionesp] = useState([]);
+     const [organismos, setOrganismos] = useState([]);
+     const [dems, setDems] = useState([]);
+  */
     // estados para agregar un nuevo elemento a las tablas que alimentan a los combos de organismos,instituciones y dem
-   /*  const [nuevoOrganismo, setNuevoOrganismo] = useState("")
-    const [nuevaInstitucion, setNuevaInstitucion] = useState("");
-    const [nuevoDem, setNuevoDem] = useState("");   */
+    /*  const [nuevoOrganismo, setNuevoOrganismo] = useState("")
+     const [nuevaInstitucion, setNuevaInstitucion] = useState("");
+     const [nuevoDem, setNuevoDem] = useState("");   */
 
     /* para la edicion, tendria que poner algo así: */
     /*  const expedienteLimpio ={
@@ -71,30 +80,31 @@ nuevoDem:""
 
      } */
 
-    /* tengo que capturar el usuario.......... */ 
-  const expedienteLimpio={
+    /* tengo que capturar el usuario.......... */
+    const expedienteLimpio = {
         legajo: "",
-        folios:"",
+        folios: "",
         motivo: "",
-        nuevoMotivo:"",
+        nuevoMotivo: "",
         comentario: "",
         fechaIngreso: new Date().toISOString().substr(0, 10),
         categoria: "",
         institucion: "",
         organismo: "",
         nuevaInstitucion: "",
-        dem:"",
+        dem: "",
         nuevoDem: "",
         nuevoOrganismo: "",
         solicitante: "",
-        apellido:"",
-        nombres:"",
-        dni:"",
-        celular:"",
-        domicilio:"",
-        estado:"true",
-        usuario:"64c14460d96b8b9cdb37eef5"
-    }  
+        apellido: "",
+        nombres: "",
+       
+dni:"13589025",
+celular:"5493426895666",
+        domicilio: "",
+        estado: "true",
+        usuario: "64c14460d96b8b9cdb37eef5"
+    }
 
     const [values, setValues] = useState(expedienteLimpio);
     const [errors, setErrors] = useState({});
@@ -106,22 +116,22 @@ nuevoDem:""
 
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
-          event.preventDefault();
+            event.preventDefault();
         }
-      };
-  
+    };
 
-  /*  cuando se van cargando los campos................ */
+
+    /*  cuando se van cargando los campos................ */
     const handleChange = (event) => {
-           setValues({
+        setValues({
             ...values,
             [event.target.name]: event.target.value,
-        
+
         });
     }
     /*  cuando elije una institucion de la lista */
     const handleInstitucionChange = (event) => {
-    const selectedInstitucion = event.target.value;
+        const selectedInstitucion = event.target.value;
 
         setValues({
             ...values,
@@ -131,7 +141,7 @@ nuevoDem:""
     };
     /*  cuando agrega una nueva institucion, actualiza tambien el campo solicitante en el estado del formulario (values) */
     const handleInstitucionNueva = (event) => {
-    const selectedInstitucionNueva = event.target.value;
+        const selectedInstitucionNueva = event.target.value;
         setValues({
             ...values,
             solicitante: selectedInstitucionNueva,
@@ -139,18 +149,18 @@ nuevoDem:""
         });
     };
 
-        /*  cuando elije un organismo de la lista */
+    /*  cuando elije un organismo de la lista */
     const handleOrganismoChange = (event) => {
-    const selectedOrganismo = event.target.value;  
+        const selectedOrganismo = event.target.value;
         setValues({
             ...values,
             solicitante: selectedOrganismo,
             organismo: selectedOrganismo,
         });
     };
-     /*  cuando agrega un  nuevo organizmo, actualiza tambien el campo solicitante en el estado del formulario (values) */
+    /*  cuando agrega un  nuevo organizmo, actualiza tambien el campo solicitante en el estado del formulario (values) */
     const handleOrganismoNuevo = (event) => {
-    const selectedOrganismoNuevo = event.target.value;   
+        const selectedOrganismoNuevo = event.target.value;
         setValues({
             ...values,
             solicitante: selectedOrganismoNuevo,
@@ -159,8 +169,8 @@ nuevoDem:""
     };
 
     const handleDemChange = (event) => {
-    const selectedDem = event.target.value;
-    console.log("selectedDem",selectedDem);
+        const selectedDem = event.target.value;
+        console.log("selectedDem", selectedDem);
         setValues({
             ...values,
             solicitante: selectedDem,
@@ -175,46 +185,49 @@ nuevoDem:""
             nuevoDem: selectedDemNuevo
         });
     };
- /*  cuando elije un motivo*/
- const handleMotivosChange = (event) => {
-    const selectedMotivo = event.target.value;
+    /*  cuando elije un motivo*/
+    const handleMotivosChange = (event) => {
+        const selectedMotivo = event.target.value;
 
         setValues({
             ...values,
-             motivo: selectedMotivo,
+            motivo: selectedMotivo,
         });
     };
-    
+
 
     /* limpia los campos del estado del formulario para comenzar a cargar otro expediente */
     const handleLimpio = () => {
-           setValues( expedienteLimpio);
+        setValues(expedienteLimpio);
     }
 
-  
-    const guardarExpedienteEnBD = async () => {   
-       let solicitanteg=(values.solicitante.length==0)?(values.apellido+" "+values.nombres):values.solicitante
-             
-        let motivog=(values.motivo=="Otro")?values.nuevoMotivo:values.motivo;
-/* ojo, traer el usuario............................. */
-        let expediente_guardar={
+
+    const guardarExpedienteEnBD = async () => {
+        let solicitanteg = (values.solicitante.length == 0) ? (values.apellido + " " + values.nombres) : values.solicitante
+
+        let motivog = (values.motivo == "Otro") ? values.nuevoMotivo : values.motivo;
+        
+        let dnig=extractDigits(values.dni); 
+        let celularg=extractDigits(values.celular); 
+        /* ojo, traer el usuario............................. */
+        let expediente_guardar = {
             legajo: values.legajo,
-            folios:values.folios,
+            folios: values.folios,
             motivo: motivog,
             comentario: values.comentario,
             fechaIngreso: values.fechaIngreso,
             categoria: values.categoria,
             solicitante: solicitanteg,
-            apellido:values.apellido,
-            nombres:values.nombres,
-            dni:values.dni,
-            celular:values.celular,
-            domicilio:values.domicilio,
-            estado:"true",
-            usuario:"64c14460d96b8b9cdb37eef5"
+            apellido: values.apellido,
+            nombres: values.nombres,
+            dni: dnig,
+            celular: celularg,
+            domicilio: values.domicilio,
+            estado: "true",
+            usuario: "64c14460d96b8b9cdb37eef5"
 
         }
-        
+
         axios.post(`${url}/expedientes`, expediente_guardar)
             .then(response => {
                 console.log(response.data);
@@ -224,19 +237,19 @@ nuevoDem:""
             })
 
     }
-/* SUBMIT DEL FORMULARIO ----------------------------------------------------------- */
+    /* SUBMIT DEL FORMULARIO ----------------------------------------------------------- */
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         // Reset errors
         setErrors({});
-      /*  VALIDACIONES DE LOS CAMPOS Y SETEO DE LOS ERRORES ENCONTRADOS */
+        /*  VALIDACIONES DE LOS CAMPOS Y SETEO DE LOS ERRORES ENCONTRADOS............ */
         if (!values.legajo) {
             setErrors((errors) => ({ ...errors, legajo: "El campo legajo es requerido" }));
             legajoRef.current.focus();
             return
         }
-        
+
 
         if (!values.motivo) {
             setErrors((errors) => ({ ...errors, motivo: "El campo motivo es requerido" }));
@@ -247,59 +260,80 @@ nuevoDem:""
             setErrors((errors) => ({ ...errors, categoriaRef: "El campo categoria es requerido" }));
             categoriaRef.current.focus();
             return
-        } 
+        }
+   /*      if (!values.email || !/\S+@\S+\.\S+/.test(values.email)) {
+            setErrors((errors) => ({ ...errors, email: "Introduce un correo electrónico válido" }));
+            emailRef.current.focus();
+            return;
+        } */
+
+        if (!values.dni || values.dni.length > 10) {
+            setErrors((errors) => ({ ...errors, dni: "Introduce un DNI válido  " }));
+            dniRef.current.focus();
+            return;
+        }
+        /*  if (!values.celular || !/^(\+54|0)(15)?\d{8}$/.test(values.celular)) { */
+     /*    if (!values.celular || isNaN(values.celular)) { */
+     if ( values.celular.length > 20) {
+            setErrors((errors) => ({ ...errors, celular: "Introduce un número de celular válido " }));
+            celularRef.current.focus();
+            return;
+        }
+
+
+
+        /*=====================================================  */
 
         // Si no hay errores, enviar los datos
         if (Object.keys(errors).length === 0) {
 
-          if(values.motivo=="Otro" &&  values.nuevoMotivo.length>0) {
+            if (values.motivo == "Otro" && values.nuevoMotivo.length > 0) {
                 await addMotivo(values.nuevoMotivo);
-              
-          }
+
+            }
 
 
-        console.log(values.categoria,"(categoria)")
+            console.log(values.categoria, "(categoria)")
             /* ..este switch eliga la coleccion a la cual le va a agregar una nuevo campo................................................ */
             switch (values.categoria) {
                 case 'D.E.M.':
                     //   values.solicitante = "D.E.M.";
                     if (values.dem === 'Otro') {
-                      await  addDem(values.nuevoDem);
-                     }
+                        await addDem(values.nuevoDem);
+                    }
 
                     break;
                 case 'Instituciones privadas':
                     if (values.institucion === 'Otro') {
-                        console.log(values.nuevaInstitucion,"values nueva institucion")
-                     await  addInstitucion(values.nuevaInstitucion);
-                       }
+                        console.log(values.nuevaInstitucion, "values nueva institucion")
+                        await addInstitucion(values.nuevaInstitucion);
+                    }
 
                     break;
                 case 'Organismo público':
-             
-                    if (values.organismo=== 'Otro') {
-                        console.log("nuevo oga",values.nuevoOrganismo);
-                 await addOrganismo(values.nuevoOrganismo);  
-               
+
+                    if (values.organismo === 'Otro') {
+                        console.log("nuevo oga", values.nuevoOrganismo);
+                        await addOrganismo(values.nuevoOrganismo);
+
                     }
 
                     break;
                 default:
                     console.log("no es ninguna categoria")
-                     /*  setValues({
-                        ...values,
-                        solicitante:values.apellido
-                      }) */
+                /*  setValues({
+                   ...values,
+                   solicitante:values.apellido
+                 }) */
             }
-             guardarExpedienteEnBD();
-               console.log('Expediente guardado:');
-               handleLimpio();
+            guardarExpedienteEnBD();
+            console.log('Expediente guardado:');
+            handleLimpio();
             // Limpia el formulario después de guardar el expediente.
-            
-           
+
+
         }
-        else
-        {
+        else {
             alert("corrija!")
         }
 
@@ -327,7 +361,7 @@ nuevoDem:""
                             }}
                         />
                     </Grid>
-                    <Grid item xs={12}  sm={4} >
+                    <Grid item xs={12} sm={4} >
                         <TextField
                             label="Legajo"
                             type="number"
@@ -338,12 +372,12 @@ nuevoDem:""
                             error={!!errors.legajo}
                             helperText={errors.legajo}
                             fullWidth
-                            inputRef={legajoRef} 
+                            inputRef={legajoRef}
                         />
                     </Grid>
-                    <Grid item xs={12}  sm={4} >
+                    <Grid item xs={12} sm={4} >
                         <TextField
-                         
+
                             label="Folios"
                             name="folios"
                             value={values.folios}
@@ -366,14 +400,14 @@ nuevoDem:""
                                 value={values.motivo}
                                 onChange={handleMotivosChange}
                                 error={!!errors.motivo}
-                                inputRef={motivoRef} 
+                                inputRef={motivoRef}
                             >
                                 {motivos.map((motivo, index) => (
                                     <MenuItem key={motivo.motivo} value={motivo.motivo}>
                                         {motivo.motivo}
                                     </MenuItem>
                                 ))}
-                                  <MenuItem value="Otro">Otro</MenuItem>
+                                <MenuItem value="Otro">Otro</MenuItem>
                             </Select>
                         </FormControl>
                         {errors.motivo && <p style={{ color: 'red' }}>{errors.motivo}</p>}
@@ -418,7 +452,7 @@ nuevoDem:""
                                 value={values.categoria}
                                 onChange={handleChange}
                                 error={!!errors.categoria}
-                                inputRef={categoriaRef} 
+                                inputRef={categoriaRef}
                             >
                                 {categorias.map((categoria, index) => (
                                     <MenuItem key={index} value={categoria}>
@@ -554,104 +588,105 @@ nuevoDem:""
                             </Grid>
                         )}
 
-{/* {values.categoria != 'Particular' && values.categoria != 'Concejal' && ( */}
+                    {/* {values.categoria != 'Particular' && values.categoria != 'Concejal' && ( */}
                     <Grid item xs={12}>
                         <TextField
                             label="Solicitante"
                             name="solicitante"
                             value={values.solicitante}
-                             onChange={handleChange} 
-                             onKeyDown={handleKeyDown}
+                            onChange={handleChange}
+                            onKeyDown={handleKeyDown}
                             error={!!errors.solicitante}
                             helperText={errors.solicitante}
                             fullWidth
                         />
                     </Grid>
-               {/*    )
+                    {/*    )
                   } */}
                     <Grid item xs={12}>
-                    <h4 sx={{with:"100%"}}>REPRESENTADO POR:</h4>
+                        <h4 sx={{ with: "100%" }}>REPRESENTADO POR:</h4>
                     </Grid>
-                 
-                     <Grid item xs={12} sm={6}>
-                          
+
+                    <Grid item xs={12} sm={6}>
+
                         <TextField
                             label="Apellido"
                             name="apellido"
                             value={values.apellido}
-                             onChange={handleChange} 
-                             onKeyDown={handleKeyDown}
+                            onChange={handleChange}
+                            onKeyDown={handleKeyDown}
                             error={!!errors.apellido}
                             helperText={errors.apellido}
                             fullWidth
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                   
-                          
-                          <TextField
-                              label="Nombres"
-                              name="nombres"
-                              value={values.nombres}
-                               onChange={handleChange} 
-                               onKeyDown={handleKeyDown}
-                              error={!!errors.nombres}
-                              helperText={errors.nombres}
-                              fullWidth
-                          />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                       
-                    <TextField
-                            label="DNI"
-                            name="dni"
-                            value={values.dni}
-                             onChange={handleChange} 
-                             onKeyDown={handleKeyDown}
-                            error={!!errors.dni}
-                            helperText={errors.dni}
+
+
+                        <TextField
+                            label="Nombres"
+                            name="nombres"
+                            value={values.nombres}
+                            onChange={handleChange}
+                            onKeyDown={handleKeyDown}
+                            error={!!errors.nombres}
+                            helperText={errors.nombres}
                             fullWidth
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                          
-                       
-                    <TextField
-                            label="Celular"
-                            name="celular"
-                            value={values.celular}
-                             onChange={handleChange} 
-                             onKeyDown={handleKeyDown}
-                            error={!!errors.celular}
-                            helperText={errors.celular}
+ 
+                        <DniField
+                            label="DNI"
+                            name="dni"
+                            value={values.dni}
+                            onChange={handleChange}
+                            onKeyDown={handleKeyDown}
+                            error={!!errors.dni}
+                            helperText={errors.dni}
                             fullWidth
+                            inputRef={dniRef}
                         />
                     </Grid>
-                    <Grid item xs={12}>
-                          
-                       
-                          <TextField
-                                  label="domicilio"
-                                  name="domicilio"
-                                  value={values.domicilio}
-                                   onChange={handleChange} 
-                                   onKeyDown={handleKeyDown}
-                                  error={!!errors.domicilio}
-                                  helperText={errors.domicilio}
-                                  fullWidth
-                              />
-                          </Grid>
-
-                    {/* ... falta poner el usuario que lo lee del req ... */}
+                    <Grid item xs={12} sm={6}> 
+                    <CelularField
+                        name="celular"
+                        label="Celular"
+                        value={values.celular}
+                        onChange={handleChange}
+                        onKeyDown={handleKeyDown}
+                        error={Boolean(errors.celular)}
+                        helperText={!!errors.celular}
+                        fullWidth
+                        inputRef={celularRef}
+                    />
                 </Grid>
-                <Grid item xs={12} marginTop="20px" marginRight='20px' alignContent="right">
-                    <Button size="small" variant="contained" color="primary" type='submit' style={{ marginRight: 20 }}>Guardar</Button>
-                    <Button size="small" variant="contained" color="secondary" onClick={handleLimpio}>Cancelar</Button>
+                <Grid item xs={12}>
 
+
+                    <TextField
+                        label="domicilio"
+                        name="domicilio"
+                        value={values.domicilio}
+                        onChange={handleChange}
+                        onKeyDown={handleKeyDown}
+                        error={!!errors.domicilio}
+                        helperText={errors.domicilio}
+                        fullWidth
+                    />
                 </Grid>
-               
-            </form>
-        </Container>
+
+                {/* ... falta poner el usuario que lo lee del req ... */}
+          
+            <Grid item xs={12} marginTop="20px" marginRight='20px' alignContent="right">
+                <Button size="small" variant="contained" color="primary" type='submit' style={{ marginRight: 20 }}>Guardar</Button>
+                <Button size="small" variant="contained" color="secondary" onClick={handleLimpio}>Cancelar</Button>
+
+            </Grid>
+</Grid>
+        </form>
+        
+        </Container >
     );
 };
 
