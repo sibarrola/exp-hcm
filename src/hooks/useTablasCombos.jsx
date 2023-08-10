@@ -1,15 +1,11 @@
-import {useEffect,useState} from 'react';
 
 // hice esta para usar cuando quiero traer datos de una coleccion
 const [tabla,setTabla]=useState({
     datos:null,
     cargando:true
 });
-const getData = async(url) => {
-    setTabla({
-        ...tabla,
-        cargando:true
-    });
+const useTablasCombos = async(url) => {
+   
 
      
         const peticion= await fetch(url);
@@ -17,7 +13,7 @@ const getData = async(url) => {
         console.log(data)
           setTabla({
               datos:data,
-              cargando:false
+             
           })
     useEffect(()=>{
         getData();
@@ -27,8 +23,8 @@ const getData = async(url) => {
 
 return {
     datos:tabla.datos,
-    cargando:tabla.cargando
+     
 }
 }
 
-export default getData
+export default useTablasCombos

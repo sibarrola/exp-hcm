@@ -1,5 +1,5 @@
 /* ESTE ES EL FORMULARIO QUE VA PARA LA CARGA DE EXPEDIENTES */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef  } from "react";
 import {
     Select,
     MenuItem,
@@ -15,24 +15,68 @@ import {
 import { Global } from '../../helpers/Global.jsx';
 import axios from 'axios';
 import { number } from "yup";
+/*  TRAIGO LA FUNCION-----------------------------------------*/
+import  useFetchCombos  from '../../hooks/useFetchCombos.jsx';  
 
-const url = Global.url;
+  
 
 const ExpedientesCarga = () => {
-    const [motivos, setMotivos] = useState([]);
+
+    let url = Global.url;
+    
+   const {
+    motivos,
+    institucionesp,
+    organismos,
+    dems,
+    addMotivo,
+    addInstitucion,
+    addOrganismo,
+    addDem,
+  } = useFetchCombos(url);
+ 
+  const legajoRef = useRef(null);
+  const motivoRef = useRef(null);
+  const categoriaRef = useRef(null);
+   /*  const [motivos, setMotivos] = useState([]);
     const [institucionesp, setInstitucionesp] = useState([]);
     const [organismos, setOrganismos] = useState([]);
     const [dems, setDems] = useState([]);
-
+ */
     // estados para agregar un nuevo elemento a las tablas que alimentan a los combos de organismos,instituciones y dem
-    const [nuevoOrganismo, setNuevoOrganismo] = useState("")
+   /*  const [nuevoOrganismo, setNuevoOrganismo] = useState("")
     const [nuevaInstitucion, setNuevaInstitucion] = useState("");
-    const [nuevoDem, setNuevoDem] = useState("");
+    const [nuevoDem, setNuevoDem] = useState("");   */
 
-     const expedienteLimpio={
+    /* para la edicion, tendria que poner algo así: */
+    /*  const expedienteLimpio ={
+        legajo:2,
+fechaIngreso:"2023-08-10T00:00:00.000+00:00".substring(0,10),
+motivo:"Resolucion conflictos",
+comentario:"",
+categoria:"Particular",
+solicitante:"Lores  Fabian Aurelio",
+apellido:"Lores ",
+nombres:"Fabian Aurelio",
+celular:"",
+domicilio:"",
+dni:"11456788",
+folios:1,
+estado:true,
+usuario:"64c14460d96b8b9cdb37eef5",
+nuevoMotivo:"",
+nuevaInstitucion:"",
+nuevoOrganismo:"",
+nuevoDem:""
+
+     } */
+
+    /* tengo que capturar el usuario.......... */ 
+  const expedienteLimpio={
         legajo: "",
         folios:"",
         motivo: "",
+        nuevoMotivo:"",
         comentario: "",
         fechaIngreso: new Date().toISOString().substr(0, 10),
         categoria: "",
@@ -50,51 +94,29 @@ const ExpedientesCarga = () => {
         domicilio:"",
         estado:"true",
         usuario:"64c14460d96b8b9cdb37eef5"
-    }
+    }  
 
     const [values, setValues] = useState(expedienteLimpio);
-
     const [errors, setErrors] = useState({});
 
     /* C A T E G O R I A S -------------------------------------------------------O */
     const categorias = ['Particular', 'D.E.M.', 'Concejal', 'Organismo público', 'Instituciones privadas', 'Otro'];
 
-/* TODAS LAS TABLAS DE LOS COMBOS-------------------------  */
-    /* busca la lista de motivos */
-    const fetchMotivos = async () => {
-        const resMotivos = await axios.get(`${url}/motivos`);
-        setMotivos(resMotivos.data.motivos);
-    };
-    /* busca instituciones */
-    const fetchInstituciones = async () => {
-        const resInstituciones = await axios.get(`${url}/instituciones`);
-        setInstitucionesp(resInstituciones.data.instituciones);
-    };
-    /* busca la lista de ORGANISMOS */
-    const fetchOrganismo = async () => {
-        const resOrganismo = await axios.get(`${url}/organizaciones`);
-        setOrganismos(resOrganismo.data.organizaciones);
-    };
 
-    /* busca la lista de departamentos DEM */
-    const fetchDem = async () => {
-        const resDems = await axios.get(`${url}/dems`);
-        setDems(resDems.data.dems);
-    };
-/*  CUANDO SE CARGA EL COMPONENTE CARGA LAS TABLAS Y LAS GUARDA EN LOS ESTADOS */
-    useEffect(() => {
-        fetchMotivos();
-        fetchInstituciones();
-        fetchOrganismo();
-        fetchDem()
-    }, []);
+
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+        }
+      };
+  
 
   /*  cuando se van cargando los campos................ */
     const handleChange = (event) => {
-        setValues({
+           setValues({
             ...values,
-            [event.target.name]: event.target.value
-
+            [event.target.name]: event.target.value,
+        
         });
     }
     /*  cuando elije una institucion de la lista */
@@ -109,7 +131,7 @@ const ExpedientesCarga = () => {
     };
     /*  cuando agrega una nueva institucion, actualiza tambien el campo solicitante en el estado del formulario (values) */
     const handleInstitucionNueva = (event) => {
-        const selectedInstitucionNueva = event.target.value;
+    const selectedInstitucionNueva = event.target.value;
         setValues({
             ...values,
             solicitante: selectedInstitucionNueva,
@@ -119,25 +141,25 @@ const ExpedientesCarga = () => {
 
         /*  cuando elije un organismo de la lista */
     const handleOrganismoChange = (event) => {
-        const selectedOrganismo = event.target.value;
+    const selectedOrganismo = event.target.value;  
         setValues({
             ...values,
-            solicitante: selectedOrganismo.organismo,
+            solicitante: selectedOrganismo,
             organismo: selectedOrganismo,
         });
     };
      /*  cuando agrega un  nuevo organizmo, actualiza tambien el campo solicitante en el estado del formulario (values) */
     const handleOrganismoNuevo = (event) => {
-        const selectedOrganismoNuevo = event.target.value;
+    const selectedOrganismoNuevo = event.target.value;   
         setValues({
             ...values,
             solicitante: selectedOrganismoNuevo,
             nuevoOrganismo: selectedOrganismoNuevo
         });
     };
+
     const handleDemChange = (event) => {
-        const selectedDem = event.target.value;
-    
+    const selectedDem = event.target.value;
     console.log("selectedDem",selectedDem);
         setValues({
             ...values,
@@ -153,51 +175,47 @@ const ExpedientesCarga = () => {
             nuevoDem: selectedDemNuevo
         });
     };
+ /*  cuando elije un motivo*/
+ const handleMotivosChange = (event) => {
+    const selectedMotivo = event.target.value;
 
+        setValues({
+            ...values,
+             motivo: selectedMotivo,
+        });
+    };
+    
 
     /* limpia los campos del estado del formulario para comenzar a cargar otro expediente */
     const handleLimpio = () => {
            setValues( expedienteLimpio);
     }
 
-     
-    const guardarNuevaInstitucionEnBD = async (nuevaInstitucion) => {
-        try {
-      
-            await axios.post(`${url}/instituciones`, { institucion: values.nuevaInstitucion });
-            console.log('Nueva institución guardada en la base de datos.');
-            console.log(institucionesp);
-        } catch (error) {
-            console.error('Error al guardar la nueva institución:', error);
-        }
-    };
-    const guardarNuevaOrganizacionEnBD = async (nuevoOrganismo) => {
-        try {
-           await axios.post(`${url}/organizaciones`, { organizacion: nuevoOrganismo });
+  
+    const guardarExpedienteEnBD = async () => {   
+       let solicitanteg=(values.solicitante.length==0)?(values.apellido+" "+values.nombres):values.solicitante
+             
+        let motivog=(values.motivo=="Otro")?values.nuevoMotivo:values.motivo;
+/* ojo, traer el usuario............................. */
+        let expediente_guardar={
+            legajo: values.legajo,
+            folios:values.folios,
+            motivo: motivog,
+            comentario: values.comentario,
+            fechaIngreso: values.fechaIngreso,
+            categoria: values.categoria,
+            solicitante: solicitanteg,
+            apellido:values.apellido,
+            nombres:values.nombres,
+            dni:values.dni,
+            celular:values.celular,
+            domicilio:values.domicilio,
+            estado:"true",
+            usuario:"64c14460d96b8b9cdb37eef5"
 
-            console.log('Nueva orga guardada en la base de datos.');
-        } catch (error) {
-            console.error('Error al guardar el nuevo organismo pub.:', error);
         }
-    };
-    const guardarNuevoDemEnBD = async (nuevoDem) => {
-        try {
-            console.log('Nuevo DEm  .',nuevoDem);
-            await axios.post(`${url}/dems`, { dem:nuevoDem });
-            console.log('Nuevo DEm guardada en la base de datos.',nuevoDem);
-        } catch (error) {
-            console.error('Error al guardar el DEM:', error);
-        }
-    };
-
-    const guardarExpedienteEnBD = async () => {
-        if(values.solicitante==""){
-            setValues({
-                ...values,
-                solicitante:values.apellido
-            })
-        }
-        axios.post(`${url}/expedientes`, values)
+        
+        axios.post(`${url}/expedientes`, expediente_guardar)
             .then(response => {
                 console.log(response.data);
             })
@@ -206,73 +224,84 @@ const ExpedientesCarga = () => {
             })
 
     }
-
+/* SUBMIT DEL FORMULARIO ----------------------------------------------------------- */
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         // Reset errors
         setErrors({});
-        // Validaciones
+      /*  VALIDACIONES DE LOS CAMPOS Y SETEO DE LOS ERRORES ENCONTRADOS */
         if (!values.legajo) {
             setErrors((errors) => ({ ...errors, legajo: "El campo legajo es requerido" }));
+            legajoRef.current.focus();
+            return
         }
-        if (!typeof (legajo) == number) {
-            setErrors((errors) => ({ ...errors, legajo: "El campo legajo debe ser un numero" }));
-        }
+        
 
         if (!values.motivo) {
             setErrors((errors) => ({ ...errors, motivo: "El campo motivo es requerido" }));
+            motivoRef.current.focus();
+            return
         }
+        if (!values.categoria) {
+            setErrors((errors) => ({ ...errors, categoriaRef: "El campo categoria es requerido" }));
+            categoriaRef.current.focus();
+            return
+        } 
 
         // Si no hay errores, enviar los datos
         if (Object.keys(errors).length === 0) {
-        
-            /* ...............................................................si es DEM O Una institucion o una organizacion y agregó un nuevo elemento a la lista................................................. */
+
+          if(values.motivo=="Otro" &&  values.nuevoMotivo.length>0) {
+                await addMotivo(values.nuevoMotivo);
+              
+          }
+
+
+        console.log(values.categoria,"(categoria)")
+            /* ..este switch eliga la coleccion a la cual le va a agregar una nuevo campo................................................ */
             switch (values.categoria) {
                 case 'D.E.M.':
                     //   values.solicitante = "D.E.M.";
                     if (values.dem === 'Otro') {
-                        setNuevoDem(values.nuevoDem);
-                        console.log(values);
-                        await guardarNuevoDemEnBD(nuevoDem);
-                        await fetchDem(); /* la leo de nuevo a la lista , ahora modificada. No pude cambiar el estado  */
-                    }
+                      await  addDem(values.nuevoDem);
+                     }
 
                     break;
                 case 'Instituciones privadas':
                     if (values.institucion === 'Otro') {
-                       
-                        setNuevaInstitucion(values.nuevaInstitucion);
-
-                         await guardarNuevaInstitucionEnBD(nuevaInstitucion);
-                         await fetchInstituciones();  /* la leo de nuevo a la lista , ahora modificada. No pude cambiar el estado  */
-                      
-                    }
+                        console.log(values.nuevaInstitucion,"values nueva institucion")
+                     await  addInstitucion(values.nuevaInstitucion);
+                       }
 
                     break;
                 case 'Organismo público':
-                    if (values.organizacion === 'Otro') {
-                        setNuevoOrganismo(values.nuevoOrganismo);
-                        await guardarNuevaOrganizacionEnBD(nuevoOrganismo);
-                        await fetchOrganismo();
-                        /* la leo de nuevo a la lista , ahora modificada. No pude cambiar el estado  */
+             
+                    if (values.organismo=== 'Otro') {
+                        console.log("nuevo oga",values.nuevoOrganismo);
+                 await addOrganismo(values.nuevoOrganismo);  
+               
                     }
 
                     break;
                 default:
-                      setValues({
+                    console.log("no es ninguna categoria")
+                     /*  setValues({
                         ...values,
                         solicitante:values.apellido
-                      })
+                      }) */
             }
-            guardarExpedienteEnBD();
+             guardarExpedienteEnBD();
                console.log('Expediente guardado:');
-
+               handleLimpio();
             // Limpia el formulario después de guardar el expediente.
             
-            handleLimpio();
+           
         }
-        
+        else
+        {
+            alert("corrija!")
+        }
 
     };
 
@@ -289,6 +318,7 @@ const ExpedientesCarga = () => {
                             name="fechaIngreso"
                             value={values.fechaIngreso}
                             onChange={handleChange}
+                            onKeyDown={handleKeyDown}
                             error={!!errors.fechaIngreso}
                             helperText={errors.fechaIngreso}
                             fullWidth
@@ -300,20 +330,25 @@ const ExpedientesCarga = () => {
                     <Grid item xs={12}  sm={4} >
                         <TextField
                             label="Legajo"
+                            type="number"
                             name="legajo"
                             value={values.legajo}
                             onChange={handleChange}
+                            onKeyDown={handleKeyDown}
                             error={!!errors.legajo}
                             helperText={errors.legajo}
                             fullWidth
+                            inputRef={legajoRef} 
                         />
                     </Grid>
                     <Grid item xs={12}  sm={4} >
                         <TextField
+                         
                             label="Folios"
                             name="folios"
                             value={values.folios}
                             onChange={handleChange}
+                            onKeyDown={handleKeyDown}
                             error={!!errors.folios}
                             helperText={errors.folios}
                             fullWidth
@@ -329,15 +364,16 @@ const ExpedientesCarga = () => {
                             <Select
                                 name="motivo"
                                 value={values.motivo}
-                                onChange={handleChange}
+                                onChange={handleMotivosChange}
                                 error={!!errors.motivo}
-
+                                inputRef={motivoRef} 
                             >
                                 {motivos.map((motivo, index) => (
                                     <MenuItem key={motivo.motivo} value={motivo.motivo}>
                                         {motivo.motivo}
                                     </MenuItem>
                                 ))}
+                                  <MenuItem value="Otro">Otro</MenuItem>
                             </Select>
                         </FormControl>
                         {errors.motivo && <p style={{ color: 'red' }}>{errors.motivo}</p>}
@@ -349,6 +385,7 @@ const ExpedientesCarga = () => {
                                 name="nuevoMotivo"
                                 value={values.nuevoMotivo}
                                 onChange={handleChange}
+                                onKeyDown={handleKeyDown}
                                 error={!!errors.nuevoMotivo}
                                 helperText={errors.nuevoMotivo}
                                 fullWidth
@@ -362,6 +399,7 @@ const ExpedientesCarga = () => {
                             name="comentario"
                             value={values.comentario}
                             onChange={handleChange}
+                            onKeyDown={handleKeyDown}
                             error={!!errors.comentario}
                             helperText={errors.comentario}
                             fullWidth
@@ -380,6 +418,7 @@ const ExpedientesCarga = () => {
                                 value={values.categoria}
                                 onChange={handleChange}
                                 error={!!errors.categoria}
+                                inputRef={categoriaRef} 
                             >
                                 {categorias.map((categoria, index) => (
                                     <MenuItem key={index} value={categoria}>
@@ -424,6 +463,7 @@ const ExpedientesCarga = () => {
                                     name="nuevoOrganismo"
                                     value={values.nuevoOrganismo}
                                     onChange={handleOrganismoNuevo}
+                                    onKeyDown={handleKeyDown}
                                     error={!!errors.nuevoOrganismo}
                                     helperText={errors.nuevoOrganismo}
                                     fullWidth
@@ -465,6 +505,7 @@ const ExpedientesCarga = () => {
                                     name="nuevaInstitucion"
                                     value={values.nuevaInstitucion}
                                     onChange={handleInstitucionNueva}
+                                    onKeyDown={handleKeyDown}
                                     error={!!errors.nuevaInstitucion}
                                     helperText={errors.nuevaInstitucion}
                                     fullWidth
@@ -505,6 +546,7 @@ const ExpedientesCarga = () => {
                                     name="nuevoDem"
                                     value={values.nuevoDem}
                                     onChange={handleDemNuevo}
+                                    onKeyDown={handleKeyDown}
                                     error={!!errors.nuevoDem}
                                     helperText={errors.nuevoDem}
                                     fullWidth
@@ -519,7 +561,7 @@ const ExpedientesCarga = () => {
                             name="solicitante"
                             value={values.solicitante}
                              onChange={handleChange} 
-                       
+                             onKeyDown={handleKeyDown}
                             error={!!errors.solicitante}
                             helperText={errors.solicitante}
                             fullWidth
@@ -538,6 +580,7 @@ const ExpedientesCarga = () => {
                             name="apellido"
                             value={values.apellido}
                              onChange={handleChange} 
+                             onKeyDown={handleKeyDown}
                             error={!!errors.apellido}
                             helperText={errors.apellido}
                             fullWidth
@@ -551,6 +594,7 @@ const ExpedientesCarga = () => {
                               name="nombres"
                               value={values.nombres}
                                onChange={handleChange} 
+                               onKeyDown={handleKeyDown}
                               error={!!errors.nombres}
                               helperText={errors.nombres}
                               fullWidth
@@ -563,6 +607,7 @@ const ExpedientesCarga = () => {
                             name="dni"
                             value={values.dni}
                              onChange={handleChange} 
+                             onKeyDown={handleKeyDown}
                             error={!!errors.dni}
                             helperText={errors.dni}
                             fullWidth
@@ -576,6 +621,7 @@ const ExpedientesCarga = () => {
                             name="celular"
                             value={values.celular}
                              onChange={handleChange} 
+                             onKeyDown={handleKeyDown}
                             error={!!errors.celular}
                             helperText={errors.celular}
                             fullWidth
@@ -589,6 +635,7 @@ const ExpedientesCarga = () => {
                                   name="domicilio"
                                   value={values.domicilio}
                                    onChange={handleChange} 
+                                   onKeyDown={handleKeyDown}
                                   error={!!errors.domicilio}
                                   helperText={errors.domicilio}
                                   fullWidth
