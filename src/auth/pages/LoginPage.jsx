@@ -8,6 +8,10 @@ import LayoutAutentica from '../layout/LayoutAutentica';
  
 
 const LoginPage = () => {
+
+
+
+    
   return (
       <LayoutAutentica title='Login'>
          <form>
