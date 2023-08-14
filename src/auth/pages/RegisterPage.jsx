@@ -4,52 +4,65 @@ import { Button, Grid, Link, TextField, Typography } from '@mui/material';
 import LayoutAutentica from '../layout/LayoutAutentica';
 import useFormu from '../../hooks/useFormu';
 import { Global } from '../../helpers/Global.jsx'
-/* 
-const url = Global.url; */
+import { useState } from 'react';
  
+
+
 const formValidations ={
     correo:[(value)=>value.includes('@'), 'el correo debe de tener una @'],
     password:[(value)=>value.length>=6,'El password debe de tener mas de 6 letras'],
     nombre:[(value)=>value.length>=1,'El nombre es obligatorio']
 }
+
+/* comienza el componente------------------------------------------- */
 const RegisterPage = () => {
+
+const url = Global.url;  
+const [formSubmitted,setFormSubmitted]=useState(false);
 
     let formData = {
         nombre: "",
         correo: "",
         password: "",
-        rol: "INVITADO",
-        estado: true,
-        google: false
+        
     }
-    const { formState, onInputChange,isFormValid  } = useFormu(formData,formValidations);
-   
+    /* traigo del hookFormu-------------------------------------------------- */
+    const { formState,setFormState, onInputChange,isFormValid ,nombreValid,correoValid,passwordValid,onResetForm } = useFormu(formData,formValidations);
+     
+
+ /* graba SUBMIT-------------------------------------------------- */
     const saveUser = async (e) => {
         e.preventDefault();
+        setFormSubmitted(true);
         let newUser = formState;
-      
-      
-      /*   const request = await fetch(`${url}/usuarios`, {
+        newUser.rol="INVITADO";
+        
+        setFormSubmitted(true);
+
+        if ( !isFormValid ) return;
+
+        const request = await fetch(`${url}/usuarios`, {
             method: "POST",
             body: JSON.stringify(newUser),
             headers: {
                 "Content-Type": "application/json"
             }
-        });
+        }) ;
 
- 
-        console.log("data", data);
+        const data=await request.json();
+    
         if (data.errors) {
             data.errors.map(error => alert(error.msg));
             return
         }
-        alert(`${data.usuarioGuardado.nombre} GUARDADO CORRECTAMENTE (pida el rol para poder operar el sistema)`);
-
-        */
+        /* si pudo grabar  muestro el mensaje que me trae y limpio estado formulario */
+        alert(data.msg)
+        setFormState(formData)
+        setFormSubmitted(false)
     } 
     return (
         <LayoutAutentica title="Crear cuenta">
-         <p>  {isFormValid ? "Válido": "Incorrecto"}</p>  
+       {/*   <p>  {isFormValid ? "Válido": "Incorrecto"}</p>   */}
             <form onSubmit={saveUser}>
                 <Grid container>
                 
@@ -60,6 +73,9 @@ const RegisterPage = () => {
                             type="text"
                             placeholder='Nombre completo'
                             onChange={onInputChange}
+                            error={!!nombreValid && formSubmitted}
+                            helperText={nombreValid}
+                            value={formState.nombre}
                             fullWidth
                         />
                     </Grid>
@@ -71,6 +87,9 @@ const RegisterPage = () => {
                             type="email"
                             placeholder='correo@google.com'
                             onChange={onInputChange}
+                            error={!!correoValid && formSubmitted}
+                            helperText={correoValid}
+                            value={formState.correo}
                             fullWidth
                         />
                     </Grid>
@@ -82,6 +101,9 @@ const RegisterPage = () => {
                             type="password"
                             placeholder='Contraseña'
                             onChange={onInputChange}
+                            error={!!passwordValid && formSubmitted}
+                            helperText={passwordValid}
+                            value={formState.password}
                             fullWidth
                         />
                     </Grid>
