@@ -7,7 +7,7 @@ const useFetchCombos = (url) => {
   const [organismos, setOrganismos] = useState([]);
   const [dems, setDems] = useState([]);
 
-  // Funciones para obtener los datos
+  // Funciones para obtener los datos-----------------------------------
   const fetchMotivos = async () => {
     const resMotivos = await axios.get(`${url}/motivos`);
     setMotivos(resMotivos.data.motivos);
@@ -27,8 +27,9 @@ const useFetchCombos = (url) => {
     const resDems = await axios.get(`${url}/dems`);
     setDems(resDems.data.dems);
   };
+   const estados_exp=["Estudio","Aprobado","Notificado Ejecut.","Finalizado","Archivado"];  /* lo hago en un vector directamente pues no van a cambiar.... */
 
-  // Funciones para agregar nuevos elementos
+  // Funciones para agregar nuevos elementos-----------------------------------
   const addMotivo = async (motivo) => {
     await axios.post(`${url}/motivos`, { motivo });
     fetchMotivos(); // Refrescar la lista
@@ -49,6 +50,7 @@ const useFetchCombos = (url) => {
     fetchDem(); // Refrescar la lista
   };
 
+
   // Efecto para obtener los datos cuando el componente se monta
   useEffect(() => {
     fetchMotivos();
@@ -62,6 +64,7 @@ const useFetchCombos = (url) => {
     institucionesp,
     organismos,
     dems,
+    estados_exp,
     addMotivo,
     addInstitucion,
     addOrganismo,

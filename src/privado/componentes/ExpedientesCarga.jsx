@@ -1,5 +1,5 @@
 /* ESTE ES EL FORMULARIO QUE VA PARA LA CARGA DE EXPEDIENTES */
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 
 import CelularField from "./CelularField.jsx";
 import DniField from "./DniField.jsx";
@@ -13,27 +13,34 @@ import {
     InputLabel,
     Container,
     Paper,
-    Typography
 } from '@mui/material';
 import { Global } from '../../helpers/Global.jsx';
 import { extractDigits } from "../../helpers/funcionesVarias.jsx";
 import axios from 'axios';
- 
+import CustomDialog from '../componentes/CustomDialog.jsx';
 /*  TRAIGO LA FUNCION-----------------------------------------*/
 import useFetchCombos from '../../hooks/useFetchCombos.jsx';
+import useAuth from "../../hooks/useAuth.jsx";
 
 
-
+/* usuario logueado */
 
 const ExpedientesCarga = () => {
 
     let url = Global.url;
-
+    const { auth } = useAuth();  // usuario logueado
+    const [ saved, setSaved ] = useState(false);
+    const [alert, setAlert] = useState({
+        open: false,
+        severity: 'success',
+        message: '',
+    });
     const {
         motivos,
         institucionesp,
         organismos,
         dems,
+        estados_exp,
         addMotivo,
         addInstitucion,
         addOrganismo,
@@ -45,45 +52,17 @@ const ExpedientesCarga = () => {
     const categoriaRef = useRef(null);
     /* const emailRef =useRef(null); */
     const celularRef = useRef(null);
-    const dniRef=useRef(null);
+    const dniRef = useRef(null);
+    const comentarioRef = useRef(null);
+    const apellidoRef=useRef(null);
+    const nombresRef=useRef(null);
+     
 
-    /*  const [motivos, setMotivos] = useState([]);
-     const [institucionesp, setInstitucionesp] = useState([]);
-     const [organismos, setOrganismos] = useState([]);
-     const [dems, setDems] = useState([]);
-  */
-    // estados para agregar un nuevo elemento a las tablas que alimentan a los combos de organismos,instituciones y dem
-    /*  const [nuevoOrganismo, setNuevoOrganismo] = useState("")
-     const [nuevaInstitucion, setNuevaInstitucion] = useState("");
-     const [nuevoDem, setNuevoDem] = useState("");   */
 
-    /* para la edicion, tendria que poner algo así: */
-    /*  const expedienteLimpio ={
-        legajo:2,
-fechaIngreso:"2023-08-10T00:00:00.000+00:00".substring(0,10),
-motivo:"Resolucion conflictos",
-comentario:"",
-categoria:"Particular",
-solicitante:"Lores  Fabian Aurelio",
-apellido:"Lores ",
-nombres:"Fabian Aurelio",
-celular:"",
-domicilio:"",
-dni:"11456788",
-folios:1,
-estado:true,
-usuario:"64c14460d96b8b9cdb37eef5",
-nuevoMotivo:"",
-nuevaInstitucion:"",
-nuevoOrganismo:"",
-nuevoDem:""
-
-     } */
-
-    /* tengo que capturar el usuario.......... */
     const expedienteLimpio = {
         legajo: "",
         folios: "",
+        estadoExp: estados_exp[0],
         motivo: "",
         nuevoMotivo: "",
         comentario: "",
@@ -98,12 +77,11 @@ nuevoDem:""
         solicitante: "",
         apellido: "",
         nombres: "",
-       
-dni:"13589025",
-celular:"5493426895666",
+        dni: "",
+        celular: "",
         domicilio: "",
         estado: "true",
-        usuario: "64c14460d96b8b9cdb37eef5"
+        usuario: auth.uid,
     }
 
     const [values, setValues] = useState(expedienteLimpio);
@@ -120,13 +98,11 @@ celular:"5493426895666",
         }
     };
 
-
     /*  cuando se van cargando los campos................ */
     const handleChange = (event) => {
         setValues({
             ...values,
             [event.target.name]: event.target.value,
-
         });
     }
     /*  cuando elije una institucion de la lista */
@@ -206,13 +182,16 @@ celular:"5493426895666",
         let solicitanteg = (values.solicitante.length == 0) ? (values.apellido + " " + values.nombres) : values.solicitante
 
         let motivog = (values.motivo == "Otro") ? values.nuevoMotivo : values.motivo;
-        
-        let dnig=extractDigits(values.dni); 
-        let celularg=extractDigits(values.celular); 
-        /* ojo, traer el usuario............................. */
+
+        let dnig = extractDigits(values.dni);
+        let celularg = extractDigits(values.celular);
+        let legajog = parseInt(values.legajo);
+        let foliosg = parseInt(values.folios);
+
         let expediente_guardar = {
-            legajo: values.legajo,
-            folios: values.folios,
+            legajo: legajog,
+            folios: foliosg,
+            estadoExp: estados_exp[0],
             motivo: motivog,
             comentario: values.comentario,
             fechaIngreso: values.fechaIngreso,
@@ -224,16 +203,43 @@ celular:"5493426895666",
             celular: celularg,
             domicilio: values.domicilio,
             estado: "true",
-            usuario: "64c14460d96b8b9cdb37eef5"
-
+            usuario: auth.uid
         }
 
         axios.post(`${url}/expedientes`, expediente_guardar)
             .then(response => {
-                console.log(response.data);
+                console.log("response del axios",response.data.success)
+                if (response.data.success) {
+                    setSaved(true);
+                    setAlert({
+                        open: true,
+                        severity: 'error',
+                        message: `El expediente nro legajo: ${response.data.expediente.legajo} ha sido guardado OK!`
+
+                    });
+                }
+                else {
+                    
+                    let errores = "";
+                    response.data.errors.errors.map(error => {
+                        errores = errores + " " + error.msg
+                    })
+                    setAlert({
+                        open: true,
+                        severity: 'error',
+                        message: errores
+
+                    }); 
+                }
             })
             .catch(error => {
-                console.log(error);
+                setAlert({
+                    open: true,
+                    severity: 'error',
+                    message: `ERROR! no se pudo guardar ${error}`
+
+                });
+                console.log(expediente_guardar)
             })
 
     }
@@ -261,11 +267,16 @@ celular:"5493426895666",
             categoriaRef.current.focus();
             return
         }
-   /*      if (!values.email || !/\S+@\S+\.\S+/.test(values.email)) {
-            setErrors((errors) => ({ ...errors, email: "Introduce un correo electrónico válido" }));
-            emailRef.current.focus();
-            return;
+      /*   if (!values.organismo) {
+            setErrors((errors) => ({ ...errors, categoriaRef: "El campo organismo es requerido" }));
+            organismoRef.current.focus();
+            return
         } */
+        /*      if (!values.email || !/\S+@\S+\.\S+/.test(values.email)) {
+                 setErrors((errors) => ({ ...errors, email: "Introduce un correo electrónico válido" }));
+                 emailRef.current.focus();
+                 return;
+             } */
 
         if (!values.dni || values.dni.length > 10) {
             setErrors((errors) => ({ ...errors, dni: "Introduce un DNI válido  " }));
@@ -273,13 +284,22 @@ celular:"5493426895666",
             return;
         }
         /*  if (!values.celular || !/^(\+54|0)(15)?\d{8}$/.test(values.celular)) { */
-     /*    if (!values.celular || isNaN(values.celular)) { */
-     if ( values.celular.length > 20) {
+        /*    if (!values.celular || isNaN(values.celular)) { */
+        if (values.celular.length > 20) {
             setErrors((errors) => ({ ...errors, celular: "Introduce un número de celular válido " }));
             celularRef.current.focus();
             return;
         }
-
+        if (!values.apellido) {
+            setErrors((errors) => ({ ...errors, apellido: "El campo Apellido es requerido" }));
+            apellidoRef.current.focus();
+            return
+        }
+        if (!values.nombres) {
+            setErrors((errors) => ({ ...errors, nombres: "El campo Apellido es requerido" }));
+            nombresRef.current.focus();
+            return
+        }
 
 
         /*=====================================================  */
@@ -293,7 +313,6 @@ celular:"5493426895666",
             }
 
 
-            console.log(values.categoria, "(categoria)")
             /* ..este switch eliga la coleccion a la cual le va a agregar una nuevo campo................................................ */
             switch (values.categoria) {
                 case 'D.E.M.':
@@ -320,21 +339,20 @@ celular:"5493426895666",
 
                     break;
                 default:
-                    console.log("no es ninguna categoria")
+                    console.log("no es ninguna categoria para ampliar")
                 /*  setValues({
                    ...values,
                    solicitante:values.apellido
                  }) */
             }
             guardarExpedienteEnBD();
-            console.log('Expediente guardado:');
-            handleLimpio();
-            // Limpia el formulario después de guardar el expediente.
+
+            saved ? handleLimpio() : console.log("corregir");
 
 
         }
         else {
-            alert("corrija!")
+            console.log("corrija!")
         }
 
     };
@@ -343,6 +361,12 @@ celular:"5493426895666",
     return (
         <Container component={Paper} maxWidth="lg" sx={{ padding: 2 }}>
             <form onSubmit={handleSubmit}>
+                <CustomDialog
+                    open={alert.open}
+                    onClose={() => setAlert({ ...alert, open: false })}
+                    severity={alert.severity}
+                    message={alert.message}
+                    title="Aviso de ingreso" />
                 <h3>CARGA DE EXPEDIENTES</h3>
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={4}>
@@ -422,6 +446,7 @@ celular:"5493426895666",
                                 onKeyDown={handleKeyDown}
                                 error={!!errors.nuevoMotivo}
                                 helperText={errors.nuevoMotivo}
+                             
                                 fullWidth
                             />
                         </Grid>
@@ -436,6 +461,7 @@ celular:"5493426895666",
                             onKeyDown={handleKeyDown}
                             error={!!errors.comentario}
                             helperText={errors.comentario}
+                            inputRef={comentarioRef}
                             fullWidth
                             multiline
                         />
@@ -453,6 +479,7 @@ celular:"5493426895666",
                                 onChange={handleChange}
                                 error={!!errors.categoria}
                                 inputRef={categoriaRef}
+                                helperText={errors.categoria}
                             >
                                 {categorias.map((categoria, index) => (
                                     <MenuItem key={index} value={categoria}>
@@ -475,7 +502,9 @@ celular:"5493426895666",
                                     name="organismo"
                                     value={values.organismo}
                                     onChange={handleOrganismoChange}
-                                    error={!!errors.organismo}
+                                   /*  error={!!errors.organismo}
+                                    helperText={errors.organismo}
+                                     */
                                 >
                                     {organismos.map((organizacion, index) => (
                                         <MenuItem key={index} value={organizacion.organizacion}>
@@ -498,8 +527,8 @@ celular:"5493426895666",
                                     value={values.nuevoOrganismo}
                                     onChange={handleOrganismoNuevo}
                                     onKeyDown={handleKeyDown}
-                                    error={!!errors.nuevoOrganismo}
-                                    helperText={errors.nuevoOrganismo}
+                                   /*  error={!!errors.nuevoOrganismo}
+                                    helperText={errors.nuevoOrganismo} */
                                     fullWidth
                                 />
                             </Grid>
@@ -516,7 +545,7 @@ celular:"5493426895666",
                                     name="institucion"
                                     value={values.institucion}
                                     onChange={handleInstitucionChange}
-                                    error={!!errors.institucion}
+                                /*     error={!!errors.institucion} */
                                 >
                                     {institucionesp.map((institucion, index) => (
                                         <MenuItem key={index} value={institucion}>
@@ -540,8 +569,7 @@ celular:"5493426895666",
                                     value={values.nuevaInstitucion}
                                     onChange={handleInstitucionNueva}
                                     onKeyDown={handleKeyDown}
-                                    error={!!errors.nuevaInstitucion}
-                                    helperText={errors.nuevaInstitucion}
+                                  
                                     fullWidth
                                 />
                             </Grid>
@@ -559,7 +587,7 @@ celular:"5493426895666",
                                     name="dem"
                                     value={values.dem}
                                     onChange={handleDemChange}
-                                    error={!!errors.dem}
+                                    /* error={!!errors.dem} */
                                 >
                                     {dems.map((dem, index) => (
                                         <MenuItem key={index} value={dem.dem}>
@@ -581,8 +609,8 @@ celular:"5493426895666",
                                     value={values.nuevoDem}
                                     onChange={handleDemNuevo}
                                     onKeyDown={handleKeyDown}
-                                    error={!!errors.nuevoDem}
-                                    helperText={errors.nuevoDem}
+                                   /*  error={!!errors.nuevoDem}
+                                    helperText={errors.nuevoDem} */
                                     fullWidth
                                 />
                             </Grid>
@@ -596,8 +624,8 @@ celular:"5493426895666",
                             value={values.solicitante}
                             onChange={handleChange}
                             onKeyDown={handleKeyDown}
-                            error={!!errors.solicitante}
-                            helperText={errors.solicitante}
+                           /*  error={!!errors.solicitante}
+                            helperText={errors.solicitante} */
                             fullWidth
                         />
                     </Grid>
@@ -617,6 +645,7 @@ celular:"5493426895666",
                             onKeyDown={handleKeyDown}
                             error={!!errors.apellido}
                             helperText={errors.apellido}
+                            inputRef={apellidoRef}
                             fullWidth
                         />
                     </Grid>
@@ -631,12 +660,13 @@ celular:"5493426895666",
                             onKeyDown={handleKeyDown}
                             error={!!errors.nombres}
                             helperText={errors.nombres}
+                            inputRef={nombresRef}
                             fullWidth
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
- 
-                        <DniField
+
+                        <TextField
                             label="DNI"
                             name="dni"
                             value={values.dni}
@@ -648,44 +678,44 @@ celular:"5493426895666",
                             inputRef={dniRef}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={6}> 
-                    <CelularField
-                        name="celular"
-                        label="Celular"
-                        value={values.celular}
-                        onChange={handleChange}
-                        onKeyDown={handleKeyDown}
-                        error={Boolean(errors.celular)}
-                        helperText={!!errors.celular}
-                        fullWidth
-                        inputRef={celularRef}
-                    />
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            name="celular"
+                            label="Celular"
+                            value={values.celular}
+                            onChange={handleChange}
+                            onKeyDown={handleKeyDown}
+                            error={Boolean(errors.celular)}
+                            helperText={!!errors.celular}
+                            fullWidth
+                            inputRef={celularRef}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+
+
+                        <TextField
+                            label="domicilio"
+                            name="domicilio"
+                            value={values.domicilio}
+                            onChange={handleChange}
+                            onKeyDown={handleKeyDown}
+                        /*     error={!!errors.domicilio}
+                            helperText={errors.domicilio} */
+                            fullWidth
+                        />
+                    </Grid>
+
+                    {/* ... falta poner el usuario que lo lee del req ... */}
+
+                    <Grid item xs={12} marginTop="20px" marginRight='20px' alignContent="right">
+                        <Button size="small" variant="contained" color="primary" type='submit' style={{ marginRight: 20 }}>Guardar</Button>
+                        <Button size="small" variant="contained" color="secondary" onClick={handleLimpio}>Cancelar</Button>
+
+                    </Grid>
                 </Grid>
-                <Grid item xs={12}>
+            </form>
 
-
-                    <TextField
-                        label="domicilio"
-                        name="domicilio"
-                        value={values.domicilio}
-                        onChange={handleChange}
-                        onKeyDown={handleKeyDown}
-                        error={!!errors.domicilio}
-                        helperText={errors.domicilio}
-                        fullWidth
-                    />
-                </Grid>
-
-                {/* ... falta poner el usuario que lo lee del req ... */}
-          
-            <Grid item xs={12} marginTop="20px" marginRight='20px' alignContent="right">
-                <Button size="small" variant="contained" color="primary" type='submit' style={{ marginRight: 20 }}>Guardar</Button>
-                <Button size="small" variant="contained" color="secondary" onClick={handleLimpio}>Cancelar</Button>
-
-            </Grid>
-</Grid>
-        </form>
-        
         </Container >
     );
 };

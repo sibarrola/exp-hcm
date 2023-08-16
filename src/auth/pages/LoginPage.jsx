@@ -58,12 +58,12 @@ const LoginPage = () => {
                console.log("data",data)       
                 if (data.succes) {
 
-                    console.log("data.succes",data.succes);
-                    console.log("data.token",data.token);
+                 /*    console.log("data.succes",data.succes);
+                    console.log("data.token",data.token); */
                                     
                      localStorage.setItem("token", data.token);
 
-                     console.log("JSON.stringify(data.usuario)",JSON.stringify(data.usuario));
+                 /*     console.log("JSON.stringify(data.usuario)",JSON.stringify(data.usuario)); */
                      localStorage.setItem("usuario", JSON.stringify(data.usuario));
                   
                     setIngreso(true);  

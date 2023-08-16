@@ -13,10 +13,11 @@ import TransferWithinAStationIcon from '@mui/icons-material/TransferWithinAStati
 import { NavLink, Navigate, Outlet } from 'react-router-dom';
 import { useState } from 'react';
 import { colortema } from '../../theme';
+import { Edit } from '@mui/icons-material';
+ 
+import { AutProvider } from '../../context/AutProvider';
 
  
- 
-
 
 const navVectLinks = [
     {
@@ -52,11 +53,12 @@ const navVectGestion1 = [
         title: "Ingresos", path: "/privado/ingresos", icon: <PlaylistAddIcon />
     },
     {
-        title: "Pases", path: "/contacto", icon: <RunCircleIcon />
+        title: "Lis./Edición", path: "/contacto", icon: <Edit />
     },
     {
-        title: "Organismos", path: "/contacto", icon: <TransferWithinAStationIcon />
-    }
+        title: "Pases", path: "/contacto", icon: <RunCircleIcon />
+    },
+   
 
 ]
 const navVectGestion3 = [
@@ -78,7 +80,7 @@ const navVectGestion3 = [
     const [open, setOpen] = useState(true)
   
     return (
-           
+         /*   <AutProvider> */
         /*EL BOX ES COMO UN DIV  */
         <Box sx={{ display: 'flex' , backgroundColor:"#c8e4fb", height:'950px'}}>
 
@@ -95,7 +97,7 @@ const navVectGestion3 = [
 
             </Box>
         </Box>
-    
+     /*    </AutProvider> */
     )
 }
 export default LayoutPrivado

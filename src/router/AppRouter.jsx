@@ -8,15 +8,15 @@ import PaginaPublica from '../publico/pages/PaginaPublica'
 import PaginaConsultaCiudadano from '../publico/pages/PaginaConsultaCiudadano'
 import CargaExpedientes from '../privado/pages/CargaExpedientes'
 import Tablas from '../privado/pages/Tablas'
-import useAuth from '../hooks/useAuth'
+
 
 
 
  
  
 const AppRouter = () => {
-    const {auth}=useAuth(); 
-    console.log("esto es auth",auth)  
+
+   
     return (
       
   
