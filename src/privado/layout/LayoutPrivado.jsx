@@ -10,32 +10,39 @@ import ListAltIcon from '@mui/icons-material/ListAlt';
 import CorporateFareIcon from '@mui/icons-material/CorporateFare';
 import RunCircleIcon from '@mui/icons-material/RunCircle';
 import TransferWithinAStationIcon from '@mui/icons-material/TransferWithinAStation';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Navigate, Outlet } from 'react-router-dom';
 import { useState } from 'react';
 import { colortema } from '../../theme';
+
+ 
+ 
+
+
 const navVectLinks = [
     {
         title: "Inicio", path: "/privado/menu", icon: <HomeIcon />
     },
     {
-        title: "Pag Publica", path: "/", icon: <Diversity3Icon />
-    },
+        title: "Pag Pública", path: "/", icon: <Diversity3Icon />
+    }
+    
  ];
 
 const navVectGestion1 = [
 
     {
-        title: "Motivos", path: "/privado/tablas/1", icon: <ListAltIcon />
+       /*  title: "Motivos", path: "/privado/tablas/1", icon: <ListAltIcon /> */
+       title: "Motivos", path: "/privado/tablas/1"  
     },
  
     {
-        title: "Instituciones", path: "/privado/tablas/2", icon: <ListAltIcon />
+        title: "Instituciones", path: "/privado/tablas/2" 
     },
     {
-        title: "Organismos", path: "/privado/tablas/3", icon: <PersonIcon />
+        title: "Organismos", path: "/privado/tablas/3" 
     },
     {
-        title: "DEM", path: "/privado/tablas/4", icon: <CorporateFareIcon />
+        title: "DEM", path: "/privado/tablas/4" 
     }
   
   ]
@@ -69,7 +76,7 @@ const navVectGestion3 = [
   const LayoutPrivado = ({ children }) => {
 
     const [open, setOpen] = useState(true)
-
+  
     return (
            
         /*EL BOX ES COMO UN DIV  */
@@ -81,6 +88,7 @@ const navVectGestion3 = [
                 component='main'
                 sx={{ flexGrow: 1, p: 2 ,background:colortema.fondo}}
             >
+     
                 <Toolbar />
                 {/* aqui aparecen los hijos */}
                 {children}

@@ -2,6 +2,7 @@
  import NothingSelectedView from "../views/NothingSelectedView";  
 
 const PaginaPublica = () => {
+    
   return (
     <LayoutPublico>
       <NothingSelectedView/>  

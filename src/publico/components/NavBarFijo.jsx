@@ -6,6 +6,7 @@ import {  LogoutOutlined, MenuOutlined } from '@mui/icons-material';
 import { PropTypes } from 'prop-types';
 import logo1 from '../../assets/logo-160px.fw.png' 
  
+ 
 
 
 export const NavBarFijo = ({navVectLinks, navVectCiudadanos,NavLink}) => {
@@ -72,11 +73,13 @@ export const NavBarFijo = ({navVectLinks, navVectCiudadanos,NavLink}) => {
                     }
 
                 </Box>
-                    <IconButton
+                <IconButton
+                      component={NavLink}
                         color="error"
                         size="large"
-                        onClick={() => setOpen(true)}
-                        sx={{ mr:2}}>
+                        to={"/auth/logout"}
+                        onClick={() => { setOpen(true) }}
+                        sx={{ mr: 2 }}>
                         <LogoutOutlined />
                     </IconButton>
         

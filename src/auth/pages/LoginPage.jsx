@@ -1,26 +1,28 @@
 /* ver como hacerlo */
 
-import { Link as RouterLink } from 'react-router-dom';  /* le pongo un alias al link para que nos entre en conflicto con el Link de material */
+import { Link as RouterLink, useHref } from 'react-router-dom';  /* le pongo un alias al link para que nos entre en conflicto con el Link de material */
 import { Box,  Button, Grid, Link, TextField, Typography } from '@mui/material';
 import { Google } from '@mui/icons-material';
 import LayoutAutentica from '../layout/LayoutAutentica';
 
 import { Global } from '../../helpers/Global.jsx'
 import { useState } from 'react';
-import CustomAlert from '../../privado/componentes/CustomAlert';
+/* import CustomAlert from '../../privado/componentes/CustomAlert'; */
 import CustomDialog from '../../privado/componentes/CustomDialog';
-
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
-
+    const navigate = useNavigate();
+   
     const url = Global.url;
     let formData = {
         correo: "",
         password: "",
 
     };
-
+ 
     const [formState, setFormState] = useState(formData);
+    const [ingreso,setIngreso]=useState(false);
 
     const onInputChange = ({ target }) => {
         const { name, value } = target;
@@ -53,21 +55,36 @@ const LoginPage = () => {
         })
             .then((res) => res.json())
             .then((data) => {
-                console.log("data",data);
+               console.log("data",data)       
                 if (data.succes) {
+
+                    console.log("data.succes",data.succes);
+                    console.log("data.token",data.token);
+                                    
+                     localStorage.setItem("token", data.token);
+
+                     console.log("JSON.stringify(data.usuario)",JSON.stringify(data.usuario));
+                     localStorage.setItem("usuario", JSON.stringify(data.usuario));
+                  
+                    setIngreso(true);  
+                   
                     setAlert({
                         open: true,
-                        severity: 'success',
-                        message: `${data.usuario.nombre}: Inicio de sesión exitoso!`
+                        severity: 'error',
+                        message: `${data.msg}`
                         
-                    });
-                    setFormState(formData)
+                    });  
+                    setFormState(formData);  
+                    navigate('/privado/menu');   
+                      
+ 
+
                 } else {
                                   
                     setAlert({
                         open: true,
                         severity: 'error',
-                        message: data.msg
+                        message: `${data.errors[0].msg}`
                         
                     });
                 }
@@ -76,7 +93,7 @@ const LoginPage = () => {
                 setAlert({
                     open: true,
                     severity: 'error',
-                    message: `Ocurrió un error en el inicio de sesión${data.errors[0].msg}`
+                    message: `Ocurrió un error en el inicio de sesión  `
                    
                 });
             });
@@ -141,15 +158,19 @@ const LoginPage = () => {
                         </Button>
                     </Grid>
                 </Grid>
+
+           
                 <Grid container direction='row' justifyContent='space-between'>
+                
                     <Link
                         component={RouterLink}
                         color='inherit'
                         to="/privado/menu"
-                        sx={{ fontSize: '12px', color: 'blue' }}>
+                        sx={{ fontSize: '18px', color: 'blue' }}>
                         Pagina Privada
 
-                    </Link>
+                    </Link> 
+                    
                     <Link
                         component={RouterLink}
                         color='inherit'
@@ -173,3 +194,6 @@ const LoginPage = () => {
 }
 
 export default LoginPage;
+
+
+

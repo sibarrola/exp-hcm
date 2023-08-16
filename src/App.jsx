@@ -3,14 +3,20 @@
 
 import { MailOutline} from '@mui/icons-material' */
 
+ 
 import AppRouter from "./router/AppRouter"
 import { AppTheme } from "./theme"
-
+import { AutProvider } from './context/AutProvider.jsx';
  
  const App = () => {
    return (
      <AppTheme>
-         <AppRouter/>
+        <AutProvider>
+        <AppRouter/>
+        </AutProvider>
+       
+       
+        
     </AppTheme>
    )
  }
