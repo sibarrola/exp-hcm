@@ -27,7 +27,11 @@ const useFetchCombos = (url) => {
     const resDems = await axios.get(`${url}/dems`);
     setDems(resDems.data.dems);
   };
+
+  // simplemente vectores, porque no cambiarían ---------------------------------
    const estados_exp=["Estudio","Aprobado","Notificado Ejecut.","Finalizado","Archivado"];  /* lo hago en un vector directamente pues no van a cambiar.... */
+
+   const categorias = ['Particular', 'D.E.M.', 'Concejal', 'Organismo público', 'Instituciones privadas', 'Otro'];
 
   // Funciones para agregar nuevos elementos-----------------------------------
   const addMotivo = async (motivo) => {
@@ -65,6 +69,7 @@ const useFetchCombos = (url) => {
     organismos,
     dems,
     estados_exp,
+    categorias,
     addMotivo,
     addInstitucion,
     addOrganismo,

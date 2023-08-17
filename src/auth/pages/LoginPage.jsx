@@ -56,7 +56,7 @@ const LoginPage = () => {
             .then((res) => res.json())
             .then((data) => {
                console.log("data",data)       
-                if (data.succes) {
+                if (data.success) {
 
                  /*    console.log("data.succes",data.succes);
                     console.log("data.token",data.token); */
@@ -76,15 +76,15 @@ const LoginPage = () => {
                     });  
                     setFormState(formData);  
                     navigate('/privado/menu');   
-                      
+                
  
-
                 } else {
+                    console.log(data.success,"no es true");
                                   
                     setAlert({
                         open: true,
                         severity: 'error',
-                        message: `${data.errors[0].msg}`
+                        message: `${data.errors.errors[0].msg}`
                         
                     });
                 }

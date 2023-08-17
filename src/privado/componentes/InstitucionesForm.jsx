@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Container, Paper, Box, Typography } from '@mui/material';
 import { Global } from '../../helpers/Global.jsx';
-
+import logo1 from '../../assets/logo-160px.fw.png'
 const url = Global.url;
 const InstitucionesForm = () => {
 
@@ -83,9 +83,11 @@ const InstitucionesForm = () => {
         <>
 
             <Container component={Paper} maxWidth="sm" sx={{ padding: 2 }}>
-                <Typography variant='h5'>TABLA DE INSTITUCIONES </Typography>
+                <Typography variant='h5'>TABLA DE INSTITUCIONES 
+                </Typography>
                 <hr />
                 <Box sx={{ m: '30px', textAlign: 'right' }}>
+          
                     <Button variant="contained" color="primary" onClick={() => handleDialogOpen()}>
                         Nuevo
                     </Button>
@@ -94,7 +96,7 @@ const InstitucionesForm = () => {
                     <Table>
                         <TableHead
                             sx={{
-                                backgroundColor: '#cfd8dc', // Cambia el color de fondo
+                                backgroundColor: '#d9d3a5', // Cambia el color de fondo
                                 '& .MuiTableCell-root': {   // Aplica el estilo a todas las celdas de la cabecera
                                     //   color: 'white',  // Cambia el color del texto
                                     fontWeight: '900'
@@ -117,7 +119,7 @@ const InstitucionesForm = () => {
                                         </Button>
                                     </TableCell>
                                     <TableCell>
-                                        <Button size="small" variant="contained" color="error" onClick={() => deleteInstitucion(institucion._id)}>
+                                        <Button size="small" variant="contained" color="secondary" onClick={() => deleteInstitucion(institucion._id)}>
                                             Borrar
                                         </Button>
                                     </TableCell>

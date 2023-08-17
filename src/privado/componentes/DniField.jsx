@@ -16,5 +16,3 @@ const DniField= (props)=> {
     }
   
   export default DniField
-
-  

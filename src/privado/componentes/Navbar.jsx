@@ -33,7 +33,7 @@ export const NavBar = ({ navVectLinks, navVectGestion1, navVectGestion2, navVect
                         <MenuOutlined />
                     </IconButton>
                     <Typography variant='h6' sx={{ flexGrow: 1, ml: 16 }} >GESTION DEL SISTEMA DE EXPEDIENTES </Typography>
-                    <Typography variant='body1' sx={{ mr: 10, fontStyle: 'italic', color: 'red' }} > usuario: {auth.nombre} </Typography>
+                    <Typography variant='body1' sx={{ mr: 10, fontStyle: 'italic', color:'#ffea00',fontSize:'12px'  }} > usuario: {auth.nombre} </Typography>
                     {/*  <Button color="inherit">Inicio</Button>
                     <Button color="inherit">Login</Button>
                     <Button color="inherit">Registro</Button> */}

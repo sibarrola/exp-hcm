@@ -23,7 +23,7 @@ const AppRouter = () => {
         <Routes>
     {/* Privada................................................ */}
           
-{/* a esto lo armé yo así... y me funcionó . En las rutas privados, si no encuentro el auth.id entonces va al Login*/}
+ 
             <Route path='/privado/menu' element={ <PaginaPrivada /> }  />
             <Route path="/privado/tablas/:nro" element={ <Tablas />} />
             <Route path='/privado/ingresos'element={ <CargaExpedientes /> } />

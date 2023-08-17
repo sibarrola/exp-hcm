@@ -1,8 +1,7 @@
 /* ESTE ES EL FORMULARIO QUE VA PARA LA CARGA DE EXPEDIENTES */
-import React, { useState, useRef } from "react";
+import { useState, useRef } from "react";
 
-import CelularField from "./CelularField.jsx";
-import DniField from "./DniField.jsx";
+ 
 import {
     Select,
     MenuItem,
@@ -21,6 +20,8 @@ import CustomDialog from '../componentes/CustomDialog.jsx';
 /*  TRAIGO LA FUNCION-----------------------------------------*/
 import useFetchCombos from '../../hooks/useFetchCombos.jsx';
 import useAuth from "../../hooks/useAuth.jsx";
+import CelularField from "./CelularField.jsx";
+import DniField from "./DniField.jsx";
 
 
 /* usuario logueado */
@@ -29,7 +30,7 @@ const ExpedientesCarga = () => {
 
     let url = Global.url;
     const { auth } = useAuth();  // usuario logueado
-    const [ saved, setSaved ] = useState(false);
+    const [ guardado, setGuardado ] = useState(false);
     const [alert, setAlert] = useState({
         open: false,
         severity: 'success',
@@ -41,6 +42,7 @@ const ExpedientesCarga = () => {
         organismos,
         dems,
         estados_exp,
+        categorias,
         addMotivo,
         addInstitucion,
         addOrganismo,
@@ -48,14 +50,13 @@ const ExpedientesCarga = () => {
     } = useFetchCombos(url);
 
     const legajoRef = useRef(null);
-    const motivoRef = useRef(null);
-    const categoriaRef = useRef(null);
-    /* const emailRef =useRef(null); */
-    const celularRef = useRef(null);
-    const dniRef = useRef(null);
-    const comentarioRef = useRef(null);
-    const apellidoRef=useRef(null);
-    const nombresRef=useRef(null);
+   /*  const motivoRef = useRef(null);
+    const categoriaRef = useRef(null); */
+    /*   const celularRef = useRef(null);
+    const dniRef = useRef(null); */
+ /*    const comentarioRef = useRef(null); */
+      const apellidoRef=useRef(null);
+    const nombresRef=useRef(null);  
      
 
 
@@ -87,8 +88,8 @@ const ExpedientesCarga = () => {
     const [values, setValues] = useState(expedienteLimpio);
     const [errors, setErrors] = useState({});
 
-    /* C A T E G O R I A S -------------------------------------------------------O */
-    const categorias = ['Particular', 'D.E.M.', 'Concejal', 'Organismo público', 'Instituciones privadas', 'Otro'];
+ 
+    
 
 
 
@@ -210,7 +211,8 @@ const ExpedientesCarga = () => {
             .then(response => {
                 console.log("response del axios",response.data.success)
                 if (response.data.success) {
-                    setSaved(true);
+                    setGuardado(true);
+                    handleLimpio();
                     setAlert({
                         open: true,
                         severity: 'error',
@@ -219,7 +221,7 @@ const ExpedientesCarga = () => {
                     });
                 }
                 else {
-                    
+                    console.log("response del axios del else",response.data.success) 
                     let errores = "";
                     response.data.errors.errors.map(error => {
                         errores = errores + " " + error.msg
@@ -250,14 +252,14 @@ const ExpedientesCarga = () => {
         // Reset errors
         setErrors({});
         /*  VALIDACIONES DE LOS CAMPOS Y SETEO DE LOS ERRORES ENCONTRADOS............ */
-        if (!values.legajo) {
+        if (!values.legajo || values.legajo.length<1) {
             setErrors((errors) => ({ ...errors, legajo: "El campo legajo es requerido" }));
             legajoRef.current.focus();
             return
         }
+// ver si quiero validaar algo mas......................
 
-
-        if (!values.motivo) {
+       /*  if (!values.motivo) {
             setErrors((errors) => ({ ...errors, motivo: "El campo motivo es requerido" }));
             motivoRef.current.focus();
             return
@@ -266,7 +268,7 @@ const ExpedientesCarga = () => {
             setErrors((errors) => ({ ...errors, categoriaRef: "El campo categoria es requerido" }));
             categoriaRef.current.focus();
             return
-        }
+        } */
       /*   if (!values.organismo) {
             setErrors((errors) => ({ ...errors, categoriaRef: "El campo organismo es requerido" }));
             organismoRef.current.focus();
@@ -278,34 +280,36 @@ const ExpedientesCarga = () => {
                  return;
              } */
 
-        if (!values.dni || values.dni.length > 10) {
+       /*  if (!values.dni || values.dni.length !=10) {
             setErrors((errors) => ({ ...errors, dni: "Introduce un DNI válido  " }));
             dniRef.current.focus();
             return;
         }
-        /*  if (!values.celular || !/^(\+54|0)(15)?\d{8}$/.test(values.celular)) { */
-        /*    if (!values.celular || isNaN(values.celular)) { */
-        if (values.celular.length > 20) {
+        if (values.celular.length<11) {
             setErrors((errors) => ({ ...errors, celular: "Introduce un número de celular válido " }));
             celularRef.current.focus();
             return;
-        }
-        if (!values.apellido) {
+        } */
+
+        /*  if (!values.celular || !/^(\+54|0)(15)?\d{8}$/.test(values.celular)) { */
+        /*    if (!values.celular || isNaN(values.celular)) { */
+        
+        if (!values.apellido || values.apellido.length<3) {
             setErrors((errors) => ({ ...errors, apellido: "El campo Apellido es requerido" }));
             apellidoRef.current.focus();
             return
         }
-        if (!values.nombres) {
-            setErrors((errors) => ({ ...errors, nombres: "El campo Apellido es requerido" }));
+        if (!values.nombres||values.nombres.length<3) {
+            setErrors((errors) => ({ ...errors, nombres: "El campo Nombres es requerido" }));
             nombresRef.current.focus();
             return
         }
-
+      
 
         /*=====================================================  */
 
         // Si no hay errores, enviar los datos
-        if (Object.keys(errors).length === 0) {
+        if (Object.keys(errors).length <=1) {
 
             if (values.motivo == "Otro" && values.nuevoMotivo.length > 0) {
                 await addMotivo(values.nuevoMotivo);
@@ -345,21 +349,22 @@ const ExpedientesCarga = () => {
                    solicitante:values.apellido
                  }) */
             }
-            guardarExpedienteEnBD();
+            const guardo= await guardarExpedienteEnBD();
 
-            saved ? handleLimpio() : console.log("corregir");
+          guardado ? handleLimpio() : console.log("corregir");
 
 
         }
         else {
-            console.log("corrija!")
+            console.log("corrija!");
+            console.log(Object.keys(errors))
         }
 
     };
 
 
     return (
-        <Container component={Paper} maxWidth="lg" sx={{ padding: 2 }}>
+        <Container   component={Paper} maxWidth="lg" sx={{ padding: 2 ,border:1,borderColor:'blue'}}>
             <form onSubmit={handleSubmit}>
                 <CustomDialog
                     open={alert.open}
@@ -377,8 +382,8 @@ const ExpedientesCarga = () => {
                             value={values.fechaIngreso}
                             onChange={handleChange}
                             onKeyDown={handleKeyDown}
-                            error={!!errors.fechaIngreso}
-                            helperText={errors.fechaIngreso}
+                            /* error={!!errors.fechaIngreso}
+                            helperText={errors.fechaIngreso} */
                             fullWidth
                             InputLabelProps={{
                                 shrink: true,  // <-- esta propiedad es necesaria para que el label no se superponga con la fecha predeterminada
@@ -387,6 +392,7 @@ const ExpedientesCarga = () => {
                     </Grid>
                     <Grid item xs={12} sm={4} >
                         <TextField
+                         required
                             label="Legajo"
                             type="number"
                             name="legajo"
@@ -401,32 +407,35 @@ const ExpedientesCarga = () => {
                     </Grid>
                     <Grid item xs={12} sm={4} >
                         <TextField
-
+                          required
                             label="Folios"
                             name="folios"
                             value={values.folios}
                             onChange={handleChange}
                             onKeyDown={handleKeyDown}
-                            error={!!errors.folios}
-                            helperText={errors.folios}
+                           /*  error={!!errors.folios}
+                            helperText={errors.folios} */
                             fullWidth
                         />
                     </Grid>
                     <Grid item xs={12}  >
                         <FormControl fullWidth>
+                            
                             <InputLabel
                                 shrink={true}
-                                style={{ backgroundColor: '#fff' }}  // <-- Estilo en línea para cambiar el color de fondo
+                                style={{ backgroundColor: '#ffff' }}  // <-- Estilo en línea para cambiar el color de fondo
                             >
                                 Motivo</InputLabel>
                             <Select
+                             required
                                 name="motivo"
                                 value={values.motivo}
                                 onChange={handleMotivosChange}
-                                error={!!errors.motivo}
+                               /*  error={!!errors.motivo}
                                 inputRef={motivoRef}
-                            >
-                                {motivos.map((motivo, index) => (
+                                helperText={errors.motivo}*/
+                            > 
+                                {motivos.map((motivo) => (
                                     <MenuItem key={motivo.motivo} value={motivo.motivo}>
                                         {motivo.motivo}
                                     </MenuItem>
@@ -444,8 +453,8 @@ const ExpedientesCarga = () => {
                                 value={values.nuevoMotivo}
                                 onChange={handleChange}
                                 onKeyDown={handleKeyDown}
-                                error={!!errors.nuevoMotivo}
-                                helperText={errors.nuevoMotivo}
+                                /* error={!!errors.nuevoMotivo}
+                                helperText={errors.nuevoMotivo} */
                              
                                 fullWidth
                             />
@@ -459,9 +468,9 @@ const ExpedientesCarga = () => {
                             value={values.comentario}
                             onChange={handleChange}
                             onKeyDown={handleKeyDown}
-                            error={!!errors.comentario}
-                            helperText={errors.comentario}
-                            inputRef={comentarioRef}
+                          /*   error={!!errors.comentario}
+                            helperText={errors.comentario} */
+                           /*  inputRef={comentarioRef} */
                             fullWidth
                             multiline
                         />
@@ -474,12 +483,13 @@ const ExpedientesCarga = () => {
                             >
                                 Categoría</InputLabel>
                             <Select
+                            required
                                 name="categoria"
                                 value={values.categoria}
                                 onChange={handleChange}
-                                error={!!errors.categoria}
+                             /*    error={!!errors.categoria}
                                 inputRef={categoriaRef}
-                                helperText={errors.categoria}
+                                helperText={errors.categoria} */
                             >
                                 {categorias.map((categoria, index) => (
                                     <MenuItem key={index} value={categoria}>
@@ -499,6 +509,7 @@ const ExpedientesCarga = () => {
                                 >
                                     Organismo</InputLabel>
                                 <Select
+                                 required
                                     name="organismo"
                                     value={values.organismo}
                                     onChange={handleOrganismoChange}
@@ -522,6 +533,7 @@ const ExpedientesCarga = () => {
                         values.organismo === "Otro" && (
                             <Grid item xs={12}>
                                 <TextField
+                                required
                                     label="Nuevo Organismo"
                                     name="nuevoOrganismo"
                                     value={values.nuevoOrganismo}
@@ -542,6 +554,7 @@ const ExpedientesCarga = () => {
                                 >
                                     Institución</InputLabel>
                                 <Select
+                                 required
                                     name="institucion"
                                     value={values.institucion}
                                     onChange={handleInstitucionChange}
@@ -564,6 +577,7 @@ const ExpedientesCarga = () => {
                         values.institucion === "Otro" && (
                             <Grid item xs={12}>
                                 <TextField
+                                required
                                     label="Nueva Institucion"
                                     name="nuevaInstitucion"
                                     value={values.nuevaInstitucion}
@@ -584,6 +598,7 @@ const ExpedientesCarga = () => {
                                 >
                                     Dep.DEM</InputLabel>
                                 <Select
+                                 required
                                     name="dem"
                                     value={values.dem}
                                     onChange={handleDemChange}
@@ -604,6 +619,7 @@ const ExpedientesCarga = () => {
                         values.dem === "Otro" && (
                             <Grid item xs={12}>
                                 <TextField
+                                required
                                     label="Nuevo D.E.M"
                                     name="nuevoDem"
                                     value={values.nuevoDem}
@@ -632,12 +648,13 @@ const ExpedientesCarga = () => {
                     {/*    )
                   } */}
                     <Grid item xs={12}>
-                        <h4 sx={{ with: "100%" }}>REPRESENTADO POR:</h4>
+                        <h4 >REPRESENTADO POR:</h4>
                     </Grid>
 
                     <Grid item xs={12} sm={6}>
 
                         <TextField
+                        required
                             label="Apellido"
                             name="apellido"
                             value={values.apellido}
@@ -653,6 +670,7 @@ const ExpedientesCarga = () => {
 
 
                         <TextField
+                         required
                             label="Nombres"
                             name="nombres"
                             value={values.nombres}
@@ -666,29 +684,32 @@ const ExpedientesCarga = () => {
                     </Grid>
                     <Grid item xs={12} sm={6}>
 
-                        <TextField
+                    <DniField
+                     required
                             label="DNI"
                             name="dni"
                             value={values.dni}
                             onChange={handleChange}
                             onKeyDown={handleKeyDown}
-                            error={!!errors.dni}
-                            helperText={errors.dni}
+                           
+                            /* error={!!errors.dni}
+                            helperText={errors.dni}   */  
                             fullWidth
-                            inputRef={dniRef}
+                           /*  inputRef={dniRef} */
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <TextField
+                        <CelularField
                             name="celular"
-                            label="Celular"
+                            label="Celular (342-436 4723)"
                             value={values.celular}
                             onChange={handleChange}
                             onKeyDown={handleKeyDown}
-                            error={Boolean(errors.celular)}
-                            helperText={!!errors.celular}
+                           
+                          /*   error={Boolean(errors.celular)}
+                            helperText={!!errors.celular} */
                             fullWidth
-                            inputRef={celularRef}
+                         /*    inputRef={celularRef} */
                         />
                     </Grid>
                     <Grid item xs={12}>

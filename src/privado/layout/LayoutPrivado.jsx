@@ -12,11 +12,9 @@ import RunCircleIcon from '@mui/icons-material/RunCircle';
 import TransferWithinAStationIcon from '@mui/icons-material/TransferWithinAStation';
 import { NavLink, Navigate, Outlet } from 'react-router-dom';
 import { useState } from 'react';
-import { colortema } from '../../theme';
+
 import { Edit } from '@mui/icons-material';
  
-import { AutProvider } from '../../context/AutProvider';
-
  
 
 const navVectLinks = [
@@ -80,15 +78,16 @@ const navVectGestion3 = [
     const [open, setOpen] = useState(true)
   
     return (
-         /*   <AutProvider> */
-        /*EL BOX ES COMO UN DIV  */
-        <Box sx={{ display: 'flex' , backgroundColor:"#c8e4fb", height:'950px'}}>
+      
+        /*EL BOX ES COMO UN DIV  pongo un fondo amarillo "#e8e5cc"*/
+        <Box sx={{ display: 'flex' , height:'950px', backgroundColor:'antiquewhite' }}>
 
             <NavBar  navVectLinks={navVectLinks} navVectGestion1={navVectGestion1} navVectGestion2={navVectGestion2}  navVectGestion3={navVectGestion3}NavLink={NavLink} setOpen={setOpen} />
 
             <Box
                 component='main'
-                sx={{ flexGrow: 1, p: 2 ,background:colortema.fondo}}
+                sx={{ flexGrow: 1, p: 2 
+                }}
             >
      
                 <Toolbar />
@@ -97,7 +96,7 @@ const navVectGestion3 = [
 
             </Box>
         </Box>
-     /*    </AutProvider> */
+     
     )
 }
 export default LayoutPrivado

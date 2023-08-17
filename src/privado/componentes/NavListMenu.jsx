@@ -11,7 +11,7 @@ export const NavListMenu = ({ navVectLinks, navVectGestion1, navVectGestion2, na
 
     return (
 
-        <Box sx={{ bgcolor: '#ede7f6', height: '100vh', width: '180px' }}  >
+        <Box sx={{ backgroundColor:'lightyellow', height: '100vh', width: '180px' }} > 
             <Box sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center', boxSizing: 'border-box', color: 'black' }} >
                 <img src={logo1} alt="logo" height={80} />
             </Box>
@@ -26,11 +26,12 @@ export const NavListMenu = ({ navVectLinks, navVectGestion1, navVectGestion2, na
                         expandIcon={<GridExpandMoreIcon />}
                         aria-controls="panel1a-content"
                         id="panel1a-header"
+                        sx={{ backgroundColor: 'bisque'}}
                     >
                         <Typography variant="body1" fontWeight="bold" sx={{ mt: 2, ml: 1, mr: 1, justifyContent: 'center' }} >Entidades</Typography>
                     </AccordionSummary>
                     <AccordionDetails sx={{
-                        backgroundColor: '#ede7f6'                  
+                        backgroundColor: 'lightyellow'
                     }} >
                         <List>
 
@@ -47,12 +48,8 @@ export const NavListMenu = ({ navVectLinks, navVectGestion1, navVectGestion2, na
 
                                         sx={{
                                             ":hover": {
-                                                Color: '#e1bee7'
-
-                                            },
-                                            fontSize:'small'
-                                            
-
+                                                backgroundColor: 'bisque'
+                                            }
                                         }}
                                     >
                                         {item.icon}
@@ -79,12 +76,13 @@ export const NavListMenu = ({ navVectLinks, navVectGestion1, navVectGestion2, na
                             expandIcon={<GridExpandMoreIcon />}
                             aria-controls="panel1a-content"
                             id="panel1a-header"
+                            sx={{ backgroundColor: 'bisque'}}
                         >
                             <Typography variant="body1" fontWeight="bold" sx={{ mt: 3, ml: 1, mr: 1, justifyContent: 'center' }} >Expedientes</Typography>
                         </AccordionSummary>
                         <AccordionDetails sx={{
 
-                            backgroundColor: '#ede7f6'
+backgroundColor: 'lightyellow'            
 
                         }} >
                             <List>
@@ -128,6 +126,7 @@ export const NavListMenu = ({ navVectLinks, navVectGestion1, navVectGestion2, na
         expandIcon={<GridExpandMoreIcon />}
         aria-controls="panel1a-content"
         id="panel1a-header"
+        sx={{ backgroundColor: 'bisque'}}
     >
         <Typography variant="body1" fontWeight="bold" sx={{ mt: 3, ml: 1, mr: 1, justifyContent: 'center' }} >Informes</Typography>
     </AccordionSummary>
@@ -151,7 +150,7 @@ export const NavListMenu = ({ navVectLinks, navVectGestion1, navVectGestion2, na
 
                         sx={{
                             ":hover": {
-                                Color: '#e1bee7'
+                                backgroundColor: 'bisque'
                             }
                         }}
                     >

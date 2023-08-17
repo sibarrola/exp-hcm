@@ -10,14 +10,16 @@ import { AutProvider } from './context/AutProvider.jsx';
  
  const App = () => {
    return (
-     <AppTheme>
+     
         <AutProvider>
-        <AppRouter/>
-        </AutProvider>
+            <AppTheme>
+            <AppRouter/>
+            </AppTheme>
+          </AutProvider>
        
        
         
-    </AppTheme>
+   
    )
  }
  
