@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { Global } from '../../helpers/Global';
 import Peticiones from '../../helpers/Peticiones';
-import { formatearFecha } from '../../helpers/funcionesVarias';
-import { Container,Paper, TextField } from '@mui/material';
- 
+import { formatearFecha,fechaReves } from '../../helpers/funcionesVarias';
+import { Container,Paper, TextField,Box ,Button} from '@mui/material';
+import RestartAlt from '@mui/icons-material/RestartAlt';
+
+
 
 const  ExpedientesDataGrid=({ onSelectExpediente }) =>{
     const [expedientes, setExpedientes] = useState([]);
@@ -18,7 +20,7 @@ const  ExpedientesDataGrid=({ onSelectExpediente }) =>{
     try {
        const metodo = 'GET';
        let  response= await Peticiones(url, metodo);
-         console.log(response);
+         console.log("response del fetch",response);
         setExpedientes(response.datos.expedientes);
         setTotalExpedientes(response.datos.total); 
         console.log(totalExpedientes ,"total expedientes");
@@ -29,17 +31,17 @@ const  ExpedientesDataGrid=({ onSelectExpediente }) =>{
     
 }
  
-    useEffect(() => {
+     useEffect(() => {
       fetchExpedientes(page, pageSize);
-       }, [page, pageSize]);
+       }, [page, pageSize]);  
 
   const columns = [
-    { field: 'fechaIngreso', headerName: 'Fecha ing.', width: 130 },
-    { field: 'legajo', headerName: 'Legajo', width: 130 },
-    { field: 'folios', headerName: 'Folios', width: 60 },
-    { field: 'motivo', headerName: 'Motivo', width: 130 },
-    { field: 'categoria', headerName: 'Categoría', width: 130 },
-    { field: 'solicitante', headerName: 'Solicitante', width: 130 },
+    { field: 'fechaIngreso', headerName: 'Fecha ing.', width: 100 },
+    { field: 'legajo', headerName: 'Legajo', width: 100 },
+    { field: 'folios', headerName: 'Folios', width: 100 },
+    { field: 'motivo', headerName: 'Motivo', width: 230 },
+   
+    { field: 'solicitante', headerName: 'Solicitante', width: 160 },
     { field: 'apellido', headerName: 'Apellido', width: 130 },
     { field: 'nombres', headerName: 'Nombres', width: 130 },
     { field: 'comentario', headerName: 'Comentarios', width: 130 },
@@ -47,17 +49,15 @@ const  ExpedientesDataGrid=({ onSelectExpediente }) =>{
     { field: 'celular', headerName: 'Celular', width: 130 },
     { field: 'domicilio', headerName: 'Domicilio', width: 130 },
     { field: 'id', headerName: 'Id', width: 130 },
-
+    { field: 'categoria', headerName: 'Categoría', width: 130 },
   ];
 
   const rows = expedientes.map((expediente) => ({
  
-    /* fechaIngreso: formatearFecha(new Date(expediente.fechaIngreso).toISOString().substring(0, 10)), */
-    fechaIngreso: formatearFecha(new Date(expediente.fechaIngreso)), 
+    fechaIngreso: fechaReves(formatearFecha(new Date(expediente.fechaIngreso))), 
     legajo: expediente.legajo,
     folios:expediente.folios,
     motivo: expediente.motivo,
-    categoria: expediente.categoria,
     solicitante: expediente.solicitante,
     apellido: expediente.apellido,
     nombres:expediente.nombres,
@@ -66,14 +66,17 @@ const  ExpedientesDataGrid=({ onSelectExpediente }) =>{
     celular:expediente.celular,
     domicilio:expediente.domicilio,
     id: expediente._id,
+    categoria: expediente.categoria,
   }));
   
   const handleRowClick = ({row}, event) => {
 
      let expediente=row;
+     expediente.comentario=(expediente.comentario==null)?" ":row.comentario;
+     expediente.domicilio=expediente.domicilio==null?" ":row.domicilio;
      const fechaISO = expediente.fechaIngreso.split('/').reverse().join('-');
      expediente.fechaIngreso=fechaISO;
-    onSelectExpediente(expediente);
+     onSelectExpediente(expediente);
 
   };
 
@@ -97,8 +100,16 @@ const  ExpedientesDataGrid=({ onSelectExpediente }) =>{
 
   return (
     <Container component={Paper} sx={{ padding: 2, border: 1, borderColor: 'blue' }}>
-      <h3>Lista de Expedientes en estudio {totalExpedientes} {page}{pageSize}</h3>
-      <TextField label="Buscar" value={searchTerm} onChange={handleSearchChange} />
+      <h3 sx={{width:'500px'}}>Lista de Expedientes en estudio {totalExpedientes} </h3>
+     
+      <Box  sx={{
+        margin:'10px',
+         
+      }} >
+      <TextField label="Buscar" value={searchTerm} onChange={handleSearchChange}  sx={{backgroundColor:'amarillo.secondary'}}/>
+      <Button size="large" startIcon ={<RestartAlt/>} onClick={ ()=> fetchExpedientes(page, pageSize)} sx={{ml:'400px'}}>Refresca</Button>  
+      </Box>
+     
       <DataGrid
         rows={filteredRows}  
         columns={columns}
@@ -106,6 +117,7 @@ const  ExpedientesDataGrid=({ onSelectExpediente }) =>{
             pagination: {
               paginationModel: {
                 pageSize: 10,
+                page:0
               },
             },
           }}
@@ -114,12 +126,13 @@ const  ExpedientesDataGrid=({ onSelectExpediente }) =>{
         pageSize={pageSize}
         paginationMode="client"  
         page={page}  
+        pageSizeOptions={[5, 10, 25, 50, 100]} // incluyendo 10 en las opciones
         onPageChange={(params) => {
-          setPage(params.page);
-          setPageSize(params.pageSize);
-          console.log(page, pageSize,"page y pageSize")
-        }}
-      
+            // Actualizar el estado con los nuevos valores de página y tamaño de página
+            console.log(params,"parametros del onPageChange")
+            setPage(params.page);
+            setPageSize(params.pageSize);
+          }}
         onRowClick={handleRowClick}
         slots={{
           Toolbar: GridToolbar,

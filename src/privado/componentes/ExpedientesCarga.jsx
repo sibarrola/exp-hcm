@@ -26,22 +26,18 @@ import DniField from "./DniField.jsx";
 import { PropTypes } from "prop-types";
  
  
+
+const ExpedientesCarga = ({titulo ,expediente,   estadoCarga , onUpdated } ) => {
+ 
+   let expedienteLimpio=expediente;
+      const [values, setValues] = useState(expedienteLimpio)
  
 
 
-const ExpedientesCarga = ({titulo ,expediente, estadoCarga ,onUpdated } ) => {
-    console.log("onUpdated",onUpdated)
-  let expedienteLimpio=expediente;
-    console.log(titulo, "titulo")
-    console.log("onUpdated",onUpdated);
-    console.log(titulo);
-    console.log(estadoCarga);
-    console.log(expediente)
- 
     let url = Global.url;
     const { auth } = useAuth();  // usuario logueado
     const [ guardado, setGuardado ] = useState(false);
-    const [values, setValues] = useState(expediente);
+    
     const [errors, setErrors] = useState({});
     const [alert, setAlert] = useState({
         open: false,
@@ -53,7 +49,6 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga ,onUpdated } ) => {
         institucionesp,
         organismos,
         dems,
-        estados_exp,
         categorias,
         addMotivo,
         addInstitucion,
@@ -62,11 +57,11 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga ,onUpdated } ) => {
     } = useFetchCombos(url);
 
     const legajoRef = useRef(null);
- 
-      const apellidoRef=useRef(null);
+  
+    const apellidoRef=useRef(null);
     const nombresRef=useRef(null);  
      
- 
+    const dniRef=useRef(null);  
 
     useEffect(() => {
         setValues(expediente);
@@ -168,7 +163,7 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga ,onUpdated } ) => {
 
         let dnig = extractDigits(values.dni);
        let celularg= (values.celular&&values.celular.length>1)?extractDigits(values.celular):""
-      /*   let celularg = extractDigits(values.celular); */
+
         let legajog = parseInt(values.legajo);
         let foliosg = parseInt(values.folios);
 
@@ -192,7 +187,7 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga ,onUpdated } ) => {
         /* si el estadoCarga es Guardar lo guardo y si no lo actualizo */
          
          if (estadoCarga=="Carga") {
-            console.log("ESTADO CARGA GUARDAR")
+          
         axios.post(`${url}/expedientes`, expediente_guardar)      
             .then(response => {
                 console.log("response del axios",response.data.success)
@@ -235,11 +230,14 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga ,onUpdated } ) => {
                 .then(response => {
                     console.log("response del axios PUT",response.data)
                     if (response.data.success) {
-                        console.log("onUpdated",onUpdated)
-                        if (!!onUpdated) {
+                       /*  handleLimpio(); */
+                      
+                        setGuardado(true);
+
+                      /*   if (!!onUpdated) {
                             onUpdated();
-                        }
-                        
+                        } */
+                    
                         setAlert({
                             open: true,
                             severity: 'error',
@@ -262,10 +260,10 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga ,onUpdated } ) => {
     
                         }); 
                     }
-                         
-                 
+              
                    
                 })
+              
                 .catch(error => {
                     setAlert({
                         open: true,
@@ -305,11 +303,11 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga ,onUpdated } ) => {
             categoriaRef.current.focus();
             return
         } */
-      /*   if (!values.organismo) {
+     /*     if (!values.organismo && estadoCarga=="Carga") {
             setErrors((errors) => ({ ...errors, categoriaRef: "El campo organismo es requerido" }));
             organismoRef.current.focus();
             return
-        } */
+        }  */ 
         /*      if (!values.email || !/\S+@\S+\.\S+/.test(values.email)) {
                  setErrors((errors) => ({ ...errors, email: "Introduce un correo electrónico válido" }));
                  emailRef.current.focus();
@@ -401,7 +399,7 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga ,onUpdated } ) => {
 
 
     return (
-        <Container   component={Paper}  sx={{ padding: 2 ,border:1,borderColor:'blue'}}>
+        <Container    component={Paper}  sx={{ padding: 2 ,border:1,borderColor:'blue'}}>
             <form onSubmit={handleSubmit}>
                 <CustomDialog
                     open={alert.open}
@@ -475,7 +473,7 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga ,onUpdated } ) => {
                                 helperText={errors.motivo}*/
                                 
                             > 
-                             
+                            
                                 {motivos.map((motivo) => (
                                     <MenuItem key={motivo.motivo} value={motivo.motivo}>
                                         {motivo.motivo}
@@ -550,20 +548,22 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga ,onUpdated } ) => {
                                 >
                                     Organismo</InputLabel>
                                 <Select
-                                 required
+                                   required= {estadoCarga=="Carga"?"required":""}
                                     name="organismo"
                                     value={values.organismo}
                                     onChange={handleOrganismoChange}
-                                   /*  error={!!errors.organismo}
+                                    /*  error={!!errors.organismo}
                                     helperText={errors.organismo}
-                                     */
-                                >
+                                    inputRef={organismoRef}  */
+                                > 
+                                
+                                 
                                     {organismos.map((organizacion, index) => (
                                         <MenuItem key={index} value={organizacion.organizacion}>
                                             {organizacion.organizacion}
                                         </MenuItem>
                                     ))}
-                                    <MenuItem value="Otro">Otro</MenuItem>
+                                    <MenuItem key="Otro" value="Otro">Otro</MenuItem>
 
                                 </Select>
                                 {errors.organismo && <p style={{ color: 'red' }}>{errors.organismo}</p>}
@@ -595,7 +595,7 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga ,onUpdated } ) => {
                                 >
                                     Institución</InputLabel>
                                 <Select
-                                 required
+                                required= {estadoCarga=="Carga"?"required":""}
                                     name="institucion"
                                     value={values.institucion}
                                     onChange={handleInstitucionChange}
@@ -639,7 +639,7 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga ,onUpdated } ) => {
                                 >
                                     Dep.DEM</InputLabel>
                                 <Select
-                                 required
+                                required= {estadoCarga=="Carga"?"required":""}
                                     name="dem"
                                     value={values.dem}
                                     onChange={handleDemChange}
@@ -695,7 +695,7 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga ,onUpdated } ) => {
                     <Grid item xs={12} sm={6}>
 
                         <TextField
-                        required
+                     
                             label="Apellido"
                             name="apellido"
                             value={values.apellido}
@@ -725,7 +725,8 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga ,onUpdated } ) => {
                     </Grid>
                     <Grid item xs={12} sm={6}>
 
-                    <DniField
+                  {/*   <DniField */}
+                  <DniField
                      required
                             label="DNI"
                             name="dni"
@@ -736,11 +737,12 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga ,onUpdated } ) => {
                             /* error={!!errors.dni}
                             helperText={errors.dni}   */  
                             fullWidth
-                           /*  inputRef={dniRef} */
+                            inputRef={dniRef}  
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <CelularField
+                       <CelularField  
+                    
                             name="celular"
                             label="Celular (342-436 4723)"
                             value={values.celular}
@@ -793,6 +795,7 @@ export default ExpedientesCarga;
 ExpedientesCarga.propTypes = {
     titulo: PropTypes.string,
     expediente: PropTypes.object,
+    expedienteLimpio: PropTypes.object,
     estadoCarga: PropTypes.string,
     onUpdated: PropTypes.func
   };

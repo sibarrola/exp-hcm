@@ -27,7 +27,8 @@ export const colortema =createTheme({
               main:'#ef5350'
         },
         amarillo:{
-            main:"#fcc032"
+            main:"#fcc032",
+            secondary:"#f7f7ed"
         },
         cabeceraTabla:{
             main:"#3e25fa"
