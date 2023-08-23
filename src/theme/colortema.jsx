@@ -40,14 +40,29 @@ export const colortema =createTheme({
     MuiButton: {
       variants: [
         {
-          props: { variant: 'grabar' },
+          props: { variant: "grabar"},
           style: {
             backgroundColor: '#0000FF', // Azul para los botones grabar
           },
         },
       ],
     },
-  },
+   
+    MuiDataGrid: {
+        styleOverrides: {
+            root: {
+                '& .MuiDataGrid-columnHeaderTitle': {
+                  fontWeight: 'bold',
+                },
+            '& .MuiDataGrid-columnHeaders': {
+              backgroundColor:'#E3F2FD',
+              border: '2px solid #3e25fa', // Borde azul en la parte inferior de la fila de cabecera
+            },
+            // Otros estilos personalizados si los necesitas
+          },
+        },
+      },
+    } 
 });
 
 

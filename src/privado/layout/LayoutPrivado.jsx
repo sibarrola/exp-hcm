@@ -51,7 +51,7 @@ const navVectGestion1 = [
         title: "Ingresos", path: "/privado/ingresos", icon: <PlaylistAddIcon />
     },
     {
-        title: "Lis./Edición", path: "/contacto", icon: <Edit />
+        title: "Lis./Edición", path: "/privado/edicion", icon: <Edit />
     },
     {
         title: "Pases", path: "/contacto", icon: <RunCircleIcon />

@@ -13,26 +13,26 @@ const Buscador = ({ listadoState, setListadoState }) => {  // puedo acceder al a
         setBusqueda(e.target.value)
         console.log(busqueda);
         console.log('listadoState', listadoState);
-
+    }
         // filtrar el estado para buscar coincidencias
-        let peliculas_encontradas = listadoState.filter(peli => {
+ /*        let peliculas_encontradas = listadoState.filter(peli => {
             // el includes tambien funciona en textos pues un string se comporta como un array
             return peli.Exp.toLowerCase().includes(busqueda.toLocaleLowerCase());
-        });
-        if (busqueda.length <= 1 || peliculas_encontradas <= 0) {
+        }); */
+       /*  if (busqueda.length <= 1 || peliculas_encontradas <= 0) {
             peliculas_encontradas = JSON.parse(localStorage.getItem("pelis"));
             setNoencontrado(true);
         }
         else {
             setNoencontrado(false)
         }
-        console.log('filtradas', peliculas_encontradas);
+        console.log('filtradas', peliculas_encontradas); */
 
 
         // Actualizar estado del Listado principal con lo que he logrado filtrar
-        setListadoState(peliculas_encontradas);
+ /*        setListadoState(peliculas_encontradas);
 
-    }
+    } */
     return (
         <>
             <form>

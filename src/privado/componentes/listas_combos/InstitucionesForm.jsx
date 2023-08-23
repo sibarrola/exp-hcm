@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Container, Paper, Box, Typography } from '@mui/material';
-import { Global } from '../../helpers/Global.jsx';
-import logo1 from '../../assets/logo-160px.fw.png'
+import {Global} from '../../../helpers/Global';
+ 
 const url = Global.url;
 const InstitucionesForm = () => {
 

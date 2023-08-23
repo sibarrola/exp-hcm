@@ -1,4 +1,5 @@
-import { ThemeProvider } from "@emotion/react"
+/* import { ThemeProvider } from "@emotion/react" */
+import { ThemeProvider } from '@mui/material/styles';
 /* esto es algo como el estilo normalize.css */
 import { CssBaseline } from "@mui/material"
 import {colortema} from './';

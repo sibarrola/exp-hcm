@@ -1,5 +1,5 @@
 /* ESTE ES EL FORMULARIO QUE VA PARA LA CARGA DE EXPEDIENTES */
-import { useState, useRef,useEffect } from "react";
+import { useState, useRef } from "react";
 
  
 import {
@@ -24,25 +24,18 @@ import useAuth from "../../hooks/useAuth.jsx";
 import CelularField from "./CelularField.jsx";
 import DniField from "./DniField.jsx";
 import { PropTypes } from "prop-types";
- 
- 
+import Peticiones from "../../helpers/Peticiones.jsx";
  
 
 
-const ExpedientesCarga = ({titulo ,expediente, estadoCarga ,onUpdated } ) => {
-    console.log("onUpdated",onUpdated)
-  let expedienteLimpio=expediente;
+const ExpedientesCarga = ({titulo ,expediente, estadoCarga} ) => {
+  
+  
     console.log(titulo, "titulo")
-    console.log("onUpdated",onUpdated);
-    console.log(titulo);
-    console.log(estadoCarga);
-    console.log(expediente)
- 
-    let url = Global.url;
+  
+    let url = Global.url+'/expedientes';
     const { auth } = useAuth();  // usuario logueado
     const [ guardado, setGuardado ] = useState(false);
-    const [values, setValues] = useState(expediente);
-    const [errors, setErrors] = useState({});
     const [alert, setAlert] = useState({
         open: false,
         severity: 'success',
@@ -62,15 +55,43 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga ,onUpdated } ) => {
     } = useFetchCombos(url);
 
     const legajoRef = useRef(null);
- 
+   /*  const motivoRef = useRef(null);
+    const categoriaRef = useRef(null); */
+    /*   const celularRef = useRef(null);
+    const dniRef = useRef(null); */
+ /*    const comentarioRef = useRef(null); */
       const apellidoRef=useRef(null);
     const nombresRef=useRef(null);  
      
- 
 
-    useEffect(() => {
-        setValues(expediente);
-      }, [expediente]);
+
+     const expedienteLimpio = {
+        legajo: "",
+        folios: "",
+        estadoExp: estados_exp[0],
+        motivo: "",
+        nuevoMotivo: "",
+        comentario: "",
+        fechaIngreso: "",
+        categoria: "",
+        institucion: "",
+        organismo: "",
+        nuevaInstitucion: "",
+        dem: "",
+        nuevoDem: "",
+        nuevoOrganismo: "",
+        solicitante: "",
+        apellido: "",
+        nombres: "",
+        dni: "",
+        celular: "",
+        domicilio: "",
+        estado: "true",
+       
+    }  
+
+    const [values, setValues] = useState(expediente);
+    const [errors, setErrors] = useState({});
  
  
 /*  esto es para desactivar la tecla ENTER */
@@ -157,7 +178,6 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga ,onUpdated } ) => {
     /* limpia los campos del estado del formulario para comenzar a cargar otro expediente */
     const handleLimpio = () => {
         setValues(expedienteLimpio);
-        
     }
 
 
@@ -172,10 +192,10 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga ,onUpdated } ) => {
         let legajog = parseInt(values.legajo);
         let foliosg = parseInt(values.folios);
 
-        let expediente_guardar = {
+        let datos_guardar = {
             legajo: legajog,
             folios: foliosg,
-            estadoExp: 'Estudio',
+            estadoExp: estados_exp[0],
             motivo: motivog,
             comentario: values.comentario,
             fechaIngreso: values.fechaIngreso,
@@ -190,12 +210,18 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga ,onUpdated } ) => {
             usuario: auth.uid
         }
         /* si el estadoCarga es Guardar lo guardo y si no lo actualizo */
+       
+        if(estadoCarga=="Guardar"){
+           let metodo="POST" 
+        }
+        else
+        { let metodo="GET"}
+        
+            let datos=await Peticiones(url, metodo, datos_guardar);
+            console.log(datos,"DATOS")
+        
          
-         if (estadoCarga=="Carga") {
-            console.log("ESTADO CARGA GUARDAR")
-        axios.post(`${url}/expedientes`, expediente_guardar)      
-            .then(response => {
-                console.log("response del axios",response.data.success)
+                /* console.log("response del axios",response.data.success)
                 if (response.data.success) {
                     setGuardado(true);
                     handleLimpio();
@@ -228,57 +254,8 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga ,onUpdated } ) => {
 
                 });
                 console.log(expediente_guardar)
-            })  }
-            else
-            {
-                axios.put(`${url}/expedientes/${values.id}`, expediente_guardar)      
-                .then(response => {
-                    console.log("response del axios PUT",response.data)
-                    if (response.data.success) {
-                        console.log("onUpdated",onUpdated)
-                        if (!!onUpdated) {
-                            onUpdated();
-                        }
-                        
-                        setAlert({
-                            open: true,
-                            severity: 'error',
-                            message: `El expediente ha sido actualizado Ok` 
-                            });
-                        
-                       
-                    }
-                    else {
-                        /* errores ACTUALIZO---------------------------------------- */
-                        console.log("response del axios del else",response.data.success) 
-                        let errores = "";
-                        response.data.errors.errors.map(error => {
-                            errores = errores + " " + error.msg
-                        })
-                        setAlert({
-                            open: true,
-                            severity: 'error',
-                            message: errores
-    
-                        }); 
-                    }
-                         
-                 
-                   
-                })
-                .catch(error => {
-                    setAlert({
-                        open: true,
-                        severity: 'error',
-                        message: `ERROR! no se pudo guardar ${error}`
-    
-                    });
-                    console.log(expediente_guardar)
-                }) 
-
-
-            }
-         
+            })  
+          */
          
     }
     /* SUBMIT DEL FORMULARIO ----------------------------------------------------------- */
@@ -385,9 +362,8 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga ,onUpdated } ) => {
                    solicitante:values.apellido
                  }) */
             }
-            await guardarExpedienteEnBD();
-           console.log("guardo",guardado);
-         
+            const guardo= await guardarExpedienteEnBD();
+
           guardado ? handleLimpio() : console.log("corregir");
 
 
@@ -401,7 +377,7 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga ,onUpdated } ) => {
 
 
     return (
-        <Container   component={Paper}  sx={{ padding: 2 ,border:1,borderColor:'blue'}}>
+        <Container   component={Paper} maxWidth="lg" sx={{ padding: 2 ,border:1,borderColor:'blue'}}>
             <form onSubmit={handleSubmit}>
                 <CustomDialog
                     open={alert.open}
@@ -473,9 +449,7 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga ,onUpdated } ) => {
                                /*  error={!!errors.motivo}
                                 inputRef={motivoRef}
                                 helperText={errors.motivo}*/
-                                
                             > 
-                             
                                 {motivos.map((motivo) => (
                                     <MenuItem key={motivo.motivo} value={motivo.motivo}>
                                         {motivo.motivo}
@@ -792,16 +766,10 @@ export default ExpedientesCarga;
 
 ExpedientesCarga.propTypes = {
     titulo: PropTypes.string,
-    expediente: PropTypes.object,
-    estadoCarga: PropTypes.string,
-    onUpdated: PropTypes.func
+    expediente: PropTypes.object
   };
   
   ExpedientesCarga.defaultProps = {
     titulo: "Carga de Expediente",
-    expediente: {},
-    estadoCarga:"",
-    onUpdated:null
+    expediente: {}
   };
-
- 

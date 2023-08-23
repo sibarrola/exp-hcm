@@ -28,17 +28,13 @@ export const NavBar = ({ navVectLinks, navVectGestion1, navVectGestion2, navVect
                         color="inherit"
                         size="large"
                         onClick={() => setOpen(true)}
-                        sx={{ display: { xs: "flex" } }}  /* quite el sm:"none" */
+                        sx={{ display: { xs: "flex" } }}   
                         edge="start">
                         <MenuOutlined />
                     </IconButton>
                     <Typography variant='h6' sx={{ flexGrow: 1, ml: 16 }} >GESTION DEL SISTEMA DE EXPEDIENTES </Typography>
                     <Typography variant='body1' sx={{ mr: 10, fontStyle: 'italic', color:'#ffea00',fontSize:'12px'  }} > usuario: {auth.nombre} </Typography>
-                    {/*  <Button color="inherit">Inicio</Button>
-                    <Button color="inherit">Login</Button>
-                    <Button color="inherit">Registro</Button> */}
-
-                    {/* meto los botones en un box para ocultar cuando sea pequeño */}
+                  
 
                     <Box sx={{ display: { xs: "none", sm: "none", md: 'flex' }, variant: { xs: 'body1', xm: 'title1' } }}>
 

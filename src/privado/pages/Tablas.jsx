@@ -1,9 +1,10 @@
  
-import FormularioMotivos from "../componentes/FormularioMotivos"
-import InstitucionesForm from "../componentes/InstitucionesForm";
-import OrganismosForm from "../componentes/OrganismosForm";
-import DemForm from "../componentes/DemForm";
+import FormularioMotivos from "../componentes/listas_combos/FormularioMotivos"
+import InstitucionesForm from "../componentes/listas_combos/InstitucionesForm";
+import OrganismosForm from "../componentes/listas_combos/OrganismosForm";
+import DemForm from "../componentes/listas_combos/DemForm";
 import LayoutPrivado  from "../layout/LayoutPrivado"
+ 
  
 import { useParams } from 'react-router-dom';
 
