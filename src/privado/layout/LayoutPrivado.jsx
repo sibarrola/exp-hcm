@@ -14,6 +14,7 @@ import { NavLink, Navigate, Outlet } from 'react-router-dom';
 import { useState } from 'react';
 
 import { Edit } from '@mui/icons-material';
+import EstacionesForm from '../componentes/listas_combos/EstacionesForm';
  
  
 
@@ -42,6 +43,9 @@ const navVectGestion1 = [
     },
     {
         title: "DEM", path: "/privado/tablas/4" 
+    },
+    {
+        title: "Estaciones Pases", path: "/privado/tablas/5" 
     }
   
   ]
@@ -54,7 +58,7 @@ const navVectGestion1 = [
         title: "Lis./Edición", path: "/privado/edicion", icon: <Edit />
     },
     {
-        title: "Pases", path: "/contacto", icon: <RunCircleIcon />
+        title: "Pases", path: "/privado/pases", icon: <RunCircleIcon />
     },
    
 

@@ -2,12 +2,10 @@ import { useState } from 'react';
 
 import { Grid, Typography } from '@mui/material';
 
-import ExpedientesEdicion from '../componentes/ExpedientesEdicion';
-
+import ExpedientesCarga from '../componentes/ExpedientesCarga';
 import ExpedientesDataGrid from '../componentes/ExpedientesDataGrid';
 const VistaEdicion = () => {
     const [expedienteSeleccionado, setExpedienteSeleccionado] = useState({
-
         legajo: "",
         folios: "",
         estadoExp: "Estudio",
@@ -32,35 +30,38 @@ const VistaEdicion = () => {
 
     });
     const [isEditing, setIsEditing] = useState(false);
-
+ 
     const handleExpedienteSelected = (expediente) => {
         setExpedienteSeleccionado(expediente);
         setIsEditing(true);
     };
 
-    const handleUpdated = () => {
+/*     const handleUpdated = () => {
         setIsEditing(false);
-    };
+    }; */
     return (
         <>
 
             <Grid container direction="row" justifyContent="center"   >
 
                 <Grid item xs={12}>
-                    <Typography variant='h4' align='left' marginLeft='5%'>EDICION EXPEDIENTES</Typography>
+                    <Typography variant='h5' align='left' marginLeft='5%'>LISTA/EDICION DE EXPEDIENTES</Typography>
                 </Grid>
 
                 <Grid item md={12} lg={6} sx={{ mr: "20px" }}  >
 
-                    <ExpedientesDataGrid onSelectExpediente={handleExpedienteSelected} />
+                    <ExpedientesDataGrid onSelectExpediente={handleExpedienteSelected}     isEditing={isEditing}  setIsEditing={setIsEditing} />
 
                 </Grid>
                 <Grid item md={12} lg={5} >
-                    <ExpedientesEdicion
+                  {/*   <ExpedientesEdicion */}
+                  <ExpedientesCarga
                         titulo="Edicion"
                         expediente={expedienteSeleccionado}
                         estadoCarga="Edicion"
-                        onUpdated={handleUpdated}
+                    
+                        isEditing={isEditing} 
+                        setIsEditing={setIsEditing}
                     />
                 </Grid>
 

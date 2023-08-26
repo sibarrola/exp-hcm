@@ -5,6 +5,7 @@ const useFetchCombos = (url) => {
   const [motivos, setMotivos] = useState([]);
   const [institucionesp, setInstitucionesp] = useState([]);
   const [organismos, setOrganismos] = useState([]);
+  const [estaciones, setEstaciones] = useState([]);
   const [dems, setDems] = useState([]);
 
   // Funciones para obtener los datos-----------------------------------
@@ -26,6 +27,11 @@ const useFetchCombos = (url) => {
   const fetchDem = async () => {
     const resDems = await axios.get(`${url}/dems`);
     setDems(resDems.data.dems);
+  };
+
+  const fetchEstaciones = async () => {
+    const resEstaciones = await axios.get(`${url}/estaciones`);
+    setEstaciones(resEstaciones.data.estaciones);
   };
 
   // simplemente vectores, porque no cambiarían ---------------------------------
@@ -53,7 +59,7 @@ const useFetchCombos = (url) => {
     await axios.post(`${url}/dems`, { dem });
     fetchDem(); // Refrescar la lista
   };
-
+ 
 
   // Efecto para obtener los datos cuando el componente se monta
   useEffect(() => {
@@ -61,6 +67,7 @@ const useFetchCombos = (url) => {
     fetchInstituciones();
     fetchOrganismo();
     fetchDem();
+    fetchEstaciones()
   }, [url]);
 
   return {
@@ -70,6 +77,7 @@ const useFetchCombos = (url) => {
     dems,
     estados_exp,
     categorias,
+    estaciones,
     addMotivo,
     addInstitucion,
     addOrganismo,

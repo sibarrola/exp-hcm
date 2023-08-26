@@ -29,10 +29,14 @@ const expediente= {
 }
 
 const CargaExpedientes = () => {
+    
+   /*  const [isEditing, setIsEditing] = useState(false); */
+    
+
  return (
    <LayoutPrivado>
     
-     <ExpedientesCarga titulo="Carga de expedientes" expediente={expediente} estadoCarga="Carga"/>
+     <ExpedientesCarga titulo="Carga de expedientes" expediente={expediente} estadoCarga="Carga" />
      
    </LayoutPrivado>
  )

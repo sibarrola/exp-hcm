@@ -35,7 +35,6 @@ export const NavListMenu = ({ navVectLinks, navVectGestion1, navVectGestion2, na
                     }} >
                         <List>
 
-
                             {navVectGestion1.map((item) => (
                                 <ListItem disablePadding key={item.title}>
 
@@ -45,7 +44,6 @@ export const NavListMenu = ({ navVectLinks, navVectGestion1, navVectGestion2, na
                                         component={NavLink}
                                         to={item.path}
                                         onClick={() => setOpen(false)}
-
                                         sx={{
                                             ":hover": {
                                                 backgroundColor: 'bisque'
@@ -67,7 +65,6 @@ export const NavListMenu = ({ navVectLinks, navVectGestion1, navVectGestion2, na
                     </AccordionDetails>
                 </Accordion>
 
-
                 {/*  segundo menu acordeon */}
                 <List>
 
@@ -86,8 +83,6 @@ backgroundColor: 'lightyellow'
 
                         }} >
                             <List>
-
-
                                 {navVectGestion2.map((item) => (
                                     <ListItem disablePadding key={item.title}>
 

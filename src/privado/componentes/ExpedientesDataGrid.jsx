@@ -5,10 +5,10 @@ import Peticiones from '../../helpers/Peticiones';
 import { formatearFecha,fechaReves } from '../../helpers/funcionesVarias';
 import { Container,Paper, TextField,Box ,Button} from '@mui/material';
 import RestartAlt from '@mui/icons-material/RestartAlt';
+import { PropTypes } from "prop-types";
 
 
-
-const  ExpedientesDataGrid=({ onSelectExpediente }) =>{
+const  ExpedientesDataGrid=({ onSelectExpediente  , isEditing, setIsEditing}) =>{
     const [expedientes, setExpedientes] = useState([]);
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(10);
@@ -20,10 +20,10 @@ const  ExpedientesDataGrid=({ onSelectExpediente }) =>{
     try {
        const metodo = 'GET';
        let  response= await Peticiones(url, metodo);
-         console.log("response del fetch",response);
+   
         setExpedientes(response.datos.expedientes);
         setTotalExpedientes(response.datos.total); 
-        console.log(totalExpedientes ,"total expedientes");
+    
        }
        catch (error)  {
         console.error("Hubo un error al obtener los expedientes:", error);
@@ -33,12 +33,21 @@ const  ExpedientesDataGrid=({ onSelectExpediente }) =>{
  
      useEffect(() => {
       fetchExpedientes(page, pageSize);
+     
        }, [page, pageSize]);  
+
+         useEffect(() => {
+        if(isEditing==true){ 
+            console.log("isEditing dataGreid cuando cambia",isEditing)
+        fetchExpedientes(page, pageSize);
+        setIsEditing(false);
+        } 
+         }, [isEditing]);    
 
   const columns = [
     { field: 'fechaIngreso', headerName: 'Fecha ing.', width: 100 },
     { field: 'legajo', headerName: 'Legajo', width: 100 },
-    { field: 'folios', headerName: 'Folios', width: 100 },
+    { field: 'folios', headerName: 'Folios', width: 50  },
     { field: 'motivo', headerName: 'Motivo', width: 230 },
    
     { field: 'solicitante', headerName: 'Solicitante', width: 160 },
@@ -100,11 +109,12 @@ const  ExpedientesDataGrid=({ onSelectExpediente }) =>{
 
   return (
     <Container component={Paper} sx={{ padding: 2, border: 1, borderColor: 'blue' }}>
-      <h3 sx={{width:'500px'}}>Lista de Expedientes en estudio {totalExpedientes} </h3>
+      <h3 sx={{width:'500px'}}>Lista de Expedientes en estudio {totalExpedientes}  </h3>
      
       <Box  sx={{
-        margin:'10px',
-         
+        ml:'10px',
+        mb:'10px',
+                 
       }} >
       <TextField label="Buscar" value={searchTerm} onChange={handleSearchChange}  sx={{backgroundColor:'amarillo.secondary'}}/>
       <Button size="large" startIcon ={<RestartAlt/>} onClick={ ()=> fetchExpedientes(page, pageSize)} sx={{ml:'400px'}}>Refresca</Button>  
@@ -144,5 +154,14 @@ const  ExpedientesDataGrid=({ onSelectExpediente }) =>{
 }
  export default ExpedientesDataGrid
  
-
- 
+ ExpedientesDataGrid.propTypes = {
+    
+   onSelectExpediente: PropTypes.func,
+      isEditing:PropTypes.bool,
+    setIsEditing:PropTypes.func
+  
+  };
+  ExpedientesDataGrid.defaultProps = {
+    isEditing:false,
+    setIsEditing:null
+  };

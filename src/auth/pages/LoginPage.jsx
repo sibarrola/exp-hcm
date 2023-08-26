@@ -56,7 +56,7 @@ const LoginPage = () => {
             .then((res) => res.json())
             .then((data) => {
                console.log("data",data)       
-                if (data.success) {
+                if (!!data.success) {
 
                  /*    console.log("data.succes",data.succes);
                     console.log("data.token",data.token); */

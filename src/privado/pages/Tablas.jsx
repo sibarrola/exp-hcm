@@ -4,6 +4,7 @@ import InstitucionesForm from "../componentes/listas_combos/InstitucionesForm";
 import OrganismosForm from "../componentes/listas_combos/OrganismosForm";
 import DemForm from "../componentes/listas_combos/DemForm";
 import LayoutPrivado  from "../layout/LayoutPrivado"
+import EstacionesForm from "../componentes/listas_combos/EstacionesForm";
  
  
 import { useParams } from 'react-router-dom';
@@ -27,6 +28,9 @@ const Tablas = () => {
         case '4':
             formulario = <DemForm />;
             break;
+      case '5':
+                formulario = <EstacionesForm />;
+                break;    
     default:
         formulario = <div>No se especificó un parámetro válido.</div>;
   }

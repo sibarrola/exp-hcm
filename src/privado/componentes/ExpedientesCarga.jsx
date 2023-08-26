@@ -1,4 +1,5 @@
 /* ESTE ES EL FORMULARIO QUE VA PARA LA CARGA DE EXPEDIENTES */
+/* ESTE ES EL FORMULARIO QUE VA PARA LA CARGA DE EXPEDIENTES */
 import { useState, useRef,useEffect } from "react";
 
  
@@ -27,7 +28,7 @@ import { PropTypes } from "prop-types";
  
  
 
-const ExpedientesCarga = ({titulo ,expediente,   estadoCarga , onUpdated } ) => {
+const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEditing} ) => {
  
    let expedienteLimpio=expediente;
       const [values, setValues] = useState(expedienteLimpio)
@@ -233,7 +234,8 @@ const ExpedientesCarga = ({titulo ,expediente,   estadoCarga , onUpdated } ) => 
                        /*  handleLimpio(); */
                       
                         setGuardado(true);
-
+                        setIsEditing(true);
+                        console.log("isediting",isEditing)
                       /*   if (!!onUpdated) {
                             onUpdated();
                         } */
@@ -795,16 +797,17 @@ export default ExpedientesCarga;
 ExpedientesCarga.propTypes = {
     titulo: PropTypes.string,
     expediente: PropTypes.object,
-    expedienteLimpio: PropTypes.object,
     estadoCarga: PropTypes.string,
-    onUpdated: PropTypes.func
+    isEditing:PropTypes.boolean,
+    setIsEditing:PropTypes.func
+  
   };
   
-  ExpedientesCarga.defaultProps = {
+/*   ExpedientesCarga.defaultProps = {
     titulo: "Carga de Expediente",
     expediente: {},
     estadoCarga:"",
     onUpdated:null
   };
-
+ */
  

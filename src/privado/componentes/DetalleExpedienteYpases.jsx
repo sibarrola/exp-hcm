@@ -1,14 +1,17 @@
 import React from 'react';
 import ExpedientesCarga from './ExpedientesCarga';
 
-function ExpedientesEdicion({ expediente }) {
+function DetalleExpedienteYpases({ expediente,pases }) {
   // Aquí puedes agregar lógica y diseño para editar el expediente seleccionado
   return (
     <div>
       
-      <ExpedientesCarga titulo="Edición de expedientes" expediente={expediente}/>
+      ESTO ES EL DETALLA DE EXPEDIENTES Y LOS MOVIM
+      <p>
+        {JSON.stringify(expediente)}
+      </p>
     </div>
   );
 }
 
-export default ExpedientesEdicion;
+export default DetalleExpedienteYpases;
