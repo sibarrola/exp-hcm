@@ -76,6 +76,7 @@ const  ExpedientesDataGrid=({ onSelectExpediente  , isEditing, setIsEditing}) =>
     domicilio:expediente.domicilio,
     id: expediente._id,
     categoria: expediente.categoria,
+    pases:expediente.pases
   }));
   
   const handleRowClick = ({row}, event) => {

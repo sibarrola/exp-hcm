@@ -183,7 +183,14 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
             celular: celularg,
             domicilio: values.domicilio,
             estado: "true",
-            usuario: auth.uid
+            usuario: auth.uid,
+            pases:[{
+                fecha_pase:values.fechaIngreso,
+                estacion:"Mesa de Entrada",
+                sub_estacion:"",
+                usuario_pase:auth.uid,
+                comentario:""
+            }]
         }
         /* si el estadoCarga es Guardar lo guardo y si no lo actualizo */
          

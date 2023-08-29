@@ -6,6 +6,7 @@ const useFetchCombos = (url) => {
   const [institucionesp, setInstitucionesp] = useState([]);
   const [organismos, setOrganismos] = useState([]);
   const [estaciones, setEstaciones] = useState([]);
+ 
   const [dems, setDems] = useState([]);
 
   // Funciones para obtener los datos-----------------------------------
@@ -38,6 +39,8 @@ const useFetchCombos = (url) => {
    const estados_exp=["Estudio","Aprobado","Notificado Ejecut.","Finalizado","Archivado"];  /* lo hago en un vector directamente pues no van a cambiar.... */
 
    const categorias = ['Particular', 'D.E.M.', 'Concejal', 'Organismo público', 'Instituciones privadas', 'Otro'];
+
+   const comisiones = ['Comisión de Hacienda', 'Comisión de Obras', 'Comisión de Gobierno', 'Presidencia', 'Otro'];
 
   // Funciones para agregar nuevos elementos-----------------------------------
   const addMotivo = async (motivo) => {
@@ -78,6 +81,7 @@ const useFetchCombos = (url) => {
     estados_exp,
     categorias,
     estaciones,
+    comisiones,
     addMotivo,
     addInstitucion,
     addOrganismo,
