@@ -43,6 +43,7 @@ const VistaPases = () => {
         setExpedienteSeleccionado(expediente);
 
     };
+    const [seleccionado, setSeleccionado] = useState(true);
 
     const handleAddPase = (pase) => {
         setPases(prevPases => [...prevPases, pase]);
@@ -50,25 +51,23 @@ const VistaPases = () => {
 
     return (
 
-        <Grid container direction="row" sx={{ display: 'flex' }}   >
+        <Grid container direction="row" sx={{ display: 'flex' ,justifyContent:'between' }}    spacing={2}  >
 
             <Grid item xs={12}>
                 <Typography variant='h5' align='left' marginLeft='5%'>SELECCION DE EXPEDIENTES Y CARGA DE PASES</Typography>
             </Grid>
+            {seleccionado && (
+            <Grid item md={12} lg={12} sx={{ mr: "20px" }}  >
+                <ExpedientesDataGrid onSelectExpediente={handleExpedienteSelected} seleccionado={seleccionado} setSeleccionado={setSeleccionado} />   </Grid>
+            )}
 
-            <Grid item md={12} lg={6} sx={{ mr: "20px" }}  >
-                <ExpedientesDataGrid onSelectExpediente={handleExpedienteSelected} />   </Grid>
-
-
-            {expedienteSeleccionado && (
-                <> <Grid item md={12} lg={5}>
-                    <PasesCarga onAdd={handleAddPase} expediente={expedienteSeleccionado}  />
+            {expedienteSeleccionado && !seleccionado && (
+                <> <Grid item xs={12}  md={4} >
+                    <PasesCarga onAdd={handleAddPase} expediente={expedienteSeleccionado} seleccionado={seleccionado} setSeleccionado={setSeleccionado}   />
 
                 </Grid>
-                <Grid item md={12} lg={6} sx={{ alignContent: 'left' }} >
-                       
-                    </Grid>
-                    <Grid item md={12} lg={5} sx={{ alignContent: 'left' }} >
+              
+                    <Grid item xs={12}  md={8}   sx={{ alignContent: 'left' }} >
                         <DetalleExpedienteYpases expediente={expedienteSeleccionado} pases={pases} />
 
                     </Grid>

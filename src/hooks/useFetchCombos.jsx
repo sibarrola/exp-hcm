@@ -37,6 +37,7 @@ const useFetchCombos = (url) => {
 
   // simplemente vectores, porque no cambiarían ---------------------------------
    const estados_exp=["Estudio","Aprobado","Notificado Ejecut.","Finalizado","Archivado"];  /* lo hago en un vector directamente pues no van a cambiar.... */
+   
 
    const categorias = ['Particular', 'D.E.M.', 'Concejal', 'Organismo público', 'Instituciones privadas', 'Otro'];
 

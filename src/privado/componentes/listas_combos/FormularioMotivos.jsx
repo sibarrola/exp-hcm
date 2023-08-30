@@ -92,7 +92,7 @@ const FormularioMotivos = () => {
                 <TableContainer>
                     <Table>
                     <TableHead
-                            sx={{
+                            sx={{     // Cambia el color de fondo
                                 backgroundColor: '#cfd8dc', // Cambia el color de fondo
                                 '& .MuiTableCell-root': {   // Aplica el estilo a todas las celdas de la cabecera
                                  //   color: 'white',  // Cambia el color del texto

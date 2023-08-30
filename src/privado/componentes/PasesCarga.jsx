@@ -19,12 +19,12 @@ import { useState } from 'react';
 import CustomDialog from '../../privado/componentes/CustomDialog';
 import useAuth from "../../hooks/useAuth.jsx";
 const url = Global.url;
-
+import { PropTypes } from "prop-types";
 /* ver de traer este estadao......... */
 
 
 /* comienza el componente------------------------------------------- */
-const PasesCarga = ({onAdd, expediente }) => {
+const PasesCarga = ({ expediente, seleccionado, setSeleccionado}) => {
     const { auth } = useAuth();  // usuario logueado
     const [estadoCarga,setEstadoCarga]=useState("Carga");
     console.log("estadoCarga",estadoCarga) 
@@ -68,6 +68,7 @@ const PasesCarga = ({onAdd, expediente }) => {
 
     const handleLimpio = () => {
         setFormState(formData);
+        setSeleccionado(true);
         
     }
     /*  esto es para desactivar la tecla ENTER */
@@ -321,8 +322,14 @@ const PasesCarga = ({onAdd, expediente }) => {
        
     )
 }
-
-
+PasesCarga.protoTypes = {
+     expediente:PropTypes.object,
+     seleccionado:PropTypes.bool,
+     setSeleccionado:PropTypes.func
+ 
+   
+   };
+ 
 
 
 export default PasesCarga

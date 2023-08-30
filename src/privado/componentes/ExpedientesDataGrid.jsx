@@ -8,15 +8,15 @@ import RestartAlt from '@mui/icons-material/RestartAlt';
 import { PropTypes } from "prop-types";
 
 
-const  ExpedientesDataGrid=({ onSelectExpediente  , isEditing, setIsEditing}) =>{
+const  ExpedientesDataGrid=({ onSelectExpediente  , isEditing, setIsEditing ,seleccionado, setSeleccionado}) =>{
     const [expedientes, setExpedientes] = useState([]);
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(10);
     const [totalExpedientes, setTotalExpedientes] = useState(0);
-
+    
     const fetchExpedientes = async(page, pageSize) => {
-
-      const url = `${Global.url}/expedientes/estadoExp/Estudio?desde=${page * pageSize}&limite=${pageSize}`;
+     /* le mando "Abierto", que no es un estado, pero que en el servidor interpreto como todos los estadoExp que no sean "Finalizado" */
+      const url = `${Global.url}/expedientes/estadoExp/Abierto?desde=${page * pageSize}&limite=${pageSize}`;
     try {
        const metodo = 'GET';
        let  response= await Peticiones(url, metodo);
@@ -38,7 +38,7 @@ const  ExpedientesDataGrid=({ onSelectExpediente  , isEditing, setIsEditing}) =>
 
          useEffect(() => {
         if(isEditing==true){ 
-            console.log("isEditing dataGreid cuando cambia",isEditing)
+            console.log("isEditing dataGrid cuando cambia",isEditing)
         fetchExpedientes(page, pageSize);
         setIsEditing(false);
         } 
@@ -76,7 +76,8 @@ const  ExpedientesDataGrid=({ onSelectExpediente  , isEditing, setIsEditing}) =>
     domicilio:expediente.domicilio,
     id: expediente._id,
     categoria: expediente.categoria,
-    pases:expediente.pases
+    pases:expediente.pases,
+    estadoExp:expediente.estadoExp
   }));
   
   const handleRowClick = ({row}, event) => {
@@ -87,6 +88,7 @@ const  ExpedientesDataGrid=({ onSelectExpediente  , isEditing, setIsEditing}) =>
      const fechaISO = expediente.fechaIngreso.split('/').reverse().join('-');
      expediente.fechaIngreso=fechaISO;
      onSelectExpediente(expediente);
+     setSeleccionado(false);
 
   };
 
@@ -159,7 +161,10 @@ const  ExpedientesDataGrid=({ onSelectExpediente  , isEditing, setIsEditing}) =>
     
    onSelectExpediente: PropTypes.func,
       isEditing:PropTypes.bool,
-    setIsEditing:PropTypes.func
+    setIsEditing:PropTypes.func,
+    seleccionado:PropTypes.bool,
+    setSeleccionado:PropTypes.func
+
   
   };
   ExpedientesDataGrid.defaultProps = {

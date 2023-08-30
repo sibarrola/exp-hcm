@@ -1,10 +1,10 @@
-import { Accordion, AccordionDetails, AccordionSummary, Box, Divider, List, ListItem, ListItemButton, Toolbar, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Divider, List, ListItem, ListItemButton, Typography } from '@mui/material';
 /* import HomeIcon from '@mui/icons-material/Home'; */
 import logo1 from '../../assets/logo-160px.fw.png'
 /* import ArticleIcon from '@mui/icons-material/Article'; */
 import { PropTypes } from 'prop-types';
 import { GridExpandMoreIcon } from '@mui/x-data-grid';
-
+import HomeIcon from '@mui/icons-material/Home';
 
 export const NavListMenu = ({ navVectLinks, navVectGestion1, navVectGestion2, navVectGestion3, NavLink, setOpen }) => {
 
@@ -17,7 +17,26 @@ export const NavListMenu = ({ navVectLinks, navVectGestion1, navVectGestion2, na
             </Box>
             <Typography sx={{ display: 'flex', justifyContent: 'center', fontWeight: 900 }}>HCM</Typography>
             <Divider />
-        
+            <ListItem disablePadding sx={{mt:5}}>
+
+<ListItemButton
+    color="inherit"
+    component={NavLink}
+    to="/privado/menu"
+    onClick={() => setOpen(false)}
+    sx={{
+        ":hover": {
+            backgroundColor: 'bisque'
+        }
+    }}
+>
+<HomeIcon />
+ 
+    <Typography variant='subtitle1' sx={{ marginLeft: 2 }}  >
+        Inicio
+    </Typography>
+</ListItemButton  >
+</ListItem>
 
             <List sx={{m:1 }}>
 

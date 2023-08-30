@@ -19,9 +19,7 @@ import EstacionesForm from '../componentes/listas_combos/EstacionesForm';
  
 
 const navVectLinks = [
-    {
-        title: "Inicio", path: "/privado/menu", icon: <HomeIcon />
-    },
+   
     {
         title: "Pag Pública", path: "/", icon: <Diversity3Icon />
     }
@@ -29,6 +27,7 @@ const navVectLinks = [
  ];
 
 const navVectGestion1 = [
+  
 
     {
        /*  title: "Motivos", path: "/privado/tablas/1", icon: <ListAltIcon /> */

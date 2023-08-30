@@ -5,7 +5,7 @@ import { NavListMenu } from './NavListMenu'
 import { LogoutOutlined, MenuOutlined } from '@mui/icons-material';
 import { PropTypes } from 'prop-types';
 import useAuth from "../../hooks/useAuth";
- 
+ import logo1 from "../../assets/logo-160px.fw.png"
 
 
 
@@ -24,20 +24,25 @@ export const NavBar = ({ navVectLinks, navVectGestion1, navVectGestion2, navVect
                 {/* el toolbar va a activar los espaciados y todo lo que se escriba adentro tendra la prop flex */}
                 <Toolbar>
                     {/* con el iconButtom hago un boton con un icono */}
+                    <Box sx={{ display: 'flex',  mr:5,  boxSizing: 'border-box', color: 'black' }} >
+                    <img src={logo1} alt="logo" height={70} />
+                  </Box>
                     <IconButton
                         color="inherit"
-                        size="large"
+                        
                         onClick={() => setOpen(true)}
-                        sx={{ display: { xs: "flex" } }}   
+                        sx={{ display: { xs: "flex" } }}
                         edge="start">
-                        <MenuOutlined />
+                        <MenuOutlined sx={{ fontSize: '32px' }} />
                     </IconButton>
-                    <Typography variant='h6' sx={{ flexGrow: 1, ml: 16 }} >GESTION DEL SISTEMA DE EXPEDIENTES </Typography>
+             
+                    <Typography variant='h6' sx={{ flexGrow: 1, ml: 5 }} >  
+                    GESTION DEL SISTEMA DE EXPEDIENTES </Typography>
                     <Typography variant='body1' sx={{ mr: 10, fontStyle: 'italic', color:'#ffea00',fontSize:'12px'  }} > usuario: {auth.nombre} </Typography>
-                  
+                
 
                     <Box sx={{ display: { xs: "none", sm: "none", md: 'flex' }, variant: { xs: 'body1', xm: 'title1' } }}>
-
+                 
                         {navVectLinks.map(item => (
 
                             <IconButton
