@@ -21,13 +21,15 @@ import useAuth from "../../hooks/useAuth.jsx";
 const url = Global.url;
 import { PropTypes } from "prop-types";
 /* ver de traer este estadao......... */
+ 
 
-
-/* comienza el componente------------------------------------------- */
-const PasesCarga = ({ expediente, seleccionado, setSeleccionado}) => {
+/* comienza el componente-----------expediente={selectedExpediente} onPaseAdd={handlePaseAdd} -------------------------------- */
+const PasesCarga = ({ expediente, handleExpedienteSelect, pases, onPaseAdd }) => {
+   let idexp=expediente._id;  
+ 
     const { auth } = useAuth();  // usuario logueado
     const [estadoCarga,setEstadoCarga]=useState("Carga");
-    console.log("estadoCarga",estadoCarga) 
+  
     const {
         estaciones,
         comisiones,
@@ -35,7 +37,7 @@ const PasesCarga = ({ expediente, seleccionado, setSeleccionado}) => {
         organismos      
     } = useFetchCombos(url);
  
-    const [formSubmitted, setFormSubmitted] = useState(false);
+ 
 
     let formData = {
         fecha_pase:   new Date().toISOString().substring(0, 10),
@@ -48,27 +50,30 @@ const PasesCarga = ({ expediente, seleccionado, setSeleccionado}) => {
         usuario_pase: "",
         comentario: ""
     }
-    const [formState, setFormState] = useState(formData);
+ 
+    const [nuevoPase, setNuevoPase] = useState(formData);
+
     /* traigo del hookFormu-------------------------------------------------- */
     const onInputChange = ({ target }) => {
         const { name, value } = target;
-        setFormState({
-            ...formState,
+        setNuevoPase({
+            ...nuevoPase,
             [name]: value
         });
     }
     const onInputChange2 = ({ target }) => {
         const { name, value } = target;
-        setFormState({
-            ...formState,
+        setNuevoPase({
+            ...nuevoPase,
             [name]: value,
             sub_estacion:value
         });
+      
     }
 
     const handleLimpio = () => {
-        setFormState(formData);
-        setSeleccionado(true);
+        setNuevoPase(formData);
+        setSeleccionado(true); /* esto es para que muestre de nuevo los exped para elegir , la GRID*/
         
     }
     /*  esto es para desactivar la tecla ENTER */
@@ -86,25 +91,20 @@ const PasesCarga = ({ expediente, seleccionado, setSeleccionado}) => {
     /* graba SUBMIT-------------------------------------------------- */
     const savePase = async (e) => {
         e.preventDefault();
-/*         setFormSubmitted(true); */
-           
-        
-  /*       if (!isFormValid) return; VERRRRRRRRRRRRRRRRRRR */
-         console.log("formState",formState);
+ 
        let  paseg={
-            fecha_pase:formState.fecha_pase,
-            estacion:formState.estacion,
-            sub_estacion:formState.sub_estacion,
+            fecha_pase:nuevoPase.fecha_pase,
+            estacion:nuevoPase.estacion,
+            sub_estacion:nuevoPase.sub_estacion,
             estado: "true",
             usuario_pase: auth.uid ,     
-           comentario: formState.comentario
+           comentario: nuevoPase.comentario
          }
       expediente.pases.push(paseg);    
       
  
- console.log(expediente.id);
 
- const request = await fetch(`${url}/expedientes/${expediente.id}`, {
+ let request = await fetch(`${url}/expedientes/${expediente._id}`, {
     method: "PUT",
     body: JSON.stringify(expediente),
     headers: {
@@ -118,9 +118,14 @@ const PasesCarga = ({ expediente, seleccionado, setSeleccionado}) => {
         data.errors.map(error => alert(error.msg));
         return
      }
-      setFormState(formData)   
-     setFormSubmitted(false)  
-
+  
+       handleExpedienteSelect(data.expediente);
+        onPaseAdd(nuevoPase);   
+    
+     setNuevoPase (formData);
+    console.log("xpediente",expediente)
+ 
+    
   }
      catch(error) {
         console.log("error",error)
@@ -142,7 +147,7 @@ const PasesCarga = ({ expediente, seleccionado, setSeleccionado}) => {
                             label="Fecha del Pase"
                             type="date"
                             name="fecha_pase"
-                            value={formState.fecha_pase}
+                            value={nuevoPase.fecha_pase}
                             onChange={onInputChange}
                             onKeyDown={handleKeyDown}
                             format="dd/MM/yyyy"
@@ -167,7 +172,7 @@ const PasesCarga = ({ expediente, seleccionado, setSeleccionado}) => {
                             <Select
                              required
                                 name="estacion"
-                                value={formState.estacion}
+                                value={nuevoPase.estacion}
                                 onChange={onInputChange}
                                /*  error={!!errors.motivo}
                                 inputRef={motivoRef}
@@ -184,7 +189,7 @@ const PasesCarga = ({ expediente, seleccionado, setSeleccionado}) => {
                             </Select>
                         </FormControl>
  </Grid>
-                        {formState.estacion === "Comisión de Trabajo" && (
+                        {nuevoPase.estacion === "Comisión de Trabajo" && (
                         <Grid item xs={12}  >
                           <FormControl fullWidth>
                             
@@ -196,7 +201,7 @@ const PasesCarga = ({ expediente, seleccionado, setSeleccionado}) => {
                             <Select
                              required
                              name="comision"
-                             value={formState.comision}
+                             value={nuevoPase.comision}
                              onChange={onInputChange2}
                                /*  error={!!errors.motivo}
                                 inputRef={motivoRef}
@@ -215,7 +220,7 @@ const PasesCarga = ({ expediente, seleccionado, setSeleccionado}) => {
                         </Grid>
                     )}
 
-{formState.estacion === "Externos-DEM" && (
+{nuevoPase.estacion === "Externos-DEM" && (
                         <Grid item xs={12}  >
                           <FormControl fullWidth>
                             
@@ -227,7 +232,7 @@ const PasesCarga = ({ expediente, seleccionado, setSeleccionado}) => {
                             <Select
                              required
                              name="dem"
-                             value={formState.dem}
+                             value={nuevoPase.dem}
                                 onChange={onInputChange2}
                                /*  error={!!errors.motivo}
                                 inputRef={motivoRef}
@@ -245,7 +250,7 @@ const PasesCarga = ({ expediente, seleccionado, setSeleccionado}) => {
                         </FormControl>
                         </Grid>
                     )}
-             {formState.estacion === "Externos-Organismos" && (
+             {nuevoPase.estacion === "Externos-Organismos" && (
                         <Grid item xs={12}  >
                           <FormControl fullWidth>
                             
@@ -258,7 +263,7 @@ const PasesCarga = ({ expediente, seleccionado, setSeleccionado}) => {
                             <Select
                              required
                                 name="organismo"
-                                value={formState.organismo}
+                                value={nuevoPase.organismo}
                                 onChange={onInputChange2}
                                /*  error={!!errors.motivo}
                                 inputRef={motivoRef}
@@ -285,7 +290,7 @@ const PasesCarga = ({ expediente, seleccionado, setSeleccionado}) => {
                         <TextField
                             label="Comentario"
                             name="comentario"
-                            value={formState.comentario}
+                            value={nuevoPase.comentario}
                             onChange={onInputChange}
                             onKeyDown={handleKeyDown}
                           /*   error={!!errors.comentario}
@@ -305,7 +310,7 @@ const PasesCarga = ({ expediente, seleccionado, setSeleccionado}) => {
 
                         }
 
-                        <Button size="small" variant="contained" color="secondary" onClick={handleLimpio}>Cancelar</Button>
+                        <Button size="small" variant="contained" color="secondary" onClick={handleLimpio}>Salir</Button>
 
                     </Grid>
 
@@ -322,14 +327,17 @@ const PasesCarga = ({ expediente, seleccionado, setSeleccionado}) => {
        
     )
 }
-PasesCarga.protoTypes = {
+PasesCarga.propTypes = {
+  
      expediente:PropTypes.object,
-     seleccionado:PropTypes.bool,
-     setSeleccionado:PropTypes.func
- 
-   
+     handleExpedienteSelect:PropTypes.func,
+     
+      pases:PropTypes.array,
+      
+      onPaseAdd:PropTypes.func,
+     
    };
  
-
+ 
 
 export default PasesCarga

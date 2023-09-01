@@ -1,0 +1,50 @@
+import React, { useState } from 'react';
+ 
+function VistaPases() {
+  const [expediente, setExpediente] = useState({
+    legajo: "",
+    folios: "",
+    estadoExp: "Estudio",
+    motivo: "",
+    nuevoMotivo: "",
+    comentario: " ",
+    fechaIngreso: "",
+    categoria: "",
+    institucion: "",
+    organismo: "",
+    nuevaInstitucion: "",
+    dem: "",
+    nuevoDem: "",
+    nuevoOrganismo: "",
+    solicitante: "",
+    apellido: "",
+    nombres: "",
+    dni: "",
+    celular: "",
+    domicilio: "",
+    estado: "true",
+    pases:[{}]
+
+});
+
+  const agregarPase = (expedienteId, paseNuevo) => {
+    // Encuentra el expediente por su ID y agrega el nuevo pase
+    const expedienteActualizado = {
+      ...expediente,
+      pases: [...expediente.pases, paseNuevo],
+    };
+    
+    // Actualiza el estado con el expediente actualizado
+    setExpediente(expedienteActualizado);
+  };
+
+  return (
+    <div>
+      {/* Renderiza el DataGrid y otros elementos */}
+      <ExpedienteCard expediente={expediente} />
+      <CargaPases expedienteId={expediente.id} agregarPase={agregarPase} />
+    </div>
+  );
+}
+
+export default VistaPases;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     Card,
     CardContent,
@@ -19,10 +19,13 @@ import {
 } from '@mui/material';
 import { fechaReves, formatearFecha } from '../../helpers/funcionesVarias'
 
-const ExpedienteCard = ({ expediente }) => {
-
-    const pasesOrdenados = [...expediente.pases].sort((a, b) => new Date(a.fecha_pase) - new Date(b.fecha_pase));
+const ExpedienteCard = ({ expediente,pases,onPaseEdit,onPaseDelete}) => {
+ 
+    const pasesOrdenados = [...expediente.pases].sort((a, b) => new Date(a.fecha_pase) - new Date(b.fecha_pase));  
     /* los ... son para copiar y no perder el original */
+
+ 
+  
     return (
         <Card variant="outlined" sx={{ borderColor: 'blue' }} >
              <Grid sx={{ml:"10px", display:'flex'}} >
@@ -75,15 +78,16 @@ const ExpedienteCard = ({ expediente }) => {
 
                             {pasesOrdenados.map((pase, index) => {
                                 let diasEnEstacion = null;
+                                /* calculo dias de estación----------------- */
                                 if (index < pasesOrdenados.length - 1) {
-                                    const fechaActual = new Date(pase.fecha_pase);
+                                    const fechaActual = new Date(pasesOrdenados[index].fecha_pase);
                                     const fechaSiguiente = new Date(pasesOrdenados[index + 1].fecha_pase);
                                     diasEnEstacion = Math.ceil((fechaSiguiente - fechaActual) / (1000 * 60 * 60 * 24));
                                 }
                                 return (
                                     <TableRow key={pase._id}  >
                                         {/* he ajustado las celdas para que queden mas apretadas las filas , no tan altas */}
-                                        <TableCell sx={{ padding: '4px 16px' }}>{formatearFecha(new Date(pase.fecha_pase))}</TableCell>
+                                        <TableCell sx={{ padding: '4px 16px' }}> {formatearFecha(new Date(pase.fecha_pase))}</TableCell>
                                         <TableCell sx={{ padding: '5px 16px' }}>{pase.estacion} {pase.sub_estacion}</TableCell>
                                         <TableCell sx={{ padding: '5px 16px' }}>{pase.comentario}
                                         </TableCell>
