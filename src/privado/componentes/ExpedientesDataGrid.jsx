@@ -85,14 +85,16 @@ const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, sele
 
         let expediente = row;
         expediente._id=row.id;
+        expediente.pases.usuario_pase_nombre=row.pases.usuario_pase_nombre;
         expediente.comentario = (expediente.comentario == null) ? " " : row.comentario;
         expediente.domicilio = expediente.domicilio == null ? " " : row.domicilio;
         const fechaISO = expediente.fechaIngreso.split('/').reverse().join('-');
         expediente.fechaIngreso = fechaISO;
+        console.log(expediente,"expediente de handleRowClick")
         onSelectExpediente(expediente);
         setSeleccionado(false);
-        const pasesOrdenados = [...expediente.pases].sort((a, b) => new Date(a.fecha_pase) - new Date(b.fecha_pase));
-        setPases(pasesOrdenados);
+       /*  const pasesOrdenados = [...expediente.pases].sort((a, b) => new Date(a.fecha_pase) - new Date(b.fecha_pase)); */
+       /*  setPases(pasesOrdenados); */
     };
 
     const [searchTerm, setSearchTerm] = useState('');
@@ -145,7 +147,7 @@ const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, sele
                 pageSizeOptions={[5, 10, 25, 50, 100]} // incluyendo 10 en las opciones
                 onPageChange={(params) => {
                     // Actualizar el estado con los nuevos valores de página y tamaño de página
-                    console.log(params, "parametros del onPageChange")
+                
                     setPage(params.page);
                     setPageSize(params.pageSize);
                 }}
@@ -171,7 +173,4 @@ ExpedientesDataGrid.propTypes = {
     setPases: PropTypes.func
 
 };
-ExpedientesDataGrid.defaultProps = {
-    isEditing: false,
-    setIsEditing: null
-};
+

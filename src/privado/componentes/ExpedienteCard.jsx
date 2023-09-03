@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Card,
     CardContent,
@@ -18,42 +18,40 @@ import {
 
 } from '@mui/material';
 import { fechaReves, formatearFecha } from '../../helpers/funcionesVarias'
+/* ============================================================================ */
+const ExpedienteCard = ({ expediente, pase, onPaseEdit, onPaseDelete }) => {
 
-const ExpedienteCard = ({ expediente,pases,onPaseEdit,onPaseDelete}) => {
- 
-    const pasesOrdenados = [...expediente.pases].sort((a, b) => new Date(a.fecha_pase) - new Date(b.fecha_pase));  
+    const pasesOrdenados = [...expediente.pases].sort((a, b) => new Date(a.fecha_pase) - new Date(b.fecha_pase));
     /* los ... son para copiar y no perder el original */
 
- 
+   
   
     return (
         <Card variant="outlined" sx={{ borderColor: 'blue' }} >
-             <Grid sx={{ml:"10px", display:'flex'}} >
-               <h3>
-                {`Legajo: ${expediente.legajo}`}
+            <Grid sx={{ ml: "10px", display: 'flex' }} >
+                <h3>
+                    {`Legajo: ${expediente.legajo}`}
                 </h3>
                 <h4 mr="1">
-                 --- Ingresado: { formatearFecha(new Date(expediente. fechaIngreso)) + "--- ("+ expediente.estadoExp+")"}  
+                    --- Ingresado: {formatearFecha(new Date(expediente.fechaIngreso)) + "--- (" + expediente.estadoExp + ")"}
                 </h4>
-             </Grid>
-                
+            </Grid>
+
 
             <CardContent>
-                <Typography variant="body1" sx={{ fontWeight:900}}>Motivo: {expediente.motivo}</Typography>
+                <Typography variant="body1" sx={{ fontWeight: 900 }}>Motivo: {expediente.motivo}</Typography>
                 <Typography variant="body1"> {expediente.comentario}</Typography>
                 <Typography variant="body1">Solicitante: {expediente.solicitante}   </Typography>
-                <Typography variant="body1">Presentó:{expediente.nombres} {expediente.apellido+"  "} / {expediente.dni? "DNI:"+expediente.dni:"" } {expediente.celular? "/ Cel.:"+expediente.celular:"" }    {expediente.domicilio? "/ Domicilio:"+expediente.domicilio:"" } </Typography>
-              
+                <Typography variant="body1">Presentó:{expediente.nombres} {expediente.apellido + "  "} / {expediente.dni ? "DNI:" + expediente.dni : ""} {expediente.celular ? "/ Cel.:" + expediente.celular : ""}    {expediente.domicilio ? "/ Domicilio:" + expediente.domicilio : ""} </Typography>
+
 
                 <Divider style={{ margin: "20px 0", backgroundColor: 'blue' }} />
-
-
-                {/*   <TablaConBotones pases={expediente.pases} titulo="Pases del expediente" /> */}
+ 
 
                 <Container component={Paper} maxWidth="100%" sx={{ padding: 2 }}>
                     <Typography variant='h5'>Pases del Expediente
                     </Typography>
-           
+
 
                     <Table>
                         <TableHead
@@ -70,12 +68,13 @@ const ExpedienteCard = ({ expediente,pases,onPaseEdit,onPaseDelete}) => {
                                 <TableCell>Pase a</TableCell>
                                 <TableCell>Comentario</TableCell>
                                 <TableCell>Permanencia</TableCell>
+                                <TableCell>Usuario</TableCell>
                                 <TableCell>Editar</TableCell>
-
+                                <TableCell>Borrar</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-
+      {/* map ---------------------------------------------------- */}
                             {pasesOrdenados.map((pase, index) => {
                                 let diasEnEstacion = null;
                                 /* calculo dias de estación----------------- */
@@ -94,45 +93,39 @@ const ExpedienteCard = ({ expediente,pases,onPaseEdit,onPaseDelete}) => {
                                         <TableCell>
                                             {diasEnEstacion !== null ? `${diasEnEstacion} días` : '-'}
                                         </TableCell>
-                                        <TableCell sx={{ padding: '5px 16px' }}>
-                                            <Button
-                                                variant="contained"
-                                                color="primary"
-                                                size="small"
-                                                style={{ fontSize: '10px', padding: '4px 8px' }}
-                                            > editar</Button>
+                                        <TableCell sx={{ padding: '5px 16px' ,fontSize:"12px", fontStyle:"italic"}}>{pase.usuario_pase_nombre}
                                         </TableCell>
+                                      
+                                        <TableCell sx={{ padding: '5px 16px',maxWidth:"50px" }}>
+                                                    <Button
+                                                        variant="contained"
+                                                        color="primary"
+                                                        size="small"
+                                                        style={{ fontSize: '10px', padding: '4px 8px' }}
+                                                        onClick={() => onPaseEdit(pase)}
 
+                                                    > Editar</Button>
+
+                                                </TableCell>
+                                                <TableCell sx={{ padding: '5px 16px' ,maxWidth:"45px"  }}>
+                                                    <Button
+                                                        variant="contained"
+                                                        color="primary"
+                                                        size="small"
+                                                        style={{ fontSize: '10px', padding: '4px 8px' }}
+                                                        onClick={() => onPaseDelete(pase._id)}
+                                                    > borrar</Button>
+                                                </TableCell>                     
+                                                
                                     </TableRow>
                                 )
                             })}
                         </TableBody>
                     </Table>
-
+                   
                 </Container>
 
-                {/*  <List>
-                    {expediente.pases.map((pase, index) => (
-                        <ListItem key={index}>
-                            <ListItemText
-                                primary={`Fecha: ${new Date(pase.fecha_pase).toLocaleDateString()}`}
-                                secondary={`Estación: ${pase.estacion} ${pase.sub_estacion ? `- Sub: ${pase.sub_estacion}` : ''}` }
-                            />
-                        </ListItem>
-                    ))}
-                </List> */}
-                {/*  <List>
-                    {expediente.pases.map((pase, index) => (
-                        <ListItem key={index}>
-                            <ListItemText
-                                style={{ display: 'flex', alignItems: 'center', justifyContent: 'left' }}
-                                primaryTypographyProps={{ variant: "body2" }} // Ajusta la variante de tipografía para un texto más pequeño.
-                                primary={`Fecha: ${new Date(pase.fecha_pase).toLocaleDateString()} -  Estación: ${pase.estacion} ${pase.sub_estacion ? `- Sub: ${pase.sub_estacion}` : ''}`}
-                               
-                            />
-                        </ListItem>
-                    ))}
-                </List> */}
+              
             </CardContent>
         </Card>
     );

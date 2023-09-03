@@ -189,6 +189,7 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
                 estacion:"Mesa de Entrada",
                 sub_estacion:"",
                 usuario_pase:auth.uid,
+                usuario_pase_nombre:auth.nombre,
                 comentario:""
             }]
         }

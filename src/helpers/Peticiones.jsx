@@ -12,14 +12,23 @@
             },
           };
         }
-      
+      try {
         const peticion = await fetch(url, opciones);
         const datos = await peticion.json();
       
         return {
           datos,
         };
-      };
+      } 
+       catch(error) {
+        console.log("error",error)
+        
+
+         return error
+     }
+
+      }
+    
       
       export default Peticiones;
       

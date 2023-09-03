@@ -13,20 +13,31 @@ import {
 
 } from '@mui/material';
 import { Global } from '../../helpers/Global.jsx';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
   import useFetchCombos from '../../hooks/useFetchCombos.jsx'
 /* import CustomAlert from '../../privado/componentes/CustomAlert'; */
 import CustomDialog from '../../privado/componentes/CustomDialog';
 import useAuth from "../../hooks/useAuth.jsx";
 const url = Global.url;
 import { PropTypes } from "prop-types";
+import Peticiones from '../../helpers/Peticiones.jsx';
 /* ver de traer este estadao......... */
  
 
-/* comienza el componente-----------expediente={selectedExpediente} onPaseAdd={handlePaseAdd} -------------------------------- */
-const PasesCarga = ({ expediente, handleExpedienteSelect, pases, onPaseAdd }) => {
-   let idexp=expediente._id;  
+/* comienza el componente------------------------------------------------ */
+const PasesCarga = ({ expediente, handleExpedienteSelect,setSeleccionado, pase, onPaseAdd, editingPase, setEditingPase, handlePaseEdit,onPaseDelete}) => {
  
+  
+  const [nuevoPase,setNuevoPase]=useState(pase);
+   let idexp=expediente._id;  
+   const today = new Date().toISOString().split('T')[0]; //esta va a ser la fecha máxima que me permitirá seleccionar (para que no carguen un pase hacia adelante)
+
+  /* Si quisiera dar parmiso por 2 días hacia adelante: */
+ /*  const currentDate = new Date();
+   currentDate.setDate(currentDate.getDate() + 2);
+   const maxDate = currentDate.toISOString().split('T')[0];
+ */
+
     const { auth } = useAuth();  // usuario logueado
     const [estadoCarga,setEstadoCarga]=useState("Carga");
   
@@ -38,7 +49,7 @@ const PasesCarga = ({ expediente, handleExpedienteSelect, pases, onPaseAdd }) =>
     } = useFetchCombos(url);
  
  
-
+ 
     let formData = {
         fecha_pase:   new Date().toISOString().substring(0, 10),
         estacion: "",
@@ -51,7 +62,29 @@ const PasesCarga = ({ expediente, handleExpedienteSelect, pases, onPaseAdd }) =>
         comentario: ""
     }
  
-    const [nuevoPase, setNuevoPase] = useState(formData);
+   
+
+  useEffect(()=>{
+    if(editingPase){
+         
+          switch (pase.estacion) {
+            case 'Externos-DEM':
+               pase.dem=pase.sub_estacion;
+                break;
+            case 'Externos-Organismos':
+                pase.organismo=pase.sub_estacion;
+                break;
+            case "Comisión de Trabajo":
+                pase.comision=pase.sub_estacion;
+                break;
+            default:
+    }
+    pase.usuario_pase_nombre=auth.nombre; // actualizo con el nombre del que edita
+    setNuevoPase(pase);
+    setEstadoCarga("EDICION DEL PASE") ;
+} 
+  },[pase])  //cuando cambia el pase
+  
 
     /* traigo del hookFormu-------------------------------------------------- */
     const onInputChange = ({ target }) => {
@@ -91,46 +124,62 @@ const PasesCarga = ({ expediente, handleExpedienteSelect, pases, onPaseAdd }) =>
     /* graba SUBMIT-------------------------------------------------- */
     const savePase = async (e) => {
         e.preventDefault();
- 
-       let  paseg={
+     if(editingPase) {
+
+        // si edito voy a la función que trae los pases, busca el editado y lo reemplaza
+         handlePaseEdit(nuevoPase)
+          
+     }else
+     {
+        let  paseg={
             fecha_pase:nuevoPase.fecha_pase,
             estacion:nuevoPase.estacion,
             sub_estacion:nuevoPase.sub_estacion,
             estado: "true",
-            usuario_pase: auth.uid ,     
+            usuario_pase: auth.uid , 
+            usuario_pase_nombre: auth.nombre ,       
            comentario: nuevoPase.comentario
          }
-      expediente.pases.push(paseg);    
-      
- 
+      expediente.pases.push(paseg);    //agrego en el campo de expedientes un nuevo pase al final del vector
 
- let request = await fetch(`${url}/expedientes/${expediente._id}`, {
+     }
+      
+  
+ /* let request = await fetch(`${url}/expedientes/${expediente._id}`, {
     method: "PUT",
     body: JSON.stringify(expediente),
     headers: {
         "Content-Type": "application/json"
     }
-});
-     
-  try{
+}); */
+      let metodo="PUT"
+      let response= await Peticiones (`${url}/expedientes/${expediente._id}`,  metodo, expediente);
+      let expedienteactualizado=response.datos.expediente;
+       handleExpedienteSelect(expedienteactualizado);
+        onPaseAdd(nuevoPase); /* ver si borrar esto  */  
+        setEditingPase(false)  /* salgo del modo edición */
+        setEstadoCarga("CARGA DE PASES");
+        setNuevoPase (formData);
+    
+  /* try{
     const data = await request.json();
      if (data.success=!"true" && data.errors){
         data.errors.map(error => alert(error.msg));
         return
      }
   
-       handleExpedienteSelect(data.expediente);
-        onPaseAdd(nuevoPase);   
-    
-     setNuevoPase (formData);
-    console.log("xpediente",expediente)
- 
+        handleExpedienteSelect(data.expediente);
+        onPaseAdd(nuevoPase); /* ver si borrar esto  */  
+       /*  setEditingPase(false)  /* salgo del modo edición */
+       /*  setEstadoCarga("EDICION DEL PASE");
+        setNuevoPase (formData);
+      
     
   }
      catch(error) {
         console.log("error",error)
-         return
-     }
+         return */
+    /*  } */    
           
     }     
    
@@ -138,12 +187,11 @@ const PasesCarga = ({ expediente, handleExpedienteSelect, pases, onPaseAdd }) =>
       
         <Container    component={Paper}  sx={{ padding: 2 ,border:1,borderColor:'blue'}}>                         
              <h3>Expediente nro Legajo {expediente.legajo}</h3>
-             <h2>NUEVO PASE</h2>
+             <h2>{estadoCarga}</h2>
             <form onSubmit={savePase}>
             <Grid container spacing={2}>
                     <Grid item xs={12}  >
                     <TextField
- 
                             label="Fecha del Pase"
                             type="date"
                             name="fecha_pase"
@@ -151,16 +199,17 @@ const PasesCarga = ({ expediente, handleExpedienteSelect, pases, onPaseAdd }) =>
                             onChange={onInputChange}
                             onKeyDown={handleKeyDown}
                             format="dd/MM/yyyy"
-                            /* error={!!errors.fechaIngreso}
-                            helperText={errors.fechaIngreso} */
                             fullWidth
                             InputLabelProps={{
                                 shrink: true,  // <-- esta propiedad es necesaria para que el label no se superponga con la fecha predeterminada
                             }}
+                            inputProps={{
+                                max: today  // <-- Establece la fecha actual como valor máximo
+                              }}
                         />
                     </Grid>
 
-                  
+            
                     <Grid item xs={12}  >
                         <FormControl fullWidth>
                             
@@ -331,13 +380,17 @@ PasesCarga.propTypes = {
   
      expediente:PropTypes.object,
      handleExpedienteSelect:PropTypes.func,
-     
-      pases:PropTypes.array,
+     setSeleccionado:PropTypes.func,
+      pase:PropTypes.object,
       
       onPaseAdd:PropTypes.func,
-     
+      editingPase:PropTypes.bool,
+      setEditedPase:PropTypes.func,
+      handlePaseEdit:PropTypes.func,
+      onPaseDelete:PropTypes.func,
    };
  
+  
  
 
 export default PasesCarga
