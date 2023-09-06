@@ -16,7 +16,7 @@ const CustomDialog = ({ open, onClose, title, message }) => {
   });
 
   const CustomContent = styled(DialogContent)({
-    color: 'red', // texto rojo
+    color: 'secondary', // texto rojo
   });
 
   return (

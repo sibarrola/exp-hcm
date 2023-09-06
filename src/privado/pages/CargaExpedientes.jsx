@@ -2,7 +2,7 @@
    import ExpedientesCarga from "../componentes/ExpedientesCarga";  
  
 import LayoutPrivado  from "../layout/LayoutPrivado"
- 
+import { useState } from 'react';
 const expediente= {
     legajo: "",
     folios: "",

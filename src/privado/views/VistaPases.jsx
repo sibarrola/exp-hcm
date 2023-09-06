@@ -6,9 +6,17 @@ import PasesCarga from '../componentes/PasesCarga';
 import ExpedienteCard from '../componentes/ExpedienteCard';
 import Peticiones from '../../helpers/Peticiones';
 import {Global} from '../../helpers/Global'
-
+import { colortema } from '../../theme';
+ 
 const VistaPases = () => {
-
+ 
+   /*  const useStyles = makeStyles((theme) => ({
+        miComponente: {
+          // ...otros estilos para tu componente
+          ...colortema.typography.texto,
+        },
+      }));  */
+  
     const [expedienteSeleccionado, setExpedienteSeleccionado] = useState({
         _id: "",
         legajo: "",
@@ -57,6 +65,7 @@ const VistaPases = () => {
     const handlePaseAdd = (nuevoPase) => {
         setPases((prevPases) => [...prevPases, nuevoPase]);
     };
+   
 
     const handleExpedienteSelect = (expediente) => {
         setExpedienteSeleccionado(expediente);
@@ -90,11 +99,11 @@ const VistaPases = () => {
 
     /* -------------------BORRA EL PASE------------------------------------ */
     const handlePaseDelete = async(paseId) => {
+        console.log("handlePaseDelete",handlePaseDelete)
        const vectorPases=expedienteSeleccionado.pases;
           
         const updatedPases = vectorPases.filter((pase) => pase._id !== paseId);
-   
-         console.log("delete updatedPases",updatedPases);
+    
             setExpedienteSeleccionado((prevExpediente) => ({
                 ...prevExpediente,
                 pases: updatedPases,
@@ -110,16 +119,20 @@ const VistaPases = () => {
     };
     return (
 
-        <Grid container direction="row" sx={{ display: 'flex', justifyContent: 'between' }} spacing={2}  >
+        <Grid container direction="row" sx={{ display: 'flex', justifyContent: 'between' }} spacing={2}   >
+       
             {/*    <div> {JSON.stringify(expedienteSeleccionado)}</div>  */}
             <Grid item xs={12}>
-                <Typography variant='h5' align='left' marginLeft='5%'>SELECCION DE EXPEDIENTES Y CARGA DE PASES</Typography>
+                 
+                <Typography marginLeft="5%"   sx={colortema.typography.texto1}>SELECCION DE EXPEDIENTES Y CARGA DE PASES</Typography>
             </Grid>
             {seleccionado && (
+              
                 <Grid item md={12} lg={12} sx={{ mr: "20px" }}  >
                     <ExpedientesDataGrid onSelectExpediente={handleExpedienteSelect} isEditing={isEditing} setIsEditing={setIsEditing} seleccionado={seleccionado} setSeleccionado={setSeleccionado}
                  /* pases={pases} setPases={setPases} */ />
                 </Grid>
+          
             )}
 
             {expedienteSeleccionado && !seleccionado && (

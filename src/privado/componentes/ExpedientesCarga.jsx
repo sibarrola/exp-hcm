@@ -790,7 +790,7 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
 
                         }
 
-                        <Button size="small" variant="contained" color="secondary" onClick={handleLimpio}>Cancelar</Button>
+                        <Button size="small" variant="contained" color="botonCancela" onClick={handleLimpio}>Cancelar</Button>
 
                     </Grid>
                 </Grid>

@@ -6,7 +6,7 @@ import { LogoutOutlined, MenuOutlined } from '@mui/icons-material';
 import { PropTypes } from 'prop-types';
 import useAuth from "../../hooks/useAuth";
  import logo1 from "../../assets/logo-160px.fw.png"
-
+ import {colortema} from './../../theme/colortema'
 
 
 
@@ -35,10 +35,12 @@ export const NavBar = ({ navVectLinks, navVectGestion1, navVectGestion2, navVect
                         edge="start">
                         <MenuOutlined sx={{ fontSize: '32px' }} />
                     </IconButton>
-             
-                    <Typography variant='h6' sx={{ flexGrow: 1, ml: 5 }} >  
+                  <Box sx={{ flexGrow: 1, ml: 5 }} >
+                  <Typography   sx={colortema.typography.texto1}    >  
                     GESTION DEL SISTEMA DE EXPEDIENTES </Typography>
-                    <Typography variant='body1' sx={{ mr: 10, fontStyle: 'italic', color:'#ffea00',fontSize:'12px'  }} > usuario: {auth.nombre} </Typography>
+                    <Typography variant='body1' sx={{ mr: 10, fontStyle: 'italic', color:'#ffea00',fontSize:'12px' ,}} > usuario: {auth.nombre} </Typography>
+                  </Box>
+                   
                 
 
                     <Box sx={{ display: { xs: "none", sm: "none", md: 'flex' }, variant: { xs: 'body1', xm: 'title1' } }}>

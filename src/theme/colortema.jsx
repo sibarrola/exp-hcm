@@ -6,6 +6,7 @@ import {red} from '@mui/material/colors';
 /* defino aqui lo que quiera */
 /* AGREGAR MAS SETEOS */
 export const colortema =createTheme({
+    
     palette:{
         primary:{
              /* main:'#483af0'   */
@@ -33,7 +34,23 @@ export const colortema =createTheme({
         cabeceraTabla:{
             main:"#3e25fa"
         },
-      
+        cabeceraDialog:{
+            main:'#648dae'
+        },
+        botonConfirma:{
+            main:"#2196f3",
+            secondary:"#f7f7ed"
+        },
+        botonCancela:{
+            main:'#90caf9'
+           
+        },
+       
+        botonBorra:{
+            main:'#e57373'
+           
+        },
+
        error:{
         main:red.A400   /*red con la intensidad de 400  */
        }
@@ -63,8 +80,56 @@ export const colortema =createTheme({
           },
         },
       },
-    } 
-});
 
-
- 
+    } ,
+    
+    typography: {
+        texto: {
+          fontSize: '14px', // Tamaño de fuente por defecto
+          '@media (max-width:900px)': {
+            fontSize: '12px', // Ajustar el tamaño de fuente para pantallas pequeñas y medias
+          },
+        },
+        texto1: {
+            fontSize: '22px', // Tamaño de fuente por defecto
+            '@media (max-width:99px)': {
+              fontSize: '12px', // Ajustar el tamaño de fuente para pantallas pequeñas y medias
+            },
+          },
+      },
+     /*  '@global': {
+        // Por defecto (dispositivos pequeños)
+        body: {
+          fontSize: '12px',
+        },
+        // Para pantallas medianas
+        [`@media (min-width:${960}px)`]: { // Equivalent to theme.breakpoints.up('md')
+          body: {
+            fontSize: '14px',
+          },
+        },
+        // Para pantallas grandes
+        [`@media (min-width:${1280}px)`]: { // Equivalent to theme.breakpoints.up('lg')
+          body: {
+            fontSize: '16px',
+          },
+        },
+      },
+    });
+      */
+    overrides: {
+        MuiCssBaseline: {
+          '@global': {
+            body: {
+              fontSize: '12px',
+              '@media (min-width:960px)': {
+                fontSize: '14px',
+              },
+              '@media (min-width:1280px)': {
+                fontSize: '16px',
+              },
+            },
+          },
+        },
+      },
+    });

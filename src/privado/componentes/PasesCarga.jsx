@@ -39,7 +39,7 @@ const PasesCarga = ({ expediente, handleExpedienteSelect,setSeleccionado, pase, 
  */
 
     const { auth } = useAuth();  // usuario logueado
-    const [estadoCarga,setEstadoCarga]=useState("Carga");
+    const [estadoCarga,setEstadoCarga]=useState("NUEVO PASE");
   
     const {
         estaciones,
@@ -62,7 +62,7 @@ const PasesCarga = ({ expediente, handleExpedienteSelect,setSeleccionado, pase, 
         comentario: ""
     }
  
-   
+  
 
   useEffect(()=>{
     if(editingPase){
@@ -158,7 +158,7 @@ const PasesCarga = ({ expediente, handleExpedienteSelect,setSeleccionado, pase, 
        handleExpedienteSelect(expedienteactualizado);
         onPaseAdd(nuevoPase); /* ver si borrar esto  */  
         setEditingPase(false)  /* salgo del modo edición */
-        setEstadoCarga("CARGA DE PASES");
+        setEstadoCarga("NUEVO PASE");
         setNuevoPase (formData);
     
   /* try{
@@ -185,9 +185,10 @@ const PasesCarga = ({ expediente, handleExpedienteSelect,setSeleccionado, pase, 
    
     return (
       
-        <Container    component={Paper}  sx={{ padding: 2 ,border:1,borderColor:'blue'}}>                         
-             <h3>Expediente nro Legajo {expediente.legajo}</h3>
-             <h2>{estadoCarga}</h2>
+        <Container    component={Paper}  sx={{ padding: 2 ,border:1,borderColor:'blue' }}>                         
+           
+             <h3>{estadoCarga}</h3>
+             <h4>Exp. Legajo {expediente.legajo}</h4>
             <form onSubmit={savePase}>
             <Grid container spacing={2}>
                     <Grid item xs={12}  >
@@ -352,14 +353,14 @@ const PasesCarga = ({ expediente, handleExpedienteSelect,setSeleccionado, pase, 
                   
                     <Grid container spacing={2} sx={{ mb: 2, mt: 1 }}>
                     <Grid item xs={12} marginTop="20px" marginRight='20px' alignContent="right">
-                        {(estadoCarga=="Carga")?(
+                        {(estadoCarga=="NUEVO PASE")?(
                         <Button size="small" variant="contained" color="primary" type='submit' style={{ marginRight: 20 }}>Guardar</Button>):
                         <Button size="small" variant="contained" color="primary" type='submit' style={{ marginRight: 20 }}>Actualizar</Button>
                          
 
                         }
 
-                        <Button size="small" variant="contained" color="secondary" onClick={handleLimpio}>Salir</Button>
+                        <Button size="small" variant="contained" color="botonCancela" onClick={handleLimpio}>Salir</Button>
 
                     </Grid>
 
