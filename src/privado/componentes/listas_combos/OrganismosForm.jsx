@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Container, Paper, Box, Typography } from '@mui/material';
 import {Global} from '../../../helpers/Global';
-
+import ConfirmDialog from '../ConfirmDialog';
 const url=Global.url; 
 const OrganismosForm = () => {
 
@@ -11,7 +11,12 @@ const OrganismosForm = () => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [editOrganismo, setEditOrganizaciones] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
+// para los borrados--------------------------------------
+const [dialogOpen2, setDialogOpen2] = useState(false);
+const [isBorrando, setIsBorrando] = useState(false);
+const [borraOrganismo, setBorraOrganismo] = useState(null);
 
+const [nombre, setNombre] = useState("");
     const fetchOrganismos = async () => {
         try {
             const res = await axios.get(`${url}/organizaciones`);
@@ -44,6 +49,14 @@ const OrganismosForm = () => {
             console.error('Error', error);
         }
     };
+    // borrar ---------------------------------------------------
+const OpenDeleteOrganizacion = (id,nombre) => {
+    setBorraOrganismo(id);
+    setIsBorrando(true)
+    setNombre(nombre);
+    setDialogOpen2(true)
+};
+ 
     const deleteOrganismo = async id => {
         await axios.delete(`${url}/organizaciones/${id}`);
         setOrganizaciones(organizaciones.filter(m => m._id !== id));
@@ -78,6 +91,18 @@ const OrganismosForm = () => {
         }
         handleDialogClose();
     };
+      // ventana dialogo para confimar el borrado ---------------------------------
+      const handleDialogClose2= () => {
+        setDialogOpen2(false);
+        setBorraOrganismo(null)
+    };
+    const handleDialogConfirm2 = () => {
+        if (isBorrando) {
+            deleteOrganismo(borraOrganismo); //envia el id almacenado en BorraDEm
+        }
+        setBorraOrganismo(null)
+        handleDialogClose2();
+    };
 
     return (
         <>
@@ -91,6 +116,17 @@ const OrganismosForm = () => {
                 </Button>
             </Box>
                 <TableContainer>
+                <ConfirmDialog
+                            open={dialogOpen2}
+                            onClose={handleDialogClose2}
+                            title="Eliminación de la Organización"
+                            contentText={`¿Estás seguro de que deseas borrar ${nombre} ?`}
+                            onConfirm={handleDialogConfirm2}
+                            titulo_fondo='#4dabf5'
+                            titulo_color='black'
+                            context_fondo='yellowlight'
+                            context_color='secondary'
+                        />
                     <Table>
                     <TableHead
                             sx={{
@@ -117,7 +153,7 @@ const OrganismosForm = () => {
                                         </Button>
                                     </TableCell>
                                     <TableCell>
-                                        <Button size="small" variant="contained" color="error" onClick={() => deleteOrganismo(organizacion._id)}>
+                                        <Button size="small" variant="contained" color="error" onClick={() => OpenDeleteOrganizacion(organizacion._id,organizacion.organizacion)}>
                                             Borrar
                                         </Button>
                                     </TableCell>

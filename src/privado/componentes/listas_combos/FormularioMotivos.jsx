@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Container, Paper, Box, Typography } from '@mui/material';
 import {Global} from '../../../helpers/Global';
-
+import ConfirmDialog from '../ConfirmDialog';
 const url=Global.url; 
 const FormularioMotivos = () => {
 
@@ -11,7 +11,12 @@ const FormularioMotivos = () => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [editMotivo, setEditMotivo] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
-
+// para los borrados--------------------------------------
+const [dialogOpen2, setDialogOpen2] = useState(false);
+const [isBorrando, setIsBorrando] = useState(false);
+const [borraMotivo, setBorraMotivo] = useState(null);
+const [nombre, setNombre] = useState("");
+//-------------------------------------------------------------
     const fetchMotivos = async () => {
         try {
             const res = await axios.get(`${url}/motivos`);
@@ -43,6 +48,23 @@ const FormularioMotivos = () => {
             console.error('Error', error);
         }
     };
+
+// borrar ---------------------------------------------------
+const OpenDeleteMotivo = (id,nombre) => {
+    setBorraMotivo(id);
+    setIsBorrando(true)
+    setNombre(nombre);
+    setDialogOpen2(true)
+};
+ // borrar ---------------------------------------------------
+const OpenDeleteEstacion = (id,nombre) => {
+    setBorraEstacion(id);
+    setIsBorrando(true)
+    setNombre(nombre);
+    setDialogOpen2(true)
+};
+ 
+
     const deleteMotivo = async id => {
         await axios.delete(`${url}/motivos/${id}`);
         setMotivos(motivos.filter(m => m._id !== id));
@@ -78,6 +100,19 @@ const FormularioMotivos = () => {
         handleDialogClose();
     };
 
+    // ventana dialogo para confimar el borrado ---------------------------------
+    const handleDialogClose2= () => {
+        setDialogOpen2(false);
+        setBorraMotivo(null)
+    };
+    const handleDialogConfirm2 = () => {
+        if (isBorrando) {
+            deleteMotivo(borraMotivo); //envia el id almacenado en BorraDEm
+        }
+        setBorraMotivo(null)
+        handleDialogClose2();
+    };
+
     return (
         <>
            
@@ -90,6 +125,17 @@ const FormularioMotivos = () => {
                 </Button>
             </Box>
                 <TableContainer>
+                <ConfirmDialog
+                            open={dialogOpen2}
+                            onClose={handleDialogClose2}
+                            title="Eliminación de la Estación"
+                            contentText={`¿Estás seguro de que deseas borrar ${nombre} ?`}
+                            onConfirm={handleDialogConfirm2}
+                            titulo_fondo='#4dabf5'
+                            titulo_color='black'
+                            context_fondo='yellowlight'
+                            context_color='secondary'
+                        />
                     <Table>
                     <TableHead
                             sx={{     // Cambia el color de fondo
@@ -116,7 +162,7 @@ const FormularioMotivos = () => {
                                         </Button>
                                     </TableCell>
                                     <TableCell>
-                                        <Button size="small" variant="contained" color="error" onClick={() => deleteMotivo(motivo._id)}>
+                                        <Button size="small" variant="contained" color="error" onClick={() => OpenDeleteMotivo(motivo._id,motivo.motivo)}>
                                             Borrar
                                         </Button>
                                     </TableCell>

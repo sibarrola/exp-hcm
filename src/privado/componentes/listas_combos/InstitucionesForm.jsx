@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Container, Paper, Box, Typography } from '@mui/material';
 import {Global} from '../../../helpers/Global';
- 
+import ConfirmDialog from '../ConfirmDialog';
+
 const url = Global.url;
 const InstitucionesForm = () => {
 
@@ -11,6 +12,11 @@ const InstitucionesForm = () => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [editInstitucion, setEditInstitucion] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
+// para los borrados--------------------------------------
+const [dialogOpen2, setDialogOpen2] = useState(false);
+const [isBorrando, setIsBorrando] = useState(false);
+const [borraInstitucion, setBorraInstitucion] = useState(null);
+const [nombre, setNombre] = useState("");
 
     const fetchInstituciones = async () => {
         try {
@@ -43,6 +49,13 @@ const InstitucionesForm = () => {
         } catch (error) {
             console.error('Error', error);
         }
+    };
+
+    const OpenDeleteInstitucion = (id,nombre) => {
+        setBorraInstitucion(id);
+        setIsBorrando(true)
+        setNombre(nombre);
+        setDialogOpen2(true)
     };
     const deleteInstitucion = async id => {
         await axios.delete(`${url}/instituciones/${id}`);
@@ -78,7 +91,18 @@ const InstitucionesForm = () => {
         }
         handleDialogClose();
     };
-
+// ventana dialogo para confimar el borrado ---------------------------------
+const handleDialogClose2= () => {
+    setDialogOpen2(false);
+    setBorraInstitucion(null)
+};
+const handleDialogConfirm2 = () => {
+    if (isBorrando) {
+        deleteInstitucion(borraInstitucion); //envia el id almacenado en BorraDEm
+    }
+    setBorraInstitucion(null)
+    handleDialogClose2();
+};
     return (
         <>
 
@@ -93,6 +117,17 @@ const InstitucionesForm = () => {
                     </Button>
                 </Box>
                 <TableContainer>
+                <ConfirmDialog
+                            open={dialogOpen2}
+                            onClose={handleDialogClose2}
+                            title="Eliminación de la Institucion"
+                            contentText={`¿Estás seguro de que deseas borrar ${nombre} ?`}
+                            onConfirm={handleDialogConfirm2}
+                            titulo_fondo='#4dabf5'
+                            titulo_color='black'
+                            context_fondo='yellowlight'
+                            context_color='secondary'
+                        />
                     <Table>
                         <TableHead
                             sx={{
@@ -119,7 +154,7 @@ const InstitucionesForm = () => {
                                         </Button>
                                     </TableCell>
                                     <TableCell>
-                                        <Button size="small" variant="contained" color="secondary" onClick={() => deleteInstitucion(institucion._id)}>
+                                        <Button size="small" variant="contained" color="secondary" onClick={() => OpenDeleteInstitucion(institucion._id,institucion.institucion)}>
                                             Borrar
                                         </Button>
                                     </TableCell>

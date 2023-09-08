@@ -8,10 +8,6 @@ import { Button } from '@mui/material';
 import { styled } from '@mui/system';
 const ConfirmDialog = ({ open, onClose, title, contentText, onConfirm, titulo_fondo, titulo_color, context_fondo, context_color }) => {
 
-    /* const CustomTitle = styled(DialogTitle)({
-        backgroundColor: `${titulo_fondo}`, // fondo rojo
-        color: `${titulo_color}`, // texto blanco
-    }); */
     const CustomTitle = styled(DialogTitle)({
         backgroundColor: `#648dae`, // fondo 
         color: `#00000`, // texto blanco

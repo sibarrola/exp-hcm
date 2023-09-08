@@ -3,16 +3,21 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Container, Paper, Box, Typography } from '@mui/material';
  import {Global} from '../../../helpers/Global';
-
+import ConfirmDialog from '../ConfirmDialog';
+ 
 const url=Global.url; 
 const FormularioDem = () => {
 
     // estados
     const [dems, setDems] = useState([]);
-    const [dialogOpen, setDialogOpen] = useState(false);
+    const [nombre, setNombre] = useState("");
+    const [dialogOpen, setDialogOpen] = useState(false); // la ventana de carga y ediicion
     const [editDem, setEditDem] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
-
+    const [dialogOpen2, setDialogOpen2] = useState(false); // la ventana de carga 
+    const [isBorrando, setIsBorrando] = useState(false);
+const [borraDem, setBorraDem] = useState(null);
+    //----------------------------------------------------------------------
     const fetchDems = async () => {
         try {
             const res = await axios.get(`${url}/dems`);
@@ -44,11 +49,6 @@ const FormularioDem = () => {
             console.error('Error', error);
         }
     };
-    const deleteDem = async id => {
-        await axios.delete(`${url}/dems/${id}`);
-        setDems(dems.filter(m => m._id !== id));
-    };
-
     useEffect(() => {
         fetchDems();
     }, []);
@@ -56,6 +56,19 @@ const FormularioDem = () => {
     useEffect(() => {
         console.log("dems", dems);
     }, [dems]);
+// borrar ---------------------------------------------------
+    const OpenDeleteDem = (id,nombre) => {
+        setBorraDem(id);
+        setIsBorrando(true)
+        setNombre(nombre);
+        setDialogOpen2(true)
+    };
+    const deleteDem = async id => {
+        await axios.delete(`${url}/dems/${id}`);
+        setDems(dems.filter(m => m._id !== id));
+    };
+
+   
 
     const handleDialogOpen = (dem = null) => {
         setEditDem(dem);
@@ -70,6 +83,8 @@ const FormularioDem = () => {
         setIsEditing(false);
     };
 
+    
+
     const handleDialogConfirm = () => {
         if (isEditing) {
             updateDem(editDem);
@@ -77,6 +92,19 @@ const FormularioDem = () => {
            createDem({ dem: editDem ? editDem.dem : '' });
         }
         handleDialogClose();
+    };
+
+    // ventana dialogo para confimar el borrado ---------------------------------
+    const handleDialogClose2= () => {
+        setDialogOpen2(false);
+        setBorraDem(null)
+    };
+    const handleDialogConfirm2 = () => {
+        if (isBorrando) {
+            deleteDem(borraDem); //envia el id almacenado en BorraDEm
+        }
+        setBorraDem(null)
+        handleDialogClose2();
     };
 
     return (
@@ -91,6 +119,17 @@ const FormularioDem = () => {
                 </Button>
             </Box>
                 <TableContainer>
+                <ConfirmDialog
+                            open={dialogOpen2}
+                            onClose={handleDialogClose2}
+                            title="Eliminación de la Repartición"
+                            contentText={`¿Estás seguro de que deseas borrar ${nombre} ?`}
+                            onConfirm={handleDialogConfirm2}
+                            titulo_fondo='#4dabf5'
+                            titulo_color='black'
+                            context_fondo='yellowlight'
+                            context_color='secondary'
+                        />
                     <Table>
                     <TableHead
                             sx={{
@@ -117,7 +156,7 @@ const FormularioDem = () => {
                                         </Button>
                                     </TableCell>
                                     <TableCell>
-                                        <Button size="small" variant="contained" color="error" onClick={() => deleteDem(dem._id)}>
+                                        <Button size="small" variant="contained" color="error" onClick={() => OpenDeleteDem(dem._id,dem.dem)}>
                                             Borrar
                                         </Button>
                                     </TableCell>

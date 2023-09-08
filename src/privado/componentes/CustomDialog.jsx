@@ -8,15 +8,16 @@ import Button from '@mui/material/Button';
 import { styled, useTheme } from '@mui/system';
 
 const CustomDialog = ({ open, onClose, title, message }) => {
-  const theme = useTheme();
+ 
 
   const CustomTitle = styled(DialogTitle)({
-    backgroundColor: '#f00', // fondo rojo
-    color: 'white', // texto blanco
+    backgroundColor: "blue", // fondo 
+    color: "white", // texto blanco
   });
 
-  const CustomContent = styled(DialogContent)({
-    color: 'secondary', // texto rojo
+  const CustomContentText= styled(DialogContentText)({
+    color: 'black',
+    fontWeight:'800' // 
   });
 
   return (
@@ -31,14 +32,14 @@ const CustomDialog = ({ open, onClose, title, message }) => {
       <CustomTitle id="alert-dialog-title">
         {title}
       </CustomTitle>
-      <CustomContent>
-        <DialogContentText id="alert-dialog-description">
+      <DialogContent>
+        <CustomContentText id="alert-dialog-description">
           {message}
-        </DialogContentText>
-      </CustomContent>
+        </CustomContentText>
+      </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary" autoFocus>
-          Salir
+      <Button size="small" variant="contained" color="botonConfirma" onClick={onClose}  sx={{color:'black'}}> 
+            Salir
         </Button>
       </DialogActions>
     </Dialog>

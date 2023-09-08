@@ -1,8 +1,7 @@
 /* ESTE ES EL FORMULARIO QUE VA PARA LA CARGA DE EXPEDIENTES */
-/* ESTE ES EL FORMULARIO QUE VA PARA LA CARGA DE EXPEDIENTES */
+
 import { useState, useRef,useEffect } from "react";
 
- 
 import {
     Select,
     MenuItem,
@@ -25,26 +24,48 @@ import useAuth from "../../hooks/useAuth.jsx";
 import CelularField from "./CelularField.jsx";
 import DniField from "./DniField.jsx";
 import { PropTypes } from "prop-types";
- 
- 
-
+import CustomAlert from "./CustomAlert.jsx";
+import useFetchAxios from "../../hooks/useFetchAxios.jsx";
+let url =Global.url ;
 const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEditing} ) => {
  
-   let expedienteLimpio=expediente;
+    const [executeRequest, isSuccessful, alert, setAlert] = useFetchAxios();
+
+   let expedienteLimpio={
+    legajo: "",
+    folios: "",
+    estadoExp: "Estudio",
+    motivo: "",
+    nuevoMotivo: "",
+    comentario: " ",
+    fechaIngreso: "",
+    categoria: "",
+    institucion: "",
+    organismo: "",
+    nuevaInstitucion: "",
+    dem: "",
+    nuevoDem: "",
+    nuevoOrganismo: "",
+    solicitante: "",
+    apellido: "",
+    nombres: "",
+    dni: "",
+    celular: "",
+    domicilio: "",
+    estado: "true",
+
+};
+  
       const [values, setValues] = useState(expedienteLimpio)
- 
-
-
-    let url = Global.url;
-    const { auth } = useAuth();  // usuario logueado
+     const { auth } = useAuth();  // usuario logueado
     const [ guardado, setGuardado ] = useState(false);
     
     const [errors, setErrors] = useState({});
-    const [alert, setAlert] = useState({
+ /*    const [alert, setAlert] = useState({
         open: false,
         severity: 'success',
         message: '',
-    });
+    }); */
     const {
         motivos,
         institucionesp,
@@ -63,12 +84,24 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
     const nombresRef=useRef(null);  
      
     const dniRef=useRef(null);  
+  /* limpia los campos del estado del formulario para comenzar a cargar otro expediente */
+  const handleLimpio = () => {
+    setValues(expedienteLimpio);
+    console.log(values,"values")
+    
+}
 
     useEffect(() => {
         setValues(expediente);
       }, [expediente]);
  
- 
+      useEffect(() => {
+        if(isSuccessful){
+            handleLimpio();
+            setGuardado(true);
+            
+         } 
+     }, [isSuccessful]);
 /*  esto es para desactivar la tecla ENTER */
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
@@ -150,12 +183,7 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
     };
 
 
-    /* limpia los campos del estado del formulario para comenzar a cargar otro expediente */
-    const handleLimpio = () => {
-        setValues(expedienteLimpio);
-        
-    }
-
+  
 
     const guardarExpedienteEnBD = async () => {
         let solicitanteg = (values.solicitante&&values.solicitante.length == 0) ? (values.apellido + " " + values.nombres) : values.solicitante
@@ -194,98 +222,18 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
             }]
         }
         /* si el estadoCarga es Guardar lo guardo y si no lo actualizo */
-         
-         if (estadoCarga=="Carga") {
-          
-        axios.post(`${url}/expedientes`, expediente_guardar)      
-            .then(response => {
-                console.log("response del axios",response.data.success)
-                if (response.data.success) {
-                    setGuardado(true);
-                    handleLimpio();
-                    setAlert({
-                        open: true,
-                        severity: 'error',
-                        message: `El expediente nro legajo: ${response.data.expediente.legajo} ha sido guardado OK!`
-
-                    });
-                }
-                else {
-                    console.log("response del axios del else",response.data.success) 
-                    let errores = "";
-                    response.data.errors.errors.map(error => {
-                        errores = errores + " " + error.msg
-                    })
-                    setAlert({
-                        open: true,
-                        severity: 'error',
-                        message: errores
-
-                    }); 
-                }
-            })
-            .catch(error => {
-                setAlert({
-                    open: true,
-                    severity: 'error',
-                    message: `ERROR! no se pudo guardar ${error}`
-
-                });
-                console.log(expediente_guardar)
-            })  }
-            else
-            {
-                axios.put(`${url}/expedientes/${values.id}`, expediente_guardar)      
-                .then(response => {
-                    console.log("response del axios PUT",response.data)
-                    if (response.data.success) {
-                       /*  handleLimpio(); */
-                      
-                        setGuardado(true);
-                        setIsEditing(true);
-                        console.log("isediting",isEditing)
-                      /*   if (!!onUpdated) {
-                            onUpdated();
-                        } */
-                    
-                        setAlert({
-                            open: true,
-                            severity: 'error',
-                            message: `El expediente ha sido actualizado Ok` 
-                            });
-                        
-                       
-                    }
-                    else {
-                        /* errores ACTUALIZO---------------------------------------- */
-                        console.log("response del axios del else",response.data.success) 
-                        let errores = "";
-                        response.data.errors.errors.map(error => {
-                            errores = errores + " " + error.msg
-                        })
-                        setAlert({
-                            open: true,
-                            severity: 'error',
-                            message: errores
+       let token=auth.token;  
     
-                        }); 
-                    }
-              
-                   
-                })
-              
-                .catch(error => {
-                    setAlert({
-                        open: true,
-                        severity: 'error',
-                        message: `ERROR! no se pudo guardar ${error}`
-    
-                    });
-                    console.log(expediente_guardar)
-                }) 
+       let method= (estadoCarga=="Carga")?"POST":"PUT";
+       let url2=url+"/expedientes" ;
+       // llamo a la funcion executeRequest del useFetchAxios()------------ 
+       console.log(url,method,expediente_guardar,token);
+       await executeRequest(url2, method, expediente_guardar, token)  ;
+       console.log("isSuccessful",isSuccessful);
+   
+   // alert contiene la alerta actual.
+   // setAlert te permite modificar la alerta si necesitas hacerlo fuera del hook.
 
-
-            }
          
          
     }
@@ -394,9 +342,7 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
                  }) */
             }
             await guardarExpedienteEnBD();
-           console.log("guardo",guardado);
-         
-          guardado ? handleLimpio() : console.log("corregir");
+        
 
 
         }
@@ -802,14 +748,7 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
 
 export default ExpedientesCarga;
 
-ExpedientesCarga.propTypes = {
-    titulo: PropTypes.string,
-    expediente: PropTypes.object,
-    estadoCarga: PropTypes.string,
-    isEditing:PropTypes.boolean,
-    setIsEditing:PropTypes.func
-  
-  };
+
   
 /*   ExpedientesCarga.defaultProps = {
     titulo: "Carga de Expediente",

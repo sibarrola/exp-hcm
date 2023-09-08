@@ -36,9 +36,9 @@ const VistaEdicion = () => {
         setIsEditing(true);
     };
 
-/*     const handleUpdated = () => {
-        setIsEditing(false);
-    }; */
+    // este estado  lo  pongo porque los usa el componente DATAGRID (pero en realidad los usa desde la VistaPases )
+    const [seleccionado, setSeleccionado] = useState(true); // expediente 
+ 
     return (
         <>
 
@@ -49,20 +49,20 @@ const VistaEdicion = () => {
                 </Grid>
 
                 <Grid item md={12} lg={6} sx={{ mr: "20px" }}  >
-
-                    <ExpedientesDataGrid onSelectExpediente={handleExpedienteSelected}     isEditing={isEditing}  setIsEditing={setIsEditing} />
+             
+                   <ExpedientesDataGrid onSelectExpediente={handleExpedienteSelected} isEditing={isEditing} setIsEditing={setIsEditing} seleccionado={seleccionado} setSeleccionado={setSeleccionado} />
 
                 </Grid>
                 <Grid item md={12} lg={5} >
                   {/*   <ExpedientesEdicion */}
-                  <ExpedientesCarga
+                 <ExpedientesCarga
                         titulo="Edicion"
                         expediente={expedienteSeleccionado}
                         estadoCarga="Edicion"
-                    
+               
                         isEditing={isEditing} 
                         setIsEditing={setIsEditing}
-                    />
+                    /> 
                 </Grid>
 
             </Grid>

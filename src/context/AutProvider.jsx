@@ -40,9 +40,10 @@ export const AutProvider = ({children}) => {
      });
      const data =await request.json();
      console.log("USUARIO",data.usuario);
-   
+     let usuarioLog=data.usuario;
+     usuarioLog.token=token  // se me ocurre pasarle el token, agregarle como una propiedad mas al objeto
     //setear el estado auth
-    setAuth(data.usuario); 
+    setAuth(usuarioLog); 
   
    }
 

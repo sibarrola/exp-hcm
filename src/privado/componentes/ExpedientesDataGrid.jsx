@@ -6,7 +6,7 @@ import { formatearFecha, fechaReves } from '../../helpers/funcionesVarias';
 import { Container, Paper, TextField, Box, Button } from '@mui/material';
 import RestartAlt from '@mui/icons-material/RestartAlt';
 import { PropTypes } from "prop-types";
-
+   
 
 const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, seleccionado, setSeleccionado, pases, setPases }) => {
     const [expedientes, setExpedientes] = useState([]);

@@ -119,8 +119,7 @@ const LoginPage = () => {
                  severity={alert.severity}
                  message={alert.message}
                  title="Aviso de ingreso" />
-        
-               
+                    
                
            
                  <Grid item xs={12} sx={{ mt: 2 }}>

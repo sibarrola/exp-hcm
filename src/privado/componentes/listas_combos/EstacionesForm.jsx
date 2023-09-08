@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Container, Paper, Box, Typography } from '@mui/material';
 import {Global} from '../../../helpers/Global';
-
+import ConfirmDialog from '../ConfirmDialog';
 const url=Global.url; 
 const EstacionesForm = () => {
 
@@ -11,7 +11,12 @@ const EstacionesForm = () => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [editEstacion, setEditEstacion] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
-
+// para los borrados--------------------------------------
+const [dialogOpen2, setDialogOpen2] = useState(false);
+const [isBorrando, setIsBorrando] = useState(false);
+const [borraEstacion, setBorraEstacion] = useState(null);
+const [nombre, setNombre] = useState("");
+//-------------------------------------------------------------
     const fetchEstacion= async () => {
         try {
             const res = await axios.get(`${url}/estaciones`);
@@ -44,6 +49,15 @@ const EstacionesForm = () => {
             console.error('Error', error);
         }
     };
+// borrar ---------------------------------------------------
+const OpenDeleteEstacion = (id,nombre) => {
+    setBorraEstacion(id);
+    setIsBorrando(true)
+    setNombre(nombre);
+    setDialogOpen2(true)
+};
+ 
+
     const deleteEstacion = async id => {
         await axios.delete(`${url}/estaciones/${id}`);
         setEstaciones(estaciones.filter(m => m._id !== id));
@@ -66,7 +80,7 @@ const EstacionesForm = () => {
 
     const handleDialogClose = () => {
         setDialogOpen(false);
-        setEditEstaciones(null);
+        setEditEstacion(null);
         setIsEditing(false);
     };
 
@@ -78,6 +92,19 @@ const EstacionesForm = () => {
         }
         handleDialogClose();
     };
+    // ventana dialogo para confimar el borrado ---------------------------------
+    const handleDialogClose2= () => {
+        setDialogOpen2(false);
+        setBorraEstacion(null)
+    };
+    const handleDialogConfirm2 = () => {
+        if (isBorrando) {
+            deleteEstacion(borraEstacion); //envia el id almacenado en BorraDEm
+        }
+        setBorraEstacion(null)
+        handleDialogClose2();
+    };
+
 
     return (
         <>
@@ -91,6 +118,17 @@ const EstacionesForm = () => {
                 </Button>
             </Box>
                 <TableContainer>
+                <ConfirmDialog
+                            open={dialogOpen2}
+                            onClose={handleDialogClose2}
+                            title="Eliminación de la Estación"
+                            contentText={`¿Estás seguro de que deseas borrar ${nombre} ?`}
+                            onConfirm={handleDialogConfirm2}
+                            titulo_fondo='#4dabf5'
+                            titulo_color='black'
+                            context_fondo='yellowlight'
+                            context_color='secondary'
+                        />
                     <Table>
                     <TableHead
                             sx={{
@@ -117,7 +155,7 @@ const EstacionesForm = () => {
                                         </Button>
                                     </TableCell>
                                     <TableCell>
-                                        <Button size="small" variant="contained" color="error" onClick={() => deleteEstacion(estacion._id)}>
+                                        <Button size="small" variant="contained" color="error" onClick={() => OpenDeleteEstacion(estacion._id,estacion.estacion)}>
                                             Borrar
                                         </Button>
                                     </TableCell>

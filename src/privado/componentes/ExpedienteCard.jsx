@@ -21,7 +21,7 @@ import { fechaReves, formatearFecha } from '../../helpers/funcionesVarias'
 import { colortema } from '../../theme';
 import ConfirmDialog from './ConfirmDialog';
 
-/* ============================================================================ */
+/* ====================================================================== */
 const ExpedienteCard = ({ expediente, pase, onPaseEdit, onPaseDelete }) => {
 
     const pasesOrdenados = [...expediente.pases].sort((a, b) => new Date(a.fecha_pase) - new Date(b.fecha_pase));
@@ -67,7 +67,6 @@ const ExpedienteCard = ({ expediente, pase, onPaseEdit, onPaseDelete }) => {
                 </h3>
                 <Typography sx={{ fontWeight: 800 }}  > Ingresado:</Typography>
                 <Typography sx={colortema.typography.texto} >{formatearFecha(new Date(expediente.fechaIngreso)) + "-- (" + expediente.estadoExp + ")"}</Typography>
-
 
             </Grid>
 
