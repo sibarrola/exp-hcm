@@ -368,7 +368,7 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
 
 
     return (
-        <Container    component={Paper}  sx={{ padding: 2 ,border:1,borderColor:'blue'}}>
+        <Container    component={Paper}  sx={{ padding: 1 ,border:1,borderColor:'blue'}}>
             <form onSubmit={handleSubmit}>
                 <CustomDialog
                     open={alert.open}
@@ -657,11 +657,11 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
                     </Grid>
                     {/*    )
                   } */}
-                    <Grid item xs={12}>
-                        <h4 >REPRESENTADO POR:</h4>
+                    <Grid item xs={12}  >
+                        <h5 >REPRESENTADO POR:</h5>
                     </Grid>
 
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={6}  >
 
                         <TextField
                      
@@ -741,7 +741,7 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
 
                     {/* ... falta poner el usuario que lo lee del req ... */}
 
-                    <Grid item xs={12} marginTop="20px" marginRight='20px' alignContent="right">
+                    <Grid item xs={12} marginTop="18px" marginRight='20px' alignContent="right">
                         {(estadoCarga=="Carga")?(
                         <Button size="small" variant="contained" color="primary" type='submit' style={{ marginRight: 20 }}>Guardar</Button>):
                         <Button size="small" variant="contained" color="primary" type='submit' style={{ marginRight: 20 }}>Actualizar</Button>

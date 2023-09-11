@@ -7,7 +7,6 @@ import { Container, Paper, TextField, Box, Button } from '@mui/material';
 import RestartAlt from '@mui/icons-material/RestartAlt';
 import { PropTypes } from "prop-types";
    
-
 const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, seleccionado, setSeleccionado, pases, setPases }) => {
     const [expedientes, setExpedientes] = useState([]);
     const [page, setPage] = useState(0);
@@ -17,30 +16,27 @@ const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, sele
     const fetchExpedientes = async (page, pageSize) => {
         /* le mando "Abierto", que no es un estado, pero que en el servidor interpreto como todos los estadoExp que no sean "Finalizado" */
         const url = `${Global.url}/expedientes/estadoExp/Abierto?desde=${page * pageSize}&limite=${pageSize}`;
+
         try {
             const metodo = 'GET';
             let response = await Peticiones(url, metodo);
-
             setExpedientes(response.datos.expedientes);
             setTotalExpedientes(response.datos.total);
-           
-        }
+              }
         catch (error) {
-            console.error("Hubo un error al obtener los expedientes:", error);
+            console.error("Hubo un error allos expedientes:", error);
         }
-
     }
 
     useEffect(() => {
         fetchExpedientes(page, pageSize);
-
-    }, [page, pageSize,expedientes]);
+    }, [page, pageSize]);
 
     useEffect(() => {
         if (isEditing == true) {
             console.log("isEditing dataGrid cuando cambia", isEditing)
             fetchExpedientes(page, pageSize);
-         
+            setIsEditing(false);
         }
     }, [isEditing]);
     
@@ -64,7 +60,6 @@ const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, sele
     ];
 
     const rows = expedientes.map((expediente) => ({
-
         fechaIngreso: fechaReves(formatearFecha(new Date(expediente.fechaIngreso))),
         legajo: expediente.legajo,
         folios: expediente.folios,
@@ -79,13 +74,11 @@ const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, sele
         id: expediente._id,
         categoria: expediente.categoria,
         pases: expediente.pases,
-        estadoExp: expediente.estadoExp,
-        
+        estadoExp: expediente.estadoExp,  
     }));
 
     const handleRowClick = ({ row }) => {
-
-        let expediente = row;
+       let expediente = row;
         expediente._id=row.id;
         expediente.pases.usuario_pase_nombre=row.pases.usuario_pase_nombre;
         expediente.comentario = (expediente.comentario == null) ? " " : row.comentario;
@@ -118,15 +111,16 @@ const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, sele
 
 
     return (
-        <Container component={Paper} sx={{ padding: 2, border: 1, borderColor: 'blue' }}>
-            <h3 sx={{ width: '500px' }}>Lista de Expedientes en estudio {totalExpedientes}  </h3>
+        <Container component={Paper} sx={{ padding: 1, border: 1, borderColor: 'blue' }}>
+            <h3 sx={{ width: '500px' }}>Lista de Expedientes En curso  ({totalExpedientes})  </h3>
 
             <Box sx={{
                 ml: '10px',
                 mb: '10px',
 
             }} >
-                <TextField label="Buscar" value={searchTerm} onChange={handleSearchChange} sx={{ backgroundColor: 'amarillo.secondary' }} />
+                <TextField label="Buscar" value={searchTerm} onChange={handleSearchChange} sx={{ backgroundColor: 'amarillo.secondary', fontSize:'10px' }} />
+
                 <Button size="large" startIcon={<RestartAlt />} onClick={() => fetchExpedientes(page, pageSize)} sx={{ ml: '400px' }}>Refresca</Button>
             </Box>
 
@@ -142,14 +136,12 @@ const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, sele
                     },
                 }}
                 rowCount={totalExpedientes}
-
                 pageSize={pageSize}
                 paginationMode="client"
                 page={page}
                 pageSizeOptions={[5, 10, 25, 50, 100]} // incluyendo 10 en las opciones
                 onPageChange={(params) => {
                     // Actualizar el estado con los nuevos valores de página y tamaño de página
-                
                     setPage(params.page);
                     setPageSize(params.pageSize);
                 }}
@@ -157,7 +149,6 @@ const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, sele
                 slots={{
                     Toolbar: GridToolbar,
                 }}
-
             />
         </Container>
     );
@@ -175,4 +166,3 @@ ExpedientesDataGrid.propTypes = {
     setPases: PropTypes.func
 
 };
-

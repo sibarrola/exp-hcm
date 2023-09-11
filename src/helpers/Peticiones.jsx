@@ -15,9 +15,9 @@
       try {
         const peticion = await fetch(url, opciones);
         const datos = await peticion.json();
-      
+        
         return {
-          datos,
+          datos
         };
       } 
        catch(error) {

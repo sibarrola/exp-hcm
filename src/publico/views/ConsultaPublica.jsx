@@ -1,51 +1,94 @@
 import { useState } from 'react';
-import ExpedientesList from '../components/ExpedientesList';
-import ExpedienteDetalle from '../components/ExpedienteDetalle';
+
 import { Grid, Typography } from '@mui/material';
-import Buscador from '../components/Buscador';
+import ExpedientesDataGrid from '../../privado/componentes/ExpedientesDataGrid';
+ 
+import ExpedienteCard from '../../privado/componentes/ExpedienteCard';
 
+ 
 const ConsultaPublica = () => {
-    const [expedientes, setExpedientes] = useState([
-        { id: 1, nombre: 'Expediente 1', descripcion: 'Descripción del expediente 1' },
-        { id: 2, nombre: 'Expediente 2', descripcion: 'Descripción del expediente 2' },
-        { id: 3, nombre: 'Expediente 3', descripcion: 'Descripción del expediente 3' },
-        // Agrega más expedientes según tus necesidades
-    ]);
+ 
+ 
+  
+    const [expedienteSeleccionado, setExpedienteSeleccionado] = useState({
+        _id: "",
+        legajo: "",
+        folios: "",
+        estadoExp: "Estudio",
+        motivo: "",
+        nuevoMotivo: "",
+        comentario: " ",
+        fechaIngreso: "",
+        categoria: "",
+        institucion: "",
+        organismo: "",
+        nuevaInstitucion: "",
+        dem: "",
+        nuevoDem: "",
+        nuevoOrganismo: "",
+        solicitante: "",
+        apellido: "",
+        nombres: "",
+        dni: "",
+        celular: "",
+        domicilio: "",
+        estado: "true",
+        pases: [{}]
 
-    const [expedienteSeleccionado, setExpedienteSeleccionado] = useState(null);
-    const [listadoState, setListadoState] = useState([]);
-    const handleSelectExpediente = (expediente) => {
+    });
+
+    /* -------------------------------------- */
+ 
+ 
+    const [seleccionado, setSeleccionado] = useState(true); // expediente seleccionado
+    const [isEditing, setIsEditing] = useState(false);
+ 
+
+    const handleExpedienteSelect = (expediente) => {
         setExpedienteSeleccionado(expediente);
+        console.log("expediente seleccionado", expedienteSeleccionado)
+        /*   setPases(expediente.pases); */
     };
+    /* NUEVO------------------------------------------------------ */
 
+  
+    /* -------------------BORRA EL PASE------------------------------------ */
+  
     return (
-        <Grid container direction='row' justifyContent='space-between' sx={{ mb: 1, ml:11, mt:'50px'}}>
-            <Grid item xs={12} >
-                <Typography fontSize={25}>Consulta Expediente del Cuidadano</Typography>
-             
-            </Grid>
-            <Grid item >
-                {/*-- buscador */}
-                <Buscador listadoState={listadoState} setListadoState={setListadoState} />
-            </Grid>
-            <hr/>
-            <Grid item xs={6} >
-                {expedienteSeleccionado ? (
-                    <ExpedienteDetalle expediente={expedienteSeleccionado} />
-                ) : (
-                    <p>Selecciona un expediente</p>
-                )}
-            </Grid>
-            <Grid item xs={12} sx={{mt:12}} > <Typography variant='h5'>LISTADO EXPEDIENTES </Typography></Grid>
-            <Grid item xs={12}  >
-                <ExpedientesList
-                    expedientes={expedientes}
-                    onSelectExpediente={handleSelectExpediente}
-                />
-            </Grid>
+
+        <Grid container direction="row" sx={{ display: 'flex', justifyContent: 'between',mt:'2%' }} spacing={2}   >
+       
+            {/*    <div> {JSON.stringify(expedienteSeleccionado)}</div>  */}
+    {/*         <Grid item xs={12}>
+                 
+                <Typography marginLeft="5%"   sx={colortema.typography.texto1}>SELECCION DE EXPEDIENTES Y CARGA DE PASES</Typography>
+            </Grid> */}
+            {/* seleccionado && ( */
+              
+                <Grid item xs={12} lg={7} sx={{ mr: "20px" }}  >
+                    <ExpedientesDataGrid onSelectExpediente={handleExpedienteSelect} isEditing={isEditing} setIsEditing={setIsEditing} seleccionado={seleccionado} setSeleccionado={setSeleccionado}
+                 />
+                </Grid>
+          
+           /*  ) */}
+
+            {expedienteSeleccionado && !seleccionado && (
+            
+
+
+                    <Grid item xs={12} lg={4} sx={{ alignContent: 'left' }} >
+                        <ExpedienteCard
+                            expediente={expedienteSeleccionado}   />
+
+                    </Grid>
+                 
+            )}
 
         </Grid>
+
     );
-};
+}
+
+ 
 
 export default ConsultaPublica;
