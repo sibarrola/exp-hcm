@@ -131,7 +131,10 @@ const ExpedienteCard = ({ expediente, pase, onPaseEdit, onPaseDelete }) => {
                             <TableBody  >
                                 {/* map ---------------------------------------------------- */}
                                 {pasesOrdenados.map((pase, index) => {
-                                    let diasEnEstacion = null;
+                                    let diasEnEstacion = 0;
+                                    
+                             // Determina  si es la última fila
+                                const isLastRow = index === pasesOrdenados.length - 1;  
                                     /* calculo dias de estación----------------- */
                                     if (index < pasesOrdenados.length - 1) {
                                         const fechaActual = new Date(pasesOrdenados[index].fecha_pase);
@@ -141,24 +144,26 @@ const ExpedienteCard = ({ expediente, pase, onPaseEdit, onPaseDelete }) => {
                                     return (
                                         <TableRow key={pase._id}  >
                                             {/* he ajustado las celdas para que queden mas apretadas las filas , no tan altas */}
-                                            <TableCell sx={{ padding: '4px 16px', borderBottom: '1px solid #888888' }} style={columnWidths[0]} > <Typography sx={colortema.typography.texto} > {formatearFecha(new Date(pase.fecha_pase))}</Typography>
+
+                                             
+                                            <TableCell sx={{ padding: '4px 16px', borderBottom: isLastRow ? 'none' : '1px solid #888888' }}  style={columnWidths[0]} > <Typography sx={colortema.typography.texto} > {formatearFecha(new Date(pase.fecha_pase))}</Typography>
                                             </TableCell>
-                                            <TableCell sx={{ padding: '5px 16px', borderBottom: '1px solid #888888' }} style={columnWidths[1]}>
+                                            <TableCell sx={{ padding: '4px 16px', borderBottom: isLastRow ? 'none' : '1px solid #888888' }}  style={columnWidths[1]}>
                                                 <Typography sx={colortema.typography.texto}    >
                                                     {pase.estacion} {pase.sub_estacion}</Typography></TableCell>
-                                            <TableCell sx={{ padding: '5px 16px', borderBottom: '1px solid #888888' }} style={columnWidths[2]}>
+                                            <TableCell sx={{ padding: '4px 16px', borderBottom: isLastRow ? 'none' : '1px solid #888888' }}  style={columnWidths[2]}>
                                                 <Typography sx={colortema.typography.texto} style={columnWidths[5]}  >
                                                     {pase.comentario}
                                                 </Typography>
                                             </TableCell>
-                                            <TableCell sx={{ borderBottom: '1px solid #888888' }} style={columnWidths[3]}>
+                                            <TableCell sx={{ padding: '4px 16px', borderBottom: isLastRow ? 'none' : '1px solid #888888' }}  style={columnWidths[3]}>
                                                 {diasEnEstacion !== null ? `${diasEnEstacion} días` : '-'}
                                             </TableCell>
-                                            <TableCell sx={{ padding: '5px 16px', fontSize: "12px", fontStyle: "italic", borderBottom: '1px solid #888888' }} style={columnWidths[4]}>
+                                            <TableCell sx={{ padding: '4px 16px', borderBottom: isLastRow ? 'none' : '1px solid #888888' }}  style={columnWidths[4]}>
                                                 {pase.usuario_pase_nombre}
                                             </TableCell>
 
-                                            <TableCell sx={{ padding: '5px 16px', maxWidth: "50px", borderBottom: '1px solid #888888' }} style={columnWidths[5]}>
+                                            <TableCell sx={{ padding: '4px 16px', borderBottom: isLastRow ? 'none' : '1px solid #888888' }}   style={columnWidths[5]}>
                                                 <Button
                                                     variant="contained"
                                                     color="primary"
@@ -169,7 +174,7 @@ const ExpedienteCard = ({ expediente, pase, onPaseEdit, onPaseDelete }) => {
                                                 > Editar</Button>
 
                                             </TableCell>
-                                            <TableCell sx={{ padding: '5px 16px', maxWidth: "45px", borderBottom: '1px solid #888888' }} style={columnWidths[6]}>
+                                            <TableCell sx={{ padding: '4px 16px', borderBottom: isLastRow ? 'none' : '1px solid #888888' }}  style={columnWidths[6]}>
                                                 <Button
                                                     variant="contained"
                                                     color="botonBorra"

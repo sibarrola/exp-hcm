@@ -8,10 +8,11 @@ const useFetchAxios = () => {
         message: '',
     });
     const [isSuccessful, setIsSuccessful] = useState(false);
-
+    const [respuesta, setRespuesta] = useState({});
     const executeRequest = async (url, method, data, token = "") => {
+        let response
         try {
-            let response;
+            
             const config = {
                 headers: {
                     "Content-Type":"application/json",
@@ -24,6 +25,7 @@ const useFetchAxios = () => {
                     response = await axios.post(url, data, config);
                     break;
                 case "PUT":
+                    
                     response = await axios.put(url, data, config);
                     break;
                 
@@ -39,6 +41,7 @@ const useFetchAxios = () => {
                     message: `El expediente nro legajo: ${response.data.expediente.legajo} ha sido procesado OK!`
                 });
                 setIsSuccessful(true);
+                setRespuesta(response.data.expediente)
             } else {
                 // Aquí manejas errores del backend
                 let errores = response.data.errors.errors.map(error => error.msg).join(" ");
@@ -50,7 +53,8 @@ const useFetchAxios = () => {
             }
         } catch (error) {
             // Aquí manejas errores de la petición
-            let mens = (error.response && error.response.status === '401') ? "no está autorizado" : error.message;
+            console.log("error respnse",error.response)
+            let mens = (error.response.status === '401') ? error.data.msg : error.message;
             setAlert({
                 open: true,
                 severity: 'error',
@@ -58,8 +62,8 @@ const useFetchAxios = () => {
             });
         }
     }
-   console.log("hook antes de retornar",isSuccessful)
-    return [executeRequest, isSuccessful, alert, setAlert];
+  
+    return [executeRequest, isSuccessful, alert, setAlert,respuesta];
 }
 
 export default useFetchAxios;

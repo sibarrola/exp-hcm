@@ -23,7 +23,7 @@ const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, sele
 
             setExpedientes(response.datos.expedientes);
             setTotalExpedientes(response.datos.total);
-
+           
         }
         catch (error) {
             console.error("Hubo un error al obtener los expedientes:", error);
@@ -34,15 +34,17 @@ const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, sele
     useEffect(() => {
         fetchExpedientes(page, pageSize);
 
-    }, [page, pageSize]);
+    }, [page, pageSize,expedientes]);
 
     useEffect(() => {
         if (isEditing == true) {
             console.log("isEditing dataGrid cuando cambia", isEditing)
             fetchExpedientes(page, pageSize);
-            setIsEditing(false);
+         
         }
     }, [isEditing]);
+    
+ 
 
     const columns = [
         { field: 'fechaIngreso', headerName: 'Fecha ing.', width: 100 },

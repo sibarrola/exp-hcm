@@ -6,6 +6,7 @@ import ExpedientesCarga from '../componentes/ExpedientesCarga';
 import ExpedientesDataGrid from '../componentes/ExpedientesDataGrid';
 const VistaEdicion = () => {
     const [expedienteSeleccionado, setExpedienteSeleccionado] = useState({
+        _id:"",
         legajo: "",
         folios: "",
         estadoExp: "Estudio",

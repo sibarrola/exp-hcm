@@ -20,13 +20,14 @@ import CustomDialog from '../../privado/componentes/CustomDialog';
 import useAuth from "../../hooks/useAuth.jsx";
 const url = Global.url;
 import { PropTypes } from "prop-types";
-import Peticiones from '../../helpers/Peticiones.jsx';
+ 
+import useFetchAxios from "../../hooks/useFetchAxios.jsx";
 /* ver de traer este estadao......... */
 
 /* comienza el componente------------------------------------------------ */
 const PasesCarga = ({ expediente, handleExpedienteSelect, setSeleccionado, pase, onPaseAdd, editingPase, setEditingPase, handlePaseEdit, onPaseDelete }) => {
 
-
+    const [executeRequest, isSuccessful, alert, setAlert,respuesta] = useFetchAxios();
     const [nuevoPase, setNuevoPase] = useState(pase);
     let idexp = expediente._id;
     const today = new Date().toISOString().split('T')[0]; //esta va a ser la fecha máxima que me permitirá seleccionar (para que no carguen un pase hacia adelante)
@@ -50,7 +51,7 @@ const PasesCarga = ({ expediente, handleExpedienteSelect, setSeleccionado, pase,
 
     let formData = {
         fecha_pase: new Date().toISOString().substring(0, 10),
-        estacion: null,
+        estacion: "",
         sub_estacion: "",
         comision: "",
         organismo: "",
@@ -82,7 +83,15 @@ const PasesCarga = ({ expediente, handleExpedienteSelect, setSeleccionado, pase,
             setEstadoCarga("EDICION DEL PASE");
         }
     }, [pase])  //cuando cambia el pase
-
+    useEffect(() => {
+        if(isSuccessful){
+            console.log("response",respuesta)
+            handleExpedienteSelect(respuesta);
+            setEditingPase(false)  
+            setEstadoCarga("NUEVO PASE");
+            setNuevoPase(formData);  
+         } 
+     }, [isSuccessful]);
 
     /* traigo del hookFormu-------------------------------------------------- */
     const onInputChange = ({ target }) => {
@@ -113,11 +122,11 @@ const PasesCarga = ({ expediente, handleExpedienteSelect, setSeleccionado, pase,
             event.preventDefault();
         }
     };
-    const [alert, setAlert] = useState({
+  /*   const [alert, setAlert] = useState({
         open: false,
         severity: 'success',
         message: '',
-    });
+    }); */
 
     /* graba SUBMIT-------------------------------------------------- */
     const savePase = async (e) => {
@@ -141,35 +150,15 @@ const PasesCarga = ({ expediente, handleExpedienteSelect, setSeleccionado, pase,
 
         }
 
-
-        let metodo = "PUT"
-        let response = await Peticiones(`${url}/expedientes/${expediente._id}`, metodo, expediente);
-        let expedienteactualizado = response.datos.expediente;
-        handleExpedienteSelect(expedienteactualizado);
-        onPaseAdd(nuevoPase); /* ver si borrar esto  */
-        setEditingPase(false)  /* salgo del modo edición */
-        setEstadoCarga("NUEVO PASE");
-        setNuevoPase(formData);
-
-        /* try{
-          const data = await request.json();
-           if (data.success=!"true" && data.errors){
-              data.errors.map(error => alert(error.msg));
-              return
-           }
-        
-              handleExpedienteSelect(data.expediente);
-              onPaseAdd(nuevoPase); /* ver si borrar esto  */
-        /*  setEditingPase(false)  /* salgo del modo edición */
-        /*  setEstadoCarga("EDICION DEL PASE");
-         setNuevoPase (formData);
-       
-     
-   }
-      catch(error) {
-         console.log("error",error)
-          return */
-        /*  } */
+        let token=auth.token;  
+        let method = "PUT";
+        let expediente_guardar=expediente;
+       let url2=`${url}/expedientes/${expediente._id}`;
+       // llamo a la funcion executeRequest del useFetchAxios()------------ 
+       console.log(url2,method,expediente,token);
+       await executeRequest(url2, method, expediente_guardar, token)  ;
+       console.log("isSuccessful",isSuccessful);
+ 
 
     }
 
@@ -180,6 +169,12 @@ const PasesCarga = ({ expediente, handleExpedienteSelect, setSeleccionado, pase,
             <h3>{estadoCarga}</h3>
             <h4>Exp. Legajo {expediente.legajo}</h4>
             <form onSubmit={savePase}>
+            <CustomDialog
+                    open={alert.open}
+                    onClose={() => setAlert({ ...alert, open: false })}
+                    severity={alert.severity}
+                    message={alert.message}
+                    title="Aviso de ingreso" />
                 <Grid container spacing={2}>
                     <Grid item xs={12}  >
                         <TextField
@@ -367,6 +362,7 @@ const PasesCarga = ({ expediente, handleExpedienteSelect, setSeleccionado, pase,
 
     )
 }
+export default PasesCarga;
 PasesCarga.propTypes = {
 
     expediente: PropTypes.object,
@@ -381,7 +377,3 @@ PasesCarga.propTypes = {
     onPaseDelete: PropTypes.func,
 };
 
-
-
-
-export default PasesCarga

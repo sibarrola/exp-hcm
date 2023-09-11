@@ -32,6 +32,7 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
     const [executeRequest, isSuccessful, alert, setAlert] = useFetchAxios();
 
    let expedienteLimpio={
+    _id:"",
     legajo: "",
     folios: "",
     estadoExp: "Estudio",
@@ -99,6 +100,7 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
         if(isSuccessful){
             handleLimpio();
             setGuardado(true);
+            setIsEditing(true)
             
          } 
      }, [isSuccessful]);
@@ -186,8 +188,9 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
   
 
     const guardarExpedienteEnBD = async () => {
-        let solicitanteg = (values.solicitante&&values.solicitante.length == 0) ? (values.apellido + " " + values.nombres) : values.solicitante
-
+        let solicitanteg = (!values.solicitante || values.solicitante.length == 0) ? (values.apellido + " " + values.nombres) : values.solicitante
+        console.log( "solicitante",values.solicitante.length);
+        console.log("junto",values.apellido + " " + values.nombres)
         let motivog = (values.motivo &&values.motivo == "Otro") ? values.nuevoMotivo : values.motivo;
 
         let dnig = extractDigits(values.dni);
@@ -197,6 +200,7 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
         let foliosg = parseInt(values.folios);
 
         let expediente_guardar = {
+            _id:values._id,
             legajo: legajog,
             folios: foliosg,
             estadoExp: 'Estudio',
@@ -223,13 +227,22 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
         }
         /* si el estadoCarga es Guardar lo guardo y si no lo actualizo */
        let token=auth.token;  
-    
-       let method= (estadoCarga=="Carga")?"POST":"PUT";
-       let url2=url+"/expedientes" ;
+       let method;
+       let url2;
+        if (estadoCarga=="Carga") {
+            method="POST"
+         url2=url+"/expedientes" ;   
+        }
+        else
+        {
+       
+       url2=url+"/expedientes/"+values._id ;
+       method="PUT"
+        }
        // llamo a la funcion executeRequest del useFetchAxios()------------ 
-       console.log(url,method,expediente_guardar,token);
+    
        await executeRequest(url2, method, expediente_guardar, token)  ;
-       console.log("isSuccessful",isSuccessful);
+      
    
    // alert contiene la alerta actual.
    // setAlert te permite modificar la alerta si necesitas hacerlo fuera del hook.
@@ -750,11 +763,10 @@ export default ExpedientesCarga;
 
 
   
-/*   ExpedientesCarga.defaultProps = {
+   ExpedientesCarga.defaultProps = {
     titulo: "Carga de Expediente",
     expediente: {},
     estadoCarga:"",
-    onUpdated:null
+    isEditing:false
   };
- */
- 
+   

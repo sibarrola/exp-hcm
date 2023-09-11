@@ -10,7 +10,7 @@ import { AppTheme } from "./theme"
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-    <React.StrictMode>
+   /*  <React.StrictMode> */
   <AppTheme>
   <CssBaseline />
   <BrowserRouter>
@@ -21,6 +21,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
    
   </AppTheme>
             
-    </React.StrictMode>
+  /*   </React.StrictMode> */
 )
 
