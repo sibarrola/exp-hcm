@@ -11,7 +11,7 @@ const NothingSelectedView = () => {
               
              alignitems="end"
              justifycontent="end"
-             height="100hv"
+             height="90hv"
              width='100%'
              
              >
@@ -21,7 +21,7 @@ const NothingSelectedView = () => {
                      src={equipo}
                      alt="Descripción de la imagen"
                      width='100%'
-                     height='auto'
+                     height='100%'
                  
                  />
             

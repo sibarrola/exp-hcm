@@ -44,7 +44,7 @@ const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, sele
 
     const columns = [
         { field: 'fechaIngreso', headerName: 'Fecha ing.', width: 100 },
-        { field: 'legajo', headerName: 'Legajo', width: 100 },
+        { field: 'legajo', headerName: 'Legajo', width: 50 },
         { field: 'folios', headerName: 'Folios', width: 50 },
         { field: 'motivo', headerName: 'Motivo', width: 230 },
 

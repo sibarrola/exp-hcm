@@ -17,17 +17,16 @@ import {
     CardContent
 
 } from '@mui/material';
-import { fechaReves, formatearFecha } from '../../helpers/funcionesVarias'
+import {formatearFecha} from '../../helpers/funcionesVarias'
 import { colortema } from '../../theme';
-import ConfirmDialog from './ConfirmDialog';
+ 
 
 /* ====================================================================== */
-const ExpedienteCard = ({ expediente,  onPaseEdit, onPaseDelete }) => {
+const ExpedienteCardPublico = ({ expediente}) => {
 
     const pasesOrdenados = [...expediente.pases].sort((a, b) => new Date(a.fecha_pase) - new Date(b.fecha_pase));
     /* los ... son para copiar y no perder el original */
 
-    console.log("expedienteCarrd",expediente.pases)
     const columnWidths = [
         { width: '100px' },   // Para la columna 'Fecha'
         { width: '150px' },   // Para la columna 'Pase a'
@@ -39,25 +38,9 @@ const ExpedienteCard = ({ expediente,  onPaseEdit, onPaseDelete }) => {
         { width: '100px' },   // Para la columna 'Usuario'
     ];
     /* para borrar */
-    const [dialogOpen, setDialogOpen] = useState(false);
-    const [paseToDelete, setPaseToDelete] = useState(null);
-
-    const handleOpenDialog = (id) => {
-        setPaseToDelete(id);
-        console.log("paseToDelete", paseToDelete)
-        setDialogOpen(true);
-    };
-
-    const handleCloseDialog = () => {
-        setPaseToDelete(null);
-        setDialogOpen(false);
-    };
-
-    const handleDialogConfirm = async () => {
-        await onPaseDelete(paseToDelete);
-        console.log("paseTodelete", paseToDelete)
-        setDialogOpen(false);
-    };
+    
+     
+ 
     /* -------------------- */
 
     return (
@@ -87,20 +70,7 @@ const ExpedienteCard = ({ expediente,  onPaseEdit, onPaseDelete }) => {
                     <Typography variant="body1" sx={{ fontWeight: 800, ml: "3px" }}>
                         PASES DEL EXPEDIENTE
                     </Typography>
-                    <div style={{ overflowY: 'auto', maxHeight: '300px' }}>
-                        <ConfirmDialog
-                            open={dialogOpen}
-                            onClose={handleCloseDialog}
-                            title="Eliminación del Pase"
-                            contentText="¿Estás seguro de que deseas borrar el pase?"
-                            onConfirm={handleDialogConfirm}
-                            titulo_fondo='#4dabf5'
-                            titulo_color='black'
-                            context_fondo='yellowlight'
-                            context_color='secondary'
-                        />
-
-
+                  
                         <Table sx={{ minWidth: "100%" }}>
                             <TableHead
                                 sx={{
@@ -123,9 +93,7 @@ const ExpedienteCard = ({ expediente,  onPaseEdit, onPaseDelete }) => {
                                     <TableCell sx={{ borderBottom: '1px solid #888888' }}>Pase a</TableCell>
                                     <TableCell sx={{ borderBottom: '1px solid #888888' }}>Comentario</TableCell>
                                     <TableCell sx={{ borderBottom: '1px solid #888888' }}>Permanencia</TableCell>
-                                    <TableCell sx={{ borderBottom: '1px solid #888888' }}>Usuario</TableCell>
-                                    <TableCell sx={{ borderBottom: '1px solid #888888' }}>Editar</TableCell>
-                                    <TableCell sx={{ borderBottom: '1px solid #888888' }}>Borrar</TableCell>
+                                    
                                 </TableRow>
                             </TableHead>
 
@@ -160,39 +128,14 @@ const ExpedienteCard = ({ expediente,  onPaseEdit, onPaseDelete }) => {
                                             <TableCell sx={{ padding: '4px 16px', borderBottom: isLastRow ? 'none' : '1px solid #888888' }}  style={columnWidths[3]}>
                                                 {diasEnEstacion !== null ? `${diasEnEstacion} días` : '-'}
                                             </TableCell>
-                                            <TableCell sx={{ padding: '4px 16px', borderBottom: isLastRow ? 'none' : '1px solid #888888' }}  style={columnWidths[4]}>
-                                                {pase.usuario_pase_nombre}
-                                            </TableCell>
-
-                                            <TableCell sx={{ padding: '4px 16px', borderBottom: isLastRow ? 'none' : '1px solid #888888' }}   style={columnWidths[5]}>
-                                                <Button
-                                                    variant="contained"
-                                                    color="primary"
-                                                    size="small"
-                                                    style={{ fontSize: '10px', padding: '4px 8px' }}
-                                                    onClick={() => onPaseEdit(pase) }
-
-                                                > Editar</Button>
-
-                                            </TableCell>
-                                            <TableCell sx={{ padding: '4px 16px', borderBottom: isLastRow ? 'none' : '1px solid #888888' }}  style={columnWidths[6]}>
-                                                <Button
-                                                    variant="contained"
-                                                    color="botonBorra"
-                                                    size="small"
-                                                    style={{ fontSize: '10px', padding: '4px 8px' }}
-
-                                                    onClick={() => handleOpenDialog(pase._id)}
-                                                /*   onClick={() => onPaseDelete(pase._id)} */
-                                                > borrar</Button>
-                                            </TableCell>
+                                            
                                         </TableRow>
                                     )
                                 })}
                             </TableBody>
 
                         </Table>
-                    </div>
+                   
                 </Grid>
             </CardContent>
 
@@ -200,4 +143,4 @@ const ExpedienteCard = ({ expediente,  onPaseEdit, onPaseDelete }) => {
     );
 };
 
-export default ExpedienteCard;
+export default ExpedienteCardPublico;

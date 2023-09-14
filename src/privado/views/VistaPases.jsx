@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 
 import { Grid, Typography } from '@mui/material';
 import ExpedientesDataGrid from '../componentes/ExpedientesDataGrid';
@@ -7,16 +7,10 @@ import ExpedienteCard from '../componentes/ExpedienteCard';
 import Peticiones from '../../helpers/Peticiones';
 import {Global} from '../../helpers/Global'
 import { colortema } from '../../theme';
- 
-const VistaPases = () => {
- 
-   /*  const useStyles = makeStyles((theme) => ({
-        miComponente: {
-          // ...otros estilos para tu componente
-          ...colortema.typography.texto,
-        },
-      }));  */
-  
+import useAuth from "../../hooks/useAuth.jsx";  
+import useFetchAxios from "../../hooks/useFetchAxios.jsx";
+  const VistaPases = () => {
+   
     const [expedienteSeleccionado, setExpedienteSeleccionado] = useState({
         _id: "",
         legajo: "",
@@ -43,11 +37,12 @@ const VistaPases = () => {
         pases: [{}]
 
     });
-
+    const [executeRequest, isSuccessful, alert, setAlert,respuesta] = useFetchAxios();
+    const url = Global.url;
     /* -------------------------------------- */
-
-    const [pases, setPases] = useState([]);
-    const [pase, setPase] = useState({
+    const { auth } = useAuth();  // usuario logueado
+   const [pases, setPases] = useState([]);  
+    const nuevo_pase={
         fecha_pase: new Date().toISOString().substring(0, 10),
         estacion: "",
         sub_estacion: "",
@@ -58,19 +53,28 @@ const VistaPases = () => {
         usuario_pase: "",
         comentario: "",
         _id: ""
-    });
-    const [isEditing, setIsEditing] = useState(false);   // esto viene de otro uso
+    }
+
+   /*  const [estadoCarga, setEstadoCarga] = useState("NUEVO PASE"); */
+    const [modo,setModo]=useState("Cargar")
+    const [paseAEditar, setPaseAEditar] = useState(nuevo_pase);
+    const [isEditing, setIsEditing] = useState(false);   // esto viene de otro  */ 
     const [seleccionado, setSeleccionado] = useState(true); // expediente seleccionado
-    const [editingPase, setEditingPase] = useState(false);
-    const handlePaseAdd = (nuevoPase) => {
+   /*  const [editingPase, setEditingPase] = useState(false); */
+  /*   const handlePaseAdd = (nuevoPase) => {
         setPases((prevPases) => [...prevPases, nuevoPase]);
-    };
+    }; */
    
 
     const handleExpedienteSelect = (expediente) => {
         setExpedienteSeleccionado(expediente);
-        console.log("expediente seleccionado", expedienteSeleccionado)
-        /*   setPases(expediente.pases); */
+          console.log("expediente seleccionado", expedienteSeleccionado)
+       /*     setPases(expediente.pases);   */
+            
+       setPaseAEditar(nuevo_pase);  //limpio  pase a editar
+       console.log("pase a editar",paseAEditar);
+      /*  setEstadoCarga("NUEVO PASE");  */
+           
     };
     /* NUEVO------------------------------------------------------ */
 
@@ -86,16 +90,40 @@ const VistaPases = () => {
             return pase;
         });
         // actualiza el campo con el nuevo vector
-        expedienteSeleccionado.pases = updatedPases;
-
+        let expediente_nuevo=expedienteSeleccionado;
+           expediente_nuevo.pases = updatedPases;
+          return expediente_nuevo;
+          /* handleExpedienteSelect(expediente_nuevo);
+          console.log("handlePaseEdit  expediente",expedienteSeleccionado) */
     };
 
     const onPaseEdit = (pase) => {
-        setEditingPase(true);
+       /*  setEditingPase(true); */
         pase.fecha_pase = pase.fecha_pase.substring(0, 10)
-        setPase(pase);
-        console.log("onPaseEdit pase", pase)
+        setPaseAEditar(pase);
+        setModo("Editar")
     }
+
+const onGuardar=async (expedienteNuevo)=>{
+    let token=auth.token;  
+    let method = "PUT";
+    let expediente_guardar=expedienteNuevo;
+   let url2=`${url}/expedientes/${expediente_guardar._id}`;
+   // llamo a la funcion executeRequest del useFetchAxios()------------ 
+ 
+   await executeRequest(url2, method, expediente_guardar, token)  ;
+    setPaseAEditar(nuevo_pase);
+   /*  handleExpedienteSelect(respuesta); */
+  /*  setExpedienteSeleccionado(respuesta);
+    console.log("respuesta",respuesta) */
+}  
+   
+const handleLimpio = () => {
+   
+    setSeleccionado(true); /* esto es para que muestre de nuevo los exped para elegir , la GRID*/
+
+}
+  
 
     /* -------------------BORRA EL PASE------------------------------------ */
     const handlePaseDelete = async(paseId) => {
@@ -114,9 +142,23 @@ const VistaPases = () => {
             let expedienteactualizado=response.datos.expediente;
             
              console.log("expediente luego de borrar",expedienteactualizado)
-              setEditingPase(false)  /* salgo del modo edición */
- 
+              setModo("Cargar")  /* salgo del modo edición */
+              setPaseAEditar(nuevo_pase)
     };
+
+    useEffect(() => {
+        if(isSuccessful){
+      /*       setExpedienteSeleccionado(respuesta); */
+         /*    handleExpedienteSelect(respuesta); */
+          /*   setEditingPase(false)   */
+            console.log("respuesta isSuccessful",respuesta)
+            console.log("tuvo exito el put",isSuccessful);
+            setModo("Cargar");
+            setPaseAEditar(nuevo_pase);
+            setExpedienteSeleccionado(respuesta);
+         } 
+     }, [isSuccessful])
+ 
     return (
 
         <Grid container direction="row" sx={{ display: 'flex', justifyContent: 'between' }} spacing={2}   >
@@ -135,16 +177,18 @@ const VistaPases = () => {
           
             )}
 
-            {expedienteSeleccionado && !seleccionado && (
-                <> <Grid item xs={12} md={4} >
-                    <PasesCarga expediente={expedienteSeleccionado} handleExpedienteSelect={handleExpedienteSelect} setSeleccionado={setSeleccionado} pase={pase} onPaseAdd={handlePaseAdd} editingPase={editingPase} setEditingPase={setEditingPase} handlePaseEdit={handlePaseEdit} onPaseDelete={handlePaseDelete} />
-
+            {expedienteSeleccionado  &&  !seleccionado &&(
+          /*       <> <Grid item xs={12} md={4} >
+                    <PasesCarga expediente={expedienteSeleccionado} handleExpedienteSelect={handleExpedienteSelect} setSeleccionado={setSeleccionado} paseAEditar={paseAEditar}  onPaseAdd={handlePaseAdd} editingPase={editingPase} setEditingPase={setEditingPase} handlePaseEdit={handlePaseEdit} onPaseDelete={handlePaseDelete} estadoCarga={estadoCarga} setEstadoCarga={setEstadoCarga} /> */
+                    <> <Grid item xs={12} md={4} >
+                    <PasesCarga expediente={expedienteSeleccionado}   paseAEditar={paseAEditar} modo={modo} setModo={setModo} onGuardar={onGuardar} handlePaseEdit={handlePaseEdit}  handleLimpio={handleLimpio}     />
+                   
                 </Grid>
 
 
                     <Grid item xs={12} md={8} sx={{ alignContent: 'left' }} >
                         <ExpedienteCard
-                            expediente={expedienteSeleccionado} pase={pase} onPaseEdit={onPaseEdit} onPaseDelete={handlePaseDelete} />
+                            expediente={expedienteSeleccionado} onPaseEdit={onPaseEdit} onPaseDelete={handlePaseDelete} />
 
                     </Grid>
                 </>

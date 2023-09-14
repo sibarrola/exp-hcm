@@ -21,14 +21,14 @@ import useAuth from "../../hooks/useAuth.jsx";
 const url = Global.url;
 import { PropTypes } from "prop-types";
  
-import useFetchAxios from "../../hooks/useFetchAxios.jsx";
 /* ver de traer este estadao......... */
 
 /* comienza el componente------------------------------------------------ */
-const PasesCarga = ({ expediente, handleExpedienteSelect, setSeleccionado, pase, onPaseAdd, editingPase, setEditingPase, handlePaseEdit, onPaseDelete }) => {
+/* const PasesCarga = ({ expediente, handleExpedienteSelect, setSeleccionado, pase,setPase, onPaseAdd, editingPase, setEditingPase, handlePaseEdit, onPaseDelete,estadoCarga,setEstadoCarga }) => { */
+const PasesCarga = ({ expediente, paseAEditar,modo,setModo,onGuardar,handlePaseEdit,handleLimpio }) => {
 
-    const [executeRequest, isSuccessful, alert, setAlert,respuesta] = useFetchAxios();
-    const [nuevoPase, setNuevoPase] = useState(pase);
+
+    const [nuevoPase, setNuevoPase] = useState(paseAEditar);
     let idexp = expediente._id;
     const today = new Date().toISOString().split('T')[0]; //esta va a ser la fecha máxima que me permitirá seleccionar (para que no carguen un pase hacia adelante)
 
@@ -39,7 +39,7 @@ const PasesCarga = ({ expediente, handleExpedienteSelect, setSeleccionado, pase,
     */
 
     const { auth } = useAuth();  // usuario logueado
-    const [estadoCarga, setEstadoCarga] = useState("NUEVO PASE");
+
 
     const {
         estaciones,
@@ -64,35 +64,49 @@ const PasesCarga = ({ expediente, handleExpedienteSelect, setSeleccionado, pase,
 
 
     useEffect(() => {
-        if (editingPase) {
+        if (modo=="Editar") {
 
-            switch (pase.estacion) {
+            switch (paseAEditar.estacion) {
                 case 'Externos-DEM':
-                    pase.dem = pase.sub_estacion;
+                    paseAEditar.dem = paseAEditar.sub_estacion;
                     break;
                 case 'Externos-Organismos':
-                    pase.organismo = pase.sub_estacion;
+                    paseAEditar.organismo = paseAEditar.sub_estacion;
                     break;
                 case "Comisión de Trabajo":
-                    pase.comision = pase.sub_estacion;
+                    paseAEditar.comision = paseAEditar.sub_estacion;
                     break;
                 default:
             }
-            pase.usuario_pase_nombre = auth.nombre; // actualizo con el nombre del que edita
-            setNuevoPase(pase);
-            setEstadoCarga("EDICION DEL PASE");
+            paseAEditar.usuario_pase_nombre = auth.nombre; // actualizo con el nombre del que edita
+            setNuevoPase(paseAEditar);
+           
         }
-    }, [pase])  //cuando cambia el pase
-    useEffect(() => {
+         
+    }, [paseAEditar]) ;
+     //cuando cambia el pase
+    /* useEffect(() => {
         if(isSuccessful){
+          
+            handleExpedienteSelect(respuesta);
+            setEditingPase(false)  
+            setEstadoCarga("NUEVO PASE");
+            console.log("tuvo exito el put",isSuccessful);
+            console.log("exped",expediente)
+          
+         } 
+     }, [isSuccessful]); */
+ /*     useEffect(() => {
+     
             console.log("response",respuesta)
             handleExpedienteSelect(respuesta);
             setEditingPase(false)  
             setEstadoCarga("NUEVO PASE");
             setNuevoPase(formData);  
-         } 
-     }, [isSuccessful]);
-
+           
+      
+     }, [respuesta]); */
+   
     /* traigo del hookFormu-------------------------------------------------- */
     const onInputChange = ({ target }) => {
         const { name, value } = target;
@@ -111,30 +125,27 @@ const PasesCarga = ({ expediente, handleExpedienteSelect, setSeleccionado, pase,
 
     }
 
-    const handleLimpio = () => {
-        setNuevoPase(formData);
-        setSeleccionado(true); /* esto es para que muestre de nuevo los exped para elegir , la GRID*/
 
-    }
     /*  esto es para desactivar la tecla ENTER */
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
         }
     };
-  /*   const [alert, setAlert] = useState({
+   const [alert, setAlert] = useState({
         open: false,
         severity: 'success',
         message: '',
-    }); */
+    }); 
 
     /* graba SUBMIT-------------------------------------------------- */
     const savePase = async (e) => {
         e.preventDefault();
-        if (editingPase) {
+        let expedienteNuevo;
+        if (modo=="Editar") {
 
             // si edito voy a la función que trae los pases, busca el editado y lo reemplaza
-            handlePaseEdit(nuevoPase)
+            expedienteNuevo= handlePaseEdit(nuevoPase)
 
         } else {
             let paseg = {
@@ -144,31 +155,29 @@ const PasesCarga = ({ expediente, handleExpedienteSelect, setSeleccionado, pase,
                 estado: "true",
                 usuario_pase: auth.uid,
                 usuario_pase_nombre: auth.nombre,
-                comentario: nuevoPase.comentario
+                comentario: nuevoPase.comentario}
+            
+            expedienteNuevo = { ...expediente, pases: [...expediente.pases, paseg] };
+              //agrego en el campo de expedientes un nuevo pase al final del vector
+           
             }
-            expediente.pases.push(paseg);    //agrego en el campo de expedientes un nuevo pase al final del vector
+          console.log("eXPEDIENTE NUEVO",expedienteNuevo)
 
-        }
-
-        let token=auth.token;  
-        let method = "PUT";
-        let expediente_guardar=expediente;
-       let url2=`${url}/expedientes/${expediente._id}`;
-       // llamo a la funcion executeRequest del useFetchAxios()------------ 
-       console.log(url2,method,expediente,token);
-       await executeRequest(url2, method, expediente_guardar, token)  ;
-       console.log("isSuccessful",isSuccessful);
- 
-
+         await onGuardar(expedienteNuevo);
+         setNuevoPase(formData);
+      
+         setModo("Cargar");
+      
     }
 
     return (
 
         <Container component={Paper} sx={{ padding: 2, border: 1, borderColor: 'blue' }}>
 
-            <h3>{estadoCarga}</h3>
-            <h4>Exp. Legajo {expediente.legajo}</h4>
+            <h3>{modo}</h3>
+            <h4>Exp. Legajo {expediente.legajo} {JSON.stringify(paseAEditar)} </h4>
             <form onSubmit={savePase}>
+               
             <CustomDialog
                     open={alert.open}
                     onClose={() => setAlert({ ...alert, open: false })}
@@ -338,7 +347,7 @@ const PasesCarga = ({ expediente, handleExpedienteSelect, setSeleccionado, pase,
 
                 <Grid container spacing={2} sx={{ mb: 2, mt: 1 }}>
                     <Grid item xs={12} marginTop="20px" marginRight='20px' alignContent="right">
-                        {(estadoCarga == "NUEVO PASE") ? (
+                        {(modo == "Cargar") ? (
                             <Button size="small" variant="contained" color="primary" type='submit' style={{ marginRight: 20 }}>Guardar</Button>) :
                             <Button size="small" variant="contained" color="primary" type='submit' style={{ marginRight: 20 }}>Actualizar</Button>
 
@@ -369,11 +378,10 @@ PasesCarga.propTypes = {
     handleExpedienteSelect: PropTypes.func,
     setSeleccionado: PropTypes.func,
     pase: PropTypes.object,
-
+setPase:PropTypes.func,
     onPaseAdd: PropTypes.func,
     editingPase: PropTypes.bool,
     setEditedPase: PropTypes.func,
     handlePaseEdit: PropTypes.func,
     onPaseDelete: PropTypes.func,
 };
-

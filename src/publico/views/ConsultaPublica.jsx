@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Grid, Typography } from '@mui/material';
 import ExpedientesDataGrid from '../../privado/componentes/ExpedientesDataGrid';
  
-import ExpedienteCard from '../../privado/componentes/ExpedienteCard';
+import ExpedienteCardPublico from '../components/ExpedienteCardPublico';
 
  
 const ConsultaPublica = () => {
@@ -56,7 +56,7 @@ const ConsultaPublica = () => {
   
     return (
 
-        <Grid container direction="row" sx={{ display: 'flex', justifyContent: 'between',mt:'2%' }} spacing={2}   >
+        <Grid container direction="row" spacing={2} sx={{ display: 'flex', mt:'2%', justifyContent:'center'     }}    >
        
             {/*    <div> {JSON.stringify(expedienteSeleccionado)}</div>  */}
     {/*         <Grid item xs={12}>
@@ -65,7 +65,7 @@ const ConsultaPublica = () => {
             </Grid> */}
             {/* seleccionado && ( */
               
-                <Grid item xs={12} lg={7} sx={{ mr: "20px" }}  >
+                <Grid item xs={12} lg={6}   >
                     <ExpedientesDataGrid onSelectExpediente={handleExpedienteSelect} isEditing={isEditing} setIsEditing={setIsEditing} seleccionado={seleccionado} setSeleccionado={setSeleccionado}
                  />
                 </Grid>
@@ -76,8 +76,8 @@ const ConsultaPublica = () => {
             
 
 
-                    <Grid item xs={12} lg={4} sx={{ alignContent: 'left' }} >
-                        <ExpedienteCard
+                    <Grid item xs={12} lg={5} sx={{ alignContent: 'left' }} >
+                        <ExpedienteCardPublico
                             expediente={expedienteSeleccionado}   />
 
                     </Grid>

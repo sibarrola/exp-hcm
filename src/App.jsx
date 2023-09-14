@@ -6,19 +6,22 @@ import { MailOutline} from '@mui/icons-material' */
  
 import AppRouter from "./router/AppRouter"
 
-import { AutProvider } from './context/AutProvider.jsx';
+ 
+
+  import   { useEffect } from 'react';
+
+ 
+  
+  
+    // ... el resto de tu componente
  
  const App = () => {
+    
    return (
-     
-         
+            
             <AppRouter/>
        
-        
-       
-       
-        
-   
+           
    )
  }
  
