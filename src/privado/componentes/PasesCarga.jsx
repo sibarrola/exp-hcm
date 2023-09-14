@@ -20,14 +20,15 @@ import CustomDialog from '../../privado/componentes/CustomDialog';
 import useAuth from "../../hooks/useAuth.jsx";
 const url = Global.url;
 import { PropTypes } from "prop-types";
- 
+import useFetchAxios from "../../hooks/useFetchAxios.jsx";
 /* ver de traer este estadao......... */
 
 /* comienza el componente------------------------------------------------ */
 /* const PasesCarga = ({ expediente, handleExpedienteSelect, setSeleccionado, pase,setPase, onPaseAdd, editingPase, setEditingPase, handlePaseEdit, onPaseDelete,estadoCarga,setEstadoCarga }) => { */
-const PasesCarga = ({ expediente, paseAEditar,modo,setModo,onGuardar,handlePaseEdit,handleLimpio }) => {
+const PasesCarga = ({ expediente,handleExpedienteSelect, paseAEditar,modo,setModo,onGuardar,handlePaseEdit,handleLimpio }) => {
 
-
+    let [executeRequest, isSuccessful, alert, setAlert,respuesta] = useFetchAxios();
+    const url = Global.url;
     const [nuevoPase, setNuevoPase] = useState(paseAEditar);
     let idexp = expediente._id;
     const today = new Date().toISOString().split('T')[0]; //esta va a ser la fecha máxima que me permitirá seleccionar (para que no carguen un pase hacia adelante)
@@ -58,6 +59,7 @@ const PasesCarga = ({ expediente, paseAEditar,modo,setModo,onGuardar,handlePaseE
         dem: "",
         estado: "",
         usuario_pase: "",
+        usuario_pase_nombre:"",
         comentario: ""
     }
 
@@ -85,17 +87,18 @@ const PasesCarga = ({ expediente, paseAEditar,modo,setModo,onGuardar,handlePaseE
          
     }, [paseAEditar]) ;
      //cuando cambia el pase
-    /* useEffect(() => {
+  useEffect(() => {
         if(isSuccessful){
           
             handleExpedienteSelect(respuesta);
-            setEditingPase(false)  
-            setEstadoCarga("NUEVO PASE");
+            setNuevoPase(formData);
+          /*   setEditingPase(false)   */
+           /*  setMotivo("Cargar"); */
             console.log("tuvo exito el put",isSuccessful);
-            console.log("exped",expediente)
-          
+            console.log("expediente compartido",expediente)
+           
          } 
-     }, [isSuccessful]); */
+     }, [respuesta]);  
  /*     useEffect(() => {
      
             console.log("response",respuesta)
@@ -132,12 +135,12 @@ const PasesCarga = ({ expediente, paseAEditar,modo,setModo,onGuardar,handlePaseE
             event.preventDefault();
         }
     };
-   const [alert, setAlert] = useState({
+/*      const [alert, setAlert] = useState({
         open: false,
         severity: 'success',
         message: '',
-    }); 
-
+    });  
+ */
     /* graba SUBMIT-------------------------------------------------- */
     const savePase = async (e) => {
         e.preventDefault();
@@ -161,13 +164,25 @@ const PasesCarga = ({ expediente, paseAEditar,modo,setModo,onGuardar,handlePaseE
               //agrego en el campo de expedientes un nuevo pase al final del vector
            
             }
-          console.log("eXPEDIENTE NUEVO",expedienteNuevo)
+          console.log("eXPEDIENTE NUEVO",expedienteNuevo,modo);
 
-         await onGuardar(expedienteNuevo);
-         setNuevoPase(formData);
+        /*  await onGuardar(expedienteNuevo);
+          setNuevoPase(formData);
       
+         setModo("Cargar"); */
+
+         // GUARDO
+         let token=auth.token;  
+         let method = "PUT";
+         let expediente_guardar=expedienteNuevo;
+       
          setModo("Cargar");
-      
+         setNuevoPase(formData);
+        let url2=`${url}/expedientes/${expediente_guardar._id}`;
+        // llamo a la funcion executeRequest del useFetchAxios()------------ 
+       await executeRequest(url2, method, expediente_guardar, token)  ;
+         
+       
     }
 
     return (
@@ -175,7 +190,7 @@ const PasesCarga = ({ expediente, paseAEditar,modo,setModo,onGuardar,handlePaseE
         <Container component={Paper} sx={{ padding: 2, border: 1, borderColor: 'blue' }}>
 
             <h3>{modo}</h3>
-            <h4>Exp. Legajo {expediente.legajo} {JSON.stringify(paseAEditar)} </h4>
+            <h4>Exp. Legajo {expediente.legajo}   </h4>
             <form onSubmit={savePase}>
                
             <CustomDialog

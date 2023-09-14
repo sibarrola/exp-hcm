@@ -37,7 +37,8 @@ import useFetchAxios from "../../hooks/useFetchAxios.jsx";
         pases: [{}]
 
     });
-    const [executeRequest, isSuccessful, alert, setAlert,respuesta] = useFetchAxios();
+    
+    let [executeRequest, isSuccessful, alert, setAlert,respuesta] = useFetchAxios();
     const url = Global.url;
     /* -------------------------------------- */
     const { auth } = useAuth();  // usuario logueado
@@ -66,13 +67,13 @@ import useFetchAxios from "../../hooks/useFetchAxios.jsx";
     }; */
    
 
-    const handleExpedienteSelect = (expediente) => {
+    const handleExpedienteSelect =  (expediente) => {
         setExpedienteSeleccionado(expediente);
           console.log("expediente seleccionado", expedienteSeleccionado)
        /*     setPases(expediente.pases);   */
             
-       setPaseAEditar(nuevo_pase);  //limpio  pase a editar
-       console.log("pase a editar",paseAEditar);
+      // setPaseAEditar(nuevo_pase);  //limpio  pase a editar
+     /*   console.log("pase a editar",paseAEditar); */
       /*  setEstadoCarga("NUEVO PASE");  */
            
     };
@@ -105,17 +106,17 @@ import useFetchAxios from "../../hooks/useFetchAxios.jsx";
     }
 
 const onGuardar=async (expedienteNuevo)=>{
-    let token=auth.token;  
+     let token=auth.token;  
     let method = "PUT";
     let expediente_guardar=expedienteNuevo;
+    setPaseAEditar(nuevo_pase);
+    setModo("Cargar");
    let url2=`${url}/expedientes/${expediente_guardar._id}`;
    // llamo a la funcion executeRequest del useFetchAxios()------------ 
- 
-   await executeRequest(url2, method, expediente_guardar, token)  ;
-    setPaseAEditar(nuevo_pase);
-   /*  handleExpedienteSelect(respuesta); */
-  /*  setExpedienteSeleccionado(respuesta);
-    console.log("respuesta",respuesta) */
+  await executeRequest(url2, method, expediente_guardar, token)  ;
+    
+       
+     
 }  
    
 const handleLimpio = () => {
@@ -123,41 +124,34 @@ const handleLimpio = () => {
     setSeleccionado(true); /* esto es para que muestre de nuevo los exped para elegir , la GRID*/
 
 }
-  
+ 
 
     /* -------------------BORRA EL PASE------------------------------------ */
     const handlePaseDelete = async(paseId) => {
-        console.log("handlePaseDelete",handlePaseDelete)
+        console.log("pase delete",paseId);
        const vectorPases=expedienteSeleccionado.pases;
-          
+       const expedienteNuevo=expedienteSeleccionado;
         const updatedPases = vectorPases.filter((pase) => pase._id !== paseId);
-    
-            setExpedienteSeleccionado((prevExpediente) => ({
+        console.log("pases filtrados",updatedPases);
+            /* setExpedienteSeleccionado((prevExpediente) => ({
                 ...prevExpediente,
                 pases: updatedPases,
-            }));
-            let metodo="PUT"
-            let response= await Peticiones (`${Global.url}/expedientes/${expedienteSeleccionado._id}`,  metodo, expedienteSeleccionado);
-
-            let expedienteactualizado=response.datos.expediente;
+            })); */
+            expedienteNuevo.pases=updatedPases;
+        /*     setExpedienteSeleccionado(expedienteNuevo); */
+          
+            await onGuardar(expedienteNuevo);
             
-             console.log("expediente luego de borrar",expedienteactualizado)
-              setModo("Cargar")  /* salgo del modo edición */
-              setPaseAEditar(nuevo_pase)
     };
 
-    useEffect(() => {
+/*     useEffect(() => {
         if(isSuccessful){
-      /*       setExpedienteSeleccionado(respuesta); */
-         /*    handleExpedienteSelect(respuesta); */
-          /*   setEditingPase(false)   */
-            console.log("respuesta isSuccessful",respuesta)
-            console.log("tuvo exito el put",isSuccessful);
-            setModo("Cargar");
-            setPaseAEditar(nuevo_pase);
-            setExpedienteSeleccionado(respuesta);
+              setExpedienteSeleccionado(respuesta)
+             setModo("Cargar");
+             setPaseAEditar(nuevo_pase);  
+           
          } 
-     }, [isSuccessful])
+     }, [  isSuccessful] )*/
  
     return (
 
@@ -181,14 +175,14 @@ const handleLimpio = () => {
           /*       <> <Grid item xs={12} md={4} >
                     <PasesCarga expediente={expedienteSeleccionado} handleExpedienteSelect={handleExpedienteSelect} setSeleccionado={setSeleccionado} paseAEditar={paseAEditar}  onPaseAdd={handlePaseAdd} editingPase={editingPase} setEditingPase={setEditingPase} handlePaseEdit={handlePaseEdit} onPaseDelete={handlePaseDelete} estadoCarga={estadoCarga} setEstadoCarga={setEstadoCarga} /> */
                     <> <Grid item xs={12} md={4} >
-                    <PasesCarga expediente={expedienteSeleccionado}   paseAEditar={paseAEditar} modo={modo} setModo={setModo} onGuardar={onGuardar} handlePaseEdit={handlePaseEdit}  handleLimpio={handleLimpio}     />
+                    <PasesCarga expediente={expedienteSeleccionado}  handleExpedienteSelect={handleExpedienteSelect}  paseAEditar={paseAEditar} modo={modo} setModo={setModo} onGuardar={onGuardar} handlePaseEdit={handlePaseEdit}  handleLimpio={handleLimpio}      />
                    
                 </Grid>
 
 
                     <Grid item xs={12} md={8} sx={{ alignContent: 'left' }} >
                         <ExpedienteCard
-                            expediente={expedienteSeleccionado} onPaseEdit={onPaseEdit} onPaseDelete={handlePaseDelete} />
+                            expediente={expedienteSeleccionado} onPaseEdit={onPaseEdit} onPaseDelete={handlePaseDelete}  />
 
                     </Grid>
                 </>

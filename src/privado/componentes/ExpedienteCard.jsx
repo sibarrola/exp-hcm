@@ -24,7 +24,7 @@ import ConfirmDialog from './ConfirmDialog';
 /* ====================================================================== */
 const ExpedienteCard = ({ expediente,  onPaseEdit, onPaseDelete }) => {
 
-    const pasesOrdenados = [...expediente.pases].sort((a, b) => new Date(a.fecha_pase) - new Date(b.fecha_pase));
+  let pasesOrdenados = [...expediente.pases].sort((a, b) => new Date(a.fecha_pase) - new Date(b.fecha_pase));
     /* los ... son para copiar y no perder el original */
 
     console.log("expedienteCarrd",expediente.pases)
@@ -59,7 +59,12 @@ const ExpedienteCard = ({ expediente,  onPaseEdit, onPaseDelete }) => {
         setDialogOpen(false);
     };
     /* -------------------- */
+/*     useEffect(()=>{
 
+       let pasesOrdenados = [...expediente.pases].sort((a, b) => new Date(a.fecha_pase) - new Date(b.fecha_pase));
+      
+              
+    },[expediente]) */
     return (
         <Card variant="outlined" sx={{ borderColor: 'blue' }} >
             <Grid sx={{ ml: "30px" }} >
@@ -87,7 +92,7 @@ const ExpedienteCard = ({ expediente,  onPaseEdit, onPaseDelete }) => {
                     <Typography variant="body1" sx={{ fontWeight: 800, ml: "3px" }}>
                         PASES DEL EXPEDIENTE
                     </Typography>
-                    <div style={{ overflowY: 'auto', maxHeight: '300px' }}>
+                    <div style={{ overflowY: 'auto',  Height: '300px' }}>
                         <ConfirmDialog
                             open={dialogOpen}
                             onClose={handleCloseDialog}
