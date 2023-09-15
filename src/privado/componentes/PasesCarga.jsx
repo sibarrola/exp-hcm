@@ -78,7 +78,7 @@ const PasesCarga = ({ expediente,handleExpedienteSelect, paseAEditar,modo,setMod
                 case "Comisión de Trabajo":
                     paseAEditar.comision = paseAEditar.sub_estacion;
                     break;
-                default:
+               
             }
             paseAEditar.usuario_pase_nombre = auth.nombre; // actualizo con el nombre del que edita
             setNuevoPase(paseAEditar);
@@ -161,10 +161,37 @@ const PasesCarga = ({ expediente,handleExpedienteSelect, paseAEditar,modo,setMod
                 comentario: nuevoPase.comentario}
             
             expedienteNuevo = { ...expediente, pases: [...expediente.pases, paseg] };
-              //agrego en el campo de expedientes un nuevo pase al final del vector
+
+              // cambio el estado si es un pase nuevo
+              switch(nuevoPase.estacion){
+                case "Sanción":
+                    expedienteNuevo.estadoExp="Aprobado";
+                    console.log(expedienteNuevo.estadoExp)
+                    break;
+                case "Notificación al Ejecutivo":
+                   expedienteNuevo.estadoExp="Notificado"
+                     break;  
+                case "Archivo":
+                   expedienteNuevo.estadoExp="Archivado"
+                     break;  
+                     case "Finalizado":
+                   expedienteNuevo.estadoExp="Finalizado"
+                     break;  
+              default:
+                expedienteNuevo.estadoExp="Estudio"
+            } 
            
             }
-          console.log("eXPEDIENTE NUEVO",expedienteNuevo,modo);
+         // Utiliza reduce() para encontrar el objeto con la fecha más grande
+
+
+  // Inicializa maxPase con el primer elemento del array
+          
+                       
+              
+
+
+           console.log("eXPEDIENTE NUEVO",expedienteNuevo,modo);
 
         /*  await onGuardar(expedienteNuevo);
           setNuevoPase(formData);
