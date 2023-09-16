@@ -10,11 +10,11 @@ import { Article } from '@mui/icons-material';
 import ContactPageIcon from '@mui/icons-material/ContactPage';
 import { NavLink } from 'react-router-dom';
 const navVectLinks = [
-    {
+  /*   {
         title: "Inicio", path: "/", icon: <HomeIcon />
-    },
+    }, */
     {
-        title: "Login", path: "/auth/login", icon: <PersonIcon />
+        title: "Empleado", path: "/auth/login", icon: <PersonIcon />
     }
    /*  {
         title: "Registro", path: "/auth/register", icon: <AssignmentIcon />

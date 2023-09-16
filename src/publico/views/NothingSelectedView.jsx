@@ -1,7 +1,7 @@
-import { Grid, Container, Box } from "@mui/material"
+import { Grid, Container, Box ,IconButton,Button,Avatar} from "@mui/material"
 import equipo from '../../assets/fotoconcejo1.jpg'
-import logo1 from '../../assets/logo-160px.fw.png'
-
+import botonInstagram from '../../assets/botonInstagram.jpg'
+import InstagramIcon from '@mui/icons-material/Instagram';
 const NothingSelectedView = () => {
     return (
         <>
@@ -35,6 +35,5 @@ const NothingSelectedView = () => {
     
     )
 }
-
 export default NothingSelectedView
 

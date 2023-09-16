@@ -37,7 +37,7 @@ export const NavBar = ({ navVectLinks, navVectGestion1, navVectGestion2, navVect
                     </IconButton>
                   <Box sx={{ flexGrow: 1, ml: 5 }} >
                   <Typography   sx={colortema.typography.texto1}    >  
-                    GESTION DEL SISTEMA DE EXPEDIENTES </Typography>
+                    SISTEMA DE GESTION DE EXPEDIENTES DEL HCM </Typography>
                     <Typography variant='body1' sx={{ mr: 10, fontStyle: 'italic', color:'#ffea00',fontSize:'12px' ,}} > usuario: {auth.nombre} </Typography>
                   </Box>
                    
