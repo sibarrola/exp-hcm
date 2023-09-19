@@ -45,7 +45,7 @@ export const LayoutPublico = ({ children }) => {
     return (
 
         /*EL BOX ES COMO UN DIV  */
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: 'flex',backgroundColor:'bisque' }}>
 
             <NavBarFijo navVectLinks={navVectLinks} navVectCiudadanos={navVectCiudadanos} NavLink={NavLink} setOpen={setOpen} />
 

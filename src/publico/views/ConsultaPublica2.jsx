@@ -1,9 +1,10 @@
 import { useState } from 'react';
 
-import { Grid, Typography } from '@mui/material';
+import { Container, Grid, Typography,Box } from '@mui/material';
 import ExpedientesDataGrid from '../../privado/componentes/ExpedientesDataGrid';
  
 import ExpedienteCardPublico from '../components/ExpedienteCardPublico';
+ 
 
  
 const ConsultaPublica = () => {
@@ -55,35 +56,28 @@ const ConsultaPublica = () => {
     /* -------------------BORRA EL PASE------------------------------------ */
   
     return (
-  <Grid container direction="row" spacing={2} sx={{ display: 'flex', mt:'2%', justifyContent:'center'     }}    >
-      
-       
-            {/*    <div> {JSON.stringify(expedienteSeleccionado)}</div>  */}
-    {/*         <Grid item xs={12}>
-                 
-                <Typography marginLeft="5%"   sx={colortema.typography.texto1}>SELECCION DE EXPEDIENTES Y CARGA DE PASES</Typography>
-            </Grid> */}
-            {/* seleccionado && ( */
-              
-                <Grid item xs={12} lg={6}   >
+
+     
+        <Grid container   spacing={2} sx={{ display: 'flex' ,mt:'2%', justifyContent:'center'     }}    > 
+          
+             {  seleccionado && (
+                   <Grid item xs={12}   >
                     <ExpedientesDataGrid onSelectExpediente={handleExpedienteSelect} isEditing={isEditing} setIsEditing={setIsEditing} seleccionado={seleccionado} setSeleccionado={setSeleccionado}
                  />
                 </Grid>
-          
-           /*  ) */}
-
-            {expedienteSeleccionado && !seleccionado && (
+                   )}
+                     {expedienteSeleccionado && !seleccionado && (
             
 
 
-                    <Grid item xs={12} lg={5} sx={{ alignContent: 'left' }} >
-                        <ExpedienteCardPublico
-                            expediente={expedienteSeleccionado}   />
-
-                    </Grid>
-                 
-            )}
-
+            <Grid item xs={12} lg={9}    sx={{ justifyContent: 'center' }} >
+                <ExpedienteCardPublico
+                    expediente={expedienteSeleccionado}seleccionado={seleccionado} setSeleccionado={setSeleccionado}  />
+ 
+            </Grid>
+          
+         
+    )}
         </Grid>
 
     );

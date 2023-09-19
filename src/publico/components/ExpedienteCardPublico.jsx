@@ -1,4 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState, useRef } from 'react';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import ExpedientePdf from './ExpedientePdf'; // Asegúrate de que esta ruta sea correcta
+
 import {
 
     Typography,
@@ -14,15 +17,17 @@ import {
     TableCell,
     Grid,
     Card,
-    CardContent
+    CardContent,
+    Fab
 
 } from '@mui/material';
-import {formatearFecha} from '../../helpers/funcionesVarias'
+import { formatearFecha } from '../../helpers/funcionesVarias'
 import { colortema } from '../../theme';
- 
-
+import { PropTypes } from "prop-types";
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 /* ====================================================================== */
-const ExpedienteCardPublico = ({ expediente}) => {
+const ExpedienteCardPublico = ({ expediente, seleccionado, setSeleccionado }) => {
 
     const pasesOrdenados = [...expediente.pases].sort((a, b) => new Date(a.fecha_pase) - new Date(b.fecha_pase));
     /* los ... son para copiar y no perder el original */
@@ -38,13 +43,34 @@ const ExpedienteCardPublico = ({ expediente}) => {
         { width: '100px' },   // Para la columna 'Usuario'
     ];
     /* para borrar */
-    
-     
+
  
-    /* -------------------- */
 
     return (
-        <Card variant="outlined" sx={{ borderColor: 'blue' }} >
+        <div id="expedientei"  >
+ <Card variant="outlined" sx={{ borderColor: 'blue', ml: '2%' }}  >
+            <div style={{ paddingTop: '20px', paddingRight: '20px', textAlign:'end'}} >
+                {/*     
+                        <Button size="small" variant="contained" color="primary" type='submit' style={{ marginRight: 20   }}  startIcon={<PictureAsPdfIcon/>}>Pdf</Button> 
+    
+                        <Button size="small" variant="contained" color="botonCancela"  onClick={()=>{setSeleccionado(true)}} startIcon={<KeyboardReturnIcon/>}>Volver</Button> */}
+             {/*    <Fab color="primary" aria-label="add" sx={{marginRight:'10px'}}  >
+                    <PictureAsPdfIcon />
+                </Fab> */}
+                <Fab color="secondary" aria-label="edit" onClick={()=>{setSeleccionado(true)}}>
+                    <KeyboardReturnIcon />
+                </Fab>
+
+                <PDFDownloadLink 
+        document={<ExpedientePdf expediente={expediente} pasesOrdenados={pasesOrdenados} />}
+        fileName="expediente.pdf"
+        style={{ textDecoration: 'none', padding: '10px',color: '#fff', cursor: 'pointer' }}
+      >
+        {({ blob, url, loading, error }) => (loading ? 'Generando PDF...' :    <Fab color="primary" aria-label="add" sx={{marginRight:'10px'}}  >
+                    <PictureAsPdfIcon />
+                </Fab>)}
+      </PDFDownloadLink>
+            </div>
             <Grid sx={{ ml: "30px" }} >
                 <h3>
                     VISUALIZACION EXPEDIENTE - {`Legajo: ${expediente.legajo}`}
@@ -70,7 +96,7 @@ const ExpedienteCardPublico = ({ expediente}) => {
                     <Typography variant="body1" sx={{ fontWeight: 800, ml: "3px" }}>
                         PASES DEL EXPEDIENTE
                     </Typography>
-                  
+                    <div style={{ overflowX: 'auto', overflowY: 'auto', maxHeight: '800px' }}>
                         <Table sx={{ minWidth: "100%" }}>
                             <TableHead
                                 sx={{
@@ -93,7 +119,7 @@ const ExpedienteCardPublico = ({ expediente}) => {
                                     <TableCell sx={{ borderBottom: '1px solid #888888' }}>Pase a</TableCell>
                                     <TableCell sx={{ borderBottom: '1px solid #888888' }}>Comentario</TableCell>
                                     <TableCell sx={{ borderBottom: '1px solid #888888' }}>Permanencia</TableCell>
-                                    
+
                                 </TableRow>
                             </TableHead>
 
@@ -101,9 +127,9 @@ const ExpedienteCardPublico = ({ expediente}) => {
                                 {/* map ---------------------------------------------------- */}
                                 {pasesOrdenados.map((pase, index) => {
                                     let diasEnEstacion = 0;
-                                    
-                             // Determina  si es la última fila
-                                const isLastRow = index === pasesOrdenados.length - 1;  
+
+                                    // Determina  si es la última fila
+                                    const isLastRow = index === pasesOrdenados.length - 1;
                                     /* calculo dias de estación----------------- */
                                     if (index < pasesOrdenados.length - 1) {
                                         const fechaActual = new Date(pasesOrdenados[index].fecha_pase);
@@ -114,33 +140,42 @@ const ExpedienteCardPublico = ({ expediente}) => {
                                         <TableRow key={pase._id}  >
                                             {/* he ajustado las celdas para que queden mas apretadas las filas , no tan altas */}
 
-                                             
-                                            <TableCell sx={{ padding: '4px 16px', borderBottom: isLastRow ? 'none' : '1px solid #888888' }}  style={columnWidths[0]} > <Typography sx={colortema.typography.texto} > {formatearFecha(new Date(pase.fecha_pase))}</Typography>
+
+                                            <TableCell sx={{ padding: '4px 16px', borderBottom: isLastRow ? 'none' : '1px solid #888888' }} style={columnWidths[0]} > <Typography sx={colortema.typography.texto} > {formatearFecha(new Date(pase.fecha_pase))}</Typography>
                                             </TableCell>
-                                            <TableCell sx={{ padding: '4px 16px', borderBottom: isLastRow ? 'none' : '1px solid #888888' }}  style={columnWidths[1]}>
+                                            <TableCell sx={{ padding: '4px 16px', borderBottom: isLastRow ? 'none' : '1px solid #888888' }} style={columnWidths[1]}>
                                                 <Typography sx={colortema.typography.texto}    >
                                                     {pase.estacion} {pase.sub_estacion}</Typography></TableCell>
-                                            <TableCell sx={{ padding: '4px 16px', borderBottom: isLastRow ? 'none' : '1px solid #888888' }}  style={columnWidths[2]}>
+                                            <TableCell sx={{ padding: '4px 16px', borderBottom: isLastRow ? 'none' : '1px solid #888888' }} style={columnWidths[2]}>
                                                 <Typography sx={colortema.typography.texto} style={columnWidths[5]}  >
                                                     {pase.comentario}
                                                 </Typography>
                                             </TableCell>
-                                            <TableCell sx={{ padding: '4px 16px', borderBottom: isLastRow ? 'none' : '1px solid #888888' }}  style={columnWidths[3]}>
+                                            <TableCell sx={{ padding: '4px 16px', borderBottom: isLastRow ? 'none' : '1px solid #888888' }} style={columnWidths[3]}>
                                                 {diasEnEstacion !== null ? `${diasEnEstacion} días` : '-'}
                                             </TableCell>
-                                            
+
                                         </TableRow>
                                     )
                                 })}
                             </TableBody>
 
                         </Table>
-                   
+                    </div>
                 </Grid>
             </CardContent>
 
         </Card>
+            
+        </div>
+       
     );
 };
 
 export default ExpedienteCardPublico;
+
+ExpedienteCardPublico.propTypes = {
+
+    expediente: PropTypes.object,
+    setSeleccionado: PropTypes.func
+}

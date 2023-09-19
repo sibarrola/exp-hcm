@@ -1,12 +1,12 @@
 
 import { LayoutPublico } from "../layout/LayoutPublico";  
-import ConsultaPublica from "../views/ConsultaPublica";
+import ConsultaPublica2 from "../views/ConsultaPublica2";
  
 
 const PaginaConsultaCiudadano = () => {
  return (
    <LayoutPublico>
-     <ConsultaPublica/>
+     <ConsultaPublica2/>
  
    </LayoutPublico>
  )

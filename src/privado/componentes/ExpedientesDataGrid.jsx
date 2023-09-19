@@ -24,7 +24,7 @@ const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, sele
             setTotalExpedientes(response.datos.total);
               }
         catch (error) {
-            console.error("Hubo un error allos expedientes:", error);
+            console.error("Hubo un error al leer expedientes:", error);
         }
     }
 
@@ -44,19 +44,20 @@ const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, sele
 
     const columns = [
         { field: 'fechaIngreso', headerName: 'Fecha ing.', width: 100 },
-        { field: 'legajo', headerName: 'Legajo', width: 50 },
+        { field: 'legajo', headerName: 'Legajo', width: 70 },
         { field: 'folios', headerName: 'Folios', width: 50 },
         { field: 'motivo', headerName: 'Motivo', width: 230 },
 
         { field: 'solicitante', headerName: 'Solicitante', width: 160 },
+        { field: 'dni', headerName: 'DNI', width: 130 },
         { field: 'apellido', headerName: 'Apellido', width: 130 },
         { field: 'nombres', headerName: 'Nombres', width: 130 },
         { field: 'comentario', headerName: 'Comentarios', width: 130 },
-        { field: 'dni', headerName: 'DNI', width: 130 },
+      
         { field: 'celular', headerName: 'Celular', width: 130 },
         { field: 'domicilio', headerName: 'Domicilio', width: 130 },
-        { field: 'id', headerName: 'Id', width: 130 },
-        { field: 'categoria', headerName: 'Categoría', width: 130 },
+      /*   { field: 'id', headerName: 'Id', width: 130 }, */
+       /*  { field: 'categoria', headerName: 'Categoría', width: 100 }, */
     ];
 
     const rows = expedientes.map((expediente) => ({
@@ -65,11 +66,11 @@ const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, sele
         folios: expediente.folios,
         motivo: expediente.motivo,
         solicitante: expediente.solicitante,
+        dni: expediente.dni,
         apellido: expediente.apellido,
         nombres: expediente.nombres,
         comentario: expediente.comentario,
-        dni: expediente.dni,
-        celular: expediente.celular,
+               celular: expediente.celular,
         domicilio: expediente.domicilio,
         id: expediente._id,
         categoria: expediente.categoria,
@@ -111,7 +112,7 @@ const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, sele
 
 
     return (
-        <Container component={Paper} sx={{ padding: 1, border: 1, borderColor: 'blue' }}>
+        <Box component={Paper} sx={{ paddingLeft: 10,paddingRight: 10, border: 1, borderColor: 'blue', margin:'10px',boxShadow:"2"}}>
             <h3 sx={{ width: '500px' }}>Lista de Expedientes En curso  ({totalExpedientes})  </h3>
 
             <Box sx={{
@@ -150,7 +151,7 @@ const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, sele
                     Toolbar: GridToolbar,
                 }}
             />
-        </Container>
+        </Box>
     );
 }
 export default ExpedientesDataGrid
