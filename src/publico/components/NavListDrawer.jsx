@@ -16,10 +16,12 @@ export const NavListDrawer = ({ navVectLinks,navVectCiudadanos, NavLink,setOpen 
             <Typography variant="body1" fontWeight="bold" sx={{mt:3,ml:1,mr:1, justifyContent:'center'}} >Ciudadanos</Typography>
          
                 <List>
+                   
                       {/* slice(1) para obtener una nueva matriz que excluye el primer elemento del vector. Luego, aplicamos map a esa nueva matriz  */}
                     {navVectCiudadanos.map((item) => (
+                                              
                         <ListItem disablePadding key={item.title}>
-
+  
                             <ListItemButton
                                 color="inherit"
                                 key={item.title}
@@ -36,11 +38,17 @@ export const NavListDrawer = ({ navVectLinks,navVectCiudadanos, NavLink,setOpen 
                                 <Typography variant='subtitle1' sx={{ marginLeft: 2 }}  >
                                     {item.title}
                                 </Typography>
+                              
                             </ListItemButton  >
-                        </ListItem>
-                    ))
+                         
+                        </ListItem>  
+                                           
+                    )  
+                         
+                    )
+                   
                     }
-                    <Divider />
+                  
                     <Toolbar/> 
                       {/* lo pongo en un box para ocultar si es pantalla mediana o grande */}
                       <Box sx={{display:{xs:'block',sm:'block', md:'none'},bgcolor:"#e8eaf6"}}>
@@ -64,12 +72,15 @@ export const NavListDrawer = ({ navVectLinks,navVectCiudadanos, NavLink,setOpen 
                                 <Typography variant='subtitle1' sx={{ marginLeft: 2 }}  >
                                     {item.title}
                                 </Typography>
+                            
                             </ListItemButton  >
+                            <hr/>
                         </ListItem>
                     ))
 
                     }
               </Box>
+            
             </List>   
          </Box>  
        

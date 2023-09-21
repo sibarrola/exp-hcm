@@ -13,7 +13,8 @@ export const colortema =createTheme({
             /*  main: '#FF0000',    */ 
            /*  main:'#d6140d'   */
            /* main:'#2a3eb1'*/
-          main:'#1c54b2'
+            main:'#1c54b2'  
+         
         }, 
         secondary: {
            /*  main:'#aea9eb' */

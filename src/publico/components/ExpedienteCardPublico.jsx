@@ -21,7 +21,7 @@ import {
     Fab
 
 } from '@mui/material';
-import { formatearFecha } from '../../helpers/funcionesVarias'
+import { fechaReves, formatearFecha } from '../../helpers/funcionesVarias'
 import { colortema } from '../../theme';
 import { PropTypes } from "prop-types";
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
@@ -50,14 +50,8 @@ const ExpedienteCardPublico = ({ expediente, seleccionado, setSeleccionado }) =>
         <div id="expedientei"  >
  <Card variant="outlined" sx={{ borderColor: 'blue', ml: '2%' }}  >
             <div style={{ paddingTop: '20px', paddingRight: '20px', textAlign:'end'}} >
-                {/*     
-                        <Button size="small" variant="contained" color="primary" type='submit' style={{ marginRight: 20   }}  startIcon={<PictureAsPdfIcon/>}>Pdf</Button> 
-    
-                        <Button size="small" variant="contained" color="botonCancela"  onClick={()=>{setSeleccionado(true)}} startIcon={<KeyboardReturnIcon/>}>Volver</Button> */}
-             {/*    <Fab color="primary" aria-label="add" sx={{marginRight:'10px'}}  >
-                    <PictureAsPdfIcon />
-                </Fab> */}
-                <Fab color="secondary" aria-label="edit" onClick={()=>{setSeleccionado(true)}}>
+               
+                <Fab color="secondary" aria-label="edit" size="small" onClick={()=>{setSeleccionado(true)}}>
                     <KeyboardReturnIcon />
                 </Fab>
 
@@ -66,7 +60,7 @@ const ExpedienteCardPublico = ({ expediente, seleccionado, setSeleccionado }) =>
         fileName="expediente.pdf"
         style={{ textDecoration: 'none', padding: '10px',color: '#fff', cursor: 'pointer' }}
       >
-        {({ blob, url, loading, error }) => (loading ? 'Generando PDF...' :    <Fab color="primary" aria-label="add" sx={{marginRight:'10px'}}  >
+        {({ blob, url, loading, error }) => (loading ? 'Generando PDF...' :    <Fab color="primary" aria-label="add"  size="small" sx={{marginRight:'10px'}}  >
                     <PictureAsPdfIcon />
                 </Fab>)}
       </PDFDownloadLink>
@@ -135,6 +129,13 @@ const ExpedienteCardPublico = ({ expediente, seleccionado, setSeleccionado }) =>
                                         const fechaActual = new Date(pasesOrdenados[index].fecha_pase);
                                         const fechaSiguiente = new Date(pasesOrdenados[index + 1].fecha_pase);
                                         diasEnEstacion = Math.ceil((fechaSiguiente - fechaActual) / (1000 * 60 * 60 * 24));
+                                         
+                                    } 
+                                    if (index==pasesOrdenados.length-1){
+                                        const fechaActual = new Date(pasesOrdenados[index].fecha_pase) ;
+                                        const fechaSiguiente =   new Date() 
+                                        diasEnEstacion = Math.ceil((fechaSiguiente - fechaActual) / (1000 * 60 * 60 * 24))-1; 
+                                         
                                     }
                                     return (
                                         <TableRow key={pase._id}  >

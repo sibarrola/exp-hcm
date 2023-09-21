@@ -3,28 +3,26 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { Global } from '../../helpers/Global';
 import Peticiones from '../../helpers/Peticiones';
 import { formatearFecha, fechaReves } from '../../helpers/funcionesVarias';
-import { Container, Paper, TextField, Box, Button, Fab } from '@mui/material';
+import { Container, Paper, TextField, Box, Button } from '@mui/material';
 import RestartAlt from '@mui/icons-material/RestartAlt';
 import { PropTypes } from "prop-types";
-
+   
 const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, seleccionado, setSeleccionado, pases, setPases }) => {
     const [expedientes, setExpedientes] = useState([]);
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(10);
     const [totalExpedientes, setTotalExpedientes] = useState(0);
-    const [estadoExp, setEstadoExp] = useState('Abierto');
-    const [titulo, setTitulo] = useState('Listado de Expedientes en Tratamiento');
 
     const fetchExpedientes = async (page, pageSize) => {
         /* le mando "Abierto", que no es un estado, pero que en el servidor interpreto como todos los estadoExp que no sean "Finalizado" */
-        const url = `${Global.url}/expedientes/estadoExp/` + `${estadoExp}` + `?desde=${page * pageSize}&limite=${pageSize}`;
+        const url = `${Global.url}/expedientes/estadoExp/Abierto?desde=${page * pageSize}&limite=${pageSize}`;
 
         try {
             const metodo = 'GET';
             let response = await Peticiones(url, metodo);
             setExpedientes(response.datos.expedientes);
             setTotalExpedientes(response.datos.total);
-        }
+              }
         catch (error) {
             console.error("Hubo un error al leer expedientes:", error);
         }
@@ -35,32 +33,14 @@ const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, sele
     }, [page, pageSize]);
 
     useEffect(() => {
-        fetchExpedientes(page, pageSize);
-        switch (estadoExp) {
-            case 'Abierto':
-                setTitulo("Listado de Expedientes en Tratamiento");
-                break;
-
-            case 'Notificado':
-                setTitulo("Listado de Expedientes Aprobados y Notificados");
-                break;
-            case 'Archivado':
-                setTitulo("Listado de Expedientes Archivados");
-                break;
-
-        }
-
-    }, [estadoExp]);
-
-    useEffect(() => {
         if (isEditing == true) {
             console.log("isEditing dataGrid cuando cambia", isEditing)
             fetchExpedientes(page, pageSize);
             setIsEditing(false);
         }
     }, [isEditing]);
-
-
+    
+ 
 
     const columns = [
         { field: 'fechaIngreso', headerName: 'Fecha ing.', width: 100 },
@@ -73,11 +53,11 @@ const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, sele
         { field: 'apellido', headerName: 'Apellido', width: 130 },
         { field: 'nombres', headerName: 'Nombres', width: 130 },
         { field: 'comentario', headerName: 'Comentarios', width: 130 },
-
+      
         { field: 'celular', headerName: 'Celular', width: 130 },
         { field: 'domicilio', headerName: 'Domicilio', width: 130 },
-        /*   { field: 'id', headerName: 'Id', width: 130 }, */
-        /*  { field: 'categoria', headerName: 'Categoría', width: 100 }, */
+      /*   { field: 'id', headerName: 'Id', width: 130 }, */
+       /*  { field: 'categoria', headerName: 'Categoría', width: 100 }, */
     ];
 
     const rows = expedientes.map((expediente) => ({
@@ -90,27 +70,27 @@ const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, sele
         apellido: expediente.apellido,
         nombres: expediente.nombres,
         comentario: expediente.comentario,
-        celular: expediente.celular,
+               celular: expediente.celular,
         domicilio: expediente.domicilio,
         id: expediente._id,
         categoria: expediente.categoria,
         pases: expediente.pases,
-        estadoExp: expediente.estadoExp,
+        estadoExp: expediente.estadoExp,  
     }));
 
     const handleRowClick = ({ row }) => {
-        let expediente = row;
-        expediente._id = row.id;
-        expediente.pases.usuario_pase_nombre = row.pases.usuario_pase_nombre;
+       let expediente = row;
+        expediente._id=row.id;
+        expediente.pases.usuario_pase_nombre=row.pases.usuario_pase_nombre;
         expediente.comentario = (expediente.comentario == null) ? " " : row.comentario;
         expediente.domicilio = expediente.domicilio == null ? " " : row.domicilio;
         const fechaISO = expediente.fechaIngreso.split('/').reverse().join('-');
         expediente.fechaIngreso = fechaISO;
-        console.log(expediente, "expediente de handleRowClick")
+        console.log(expediente,"expediente de handleRowClick")
         onSelectExpediente(expediente);
         setSeleccionado(false);
-        /*  const pasesOrdenados = [...expediente.pases].sort((a, b) => new Date(a.fecha_pase) - new Date(b.fecha_pase)); */
-        /*  setPases(pasesOrdenados); */
+       /*  const pasesOrdenados = [...expediente.pases].sort((a, b) => new Date(a.fecha_pase) - new Date(b.fecha_pase)); */
+       /*  setPases(pasesOrdenados); */
     };
 
     const [searchTerm, setSearchTerm] = useState('');
@@ -132,30 +112,16 @@ const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, sele
 
 
     return (
-        <Box component={Paper} sx={{ paddingLeft: 10, paddingRight: 10, border: 1, borderColor: 'blue', margin: '10px', boxShadow: "2" }}>
-            <h3 style={{ width: '90%', textAlign: 'center' }}>{titulo} - (total: {totalExpedientes})  </h3>
-            {/* ----------------------- */}
-            <div style={{ paddingTop: '0px', paddingRight: '20px', textAlign: 'end' }} >
+        <Box component={Paper} sx={{ paddingLeft: 10,paddingRight: 10, border: 1, borderColor: 'blue', margin:'10px',boxShadow:"2"}}>
+            <h3 style={{ width: '90%', textAlign:'center' }}>Lista de Expedientes en Tratamiento - (total: {totalExpedientes})  </h3>
 
-                {(estadoExp != 'Notificado') && <Button color="primary" aria-label="edit" variant='contained' onClick={() => { setEstadoExp('Notificado') }} sx={{ marginRight: '10px' }} size='small'>
-                    Finalizados
-                </Button>}
-                {(estadoExp != 'Archivado') && <Button color="secondary" aria-label="edit" variant='contained' onClick={() => { setEstadoExp('Archivado') }} sx={{ marginRight: '10px' }} size='small'>
-                    Archivados
-                </Button>}
-                {(estadoExp != 'Abierto') && <Button color="primary" aria-label="edit" variant='contained' onClick={() => { setEstadoExp('Abierto') }} sx={{ marginRight: '10px' }} size='small'>
-                    En tratamiento
-                </Button>}
-            </div>
-
-            {/* ------------------- */}
             <Box sx={{
                 ml: '10px',
                 mb: '10px',
 
             }} >
-                <TextField label="Buscar" value={searchTerm} onChange={handleSearchChange} sx={{ backgroundColor: 'amarillo.secondary', fontSize: '10px' }} />
-                {/* 
+                <TextField label="Buscar" value={searchTerm} onChange={handleSearchChange} sx={{ backgroundColor: 'amarillo.secondary', fontSize:'10px' }} />
+{/* 
                 <Button size="large" startIcon={<RestartAlt />} onClick={() => fetchExpedientes(page, pageSize)} sx={{ ml: '400px' }}>Refresca</Button> */}
             </Box>
 

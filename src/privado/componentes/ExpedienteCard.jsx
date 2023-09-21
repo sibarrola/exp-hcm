@@ -141,12 +141,19 @@ const ExpedienteCard = ({ expediente,  onPaseEdit, onPaseDelete }) => {
                                     
                              // Determina  si es la última fila
                                 const isLastRow = index === pasesOrdenados.length - 1;  
-                                    /* calculo dias de estación----------------- */
-                                    if (index < pasesOrdenados.length - 1) {
-                                        const fechaActual = new Date(pasesOrdenados[index].fecha_pase);
-                                        const fechaSiguiente = new Date(pasesOrdenados[index + 1].fecha_pase);
-                                        diasEnEstacion = Math.ceil((fechaSiguiente - fechaActual) / (1000 * 60 * 60 * 24));
-                                    }
+                                   /* calculo dias de estación----------------- */
+                                   if (index < pasesOrdenados.length - 1) {
+                                    const fechaActual = new Date(pasesOrdenados[index].fecha_pase);
+                                    const fechaSiguiente = new Date(pasesOrdenados[index + 1].fecha_pase);
+                                    diasEnEstacion = Math.ceil((fechaSiguiente - fechaActual) / (1000 * 60 * 60 * 24));
+                                     
+                                } 
+                                if (index==pasesOrdenados.length-1){
+                                    const fechaActual = new Date(pasesOrdenados[index].fecha_pase) ;
+                                    const fechaSiguiente =   new Date() 
+                                    diasEnEstacion = Math.ceil((fechaSiguiente - fechaActual) / (1000 * 60 * 60 * 24))-1; 
+                                     
+                                }
                                     return (
                                         <TableRow key={pase._id}  >
                                             {/* he ajustado las celdas para que queden mas apretadas las filas , no tan altas */}

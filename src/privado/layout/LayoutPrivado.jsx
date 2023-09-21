@@ -45,7 +45,11 @@ const navVectGestion1 = [
     },
     {
         title: "Estaciones", path: "/privado/tablas/5" 
-    }
+    },
+        {
+            title: "Usuarios", path: "/privado/tablas/6" 
+        }
+    
   
   ]
 

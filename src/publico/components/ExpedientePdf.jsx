@@ -8,7 +8,10 @@ const ExpedientePdf = ({ expediente, pasesOrdenados }) => {
 
     const styles = StyleSheet.create({
         pageContent: {
-            padding: 20  // Esto añadirá un padding de 20 a todo el contenido
+            paddingTop: 20,  // Esto añadirá un padding de 20 a todo el contenido
+            paddingLeft:50,
+            paddingRight:20,
+            paddingBottom:20
         },
         logo: {
             width: 50,     // puedes ajustar el ancho según necesites
@@ -42,10 +45,22 @@ const ExpedientePdf = ({ expediente, pasesOrdenados }) => {
         regularText: {
             fontSize: 12
         },
+        /* para hacer una linea */
+        line: {
+            borderBottomColor: '#000000',  // Color de la línea.
+            borderBottomWidth: 1,          // Grosor de la línea.
+            marginBottom: 10,              // Espacio inferior (opcional).
+            marginTop: 10                  // Espacio superior (opcional).
+        },
 /* para hacer dos formatos en la misma linea */
         inlineTextContainer: {
             flexDirection: 'row',  // Esto alinea los elementos hijos en horizontal
             alignItems: 'baseline'  // Alinea verticalmente por la línea base del texto
+        },
+        inlineTextContainer2: {
+            flexDirection: 'row',   
+            alignItems: 'baseline' ,
+            justifyContent:'center'  
         },
         labelText: {
             fontSize: 12,
@@ -53,7 +68,7 @@ const ExpedientePdf = ({ expediente, pasesOrdenados }) => {
             marginBottom: 5
         },
         valueText: {
-            fontSize: 12,
+            fontSize: 10,
             marginLeft: 5 ,
             marginBottom: 5   
         },
@@ -99,7 +114,7 @@ const ExpedientePdf = ({ expediente, pasesOrdenados }) => {
             borderWidth: 1,
             borderLeftWidth: 0,
             borderTopWidth: 0,
-          
+         
             
         },
         tableCellHeader: {
@@ -111,6 +126,7 @@ const ExpedientePdf = ({ expediente, pasesOrdenados }) => {
           /*   margin: 'auto', */
             fontSize: 10,
             textAlign:'left',
+            paddingLeft:'10px'
         }
     });
 
@@ -128,14 +144,15 @@ const ExpedientePdf = ({ expediente, pasesOrdenados }) => {
                      <Text style={styles.title2}>
                        HCM S.J.del Rincón
                     </Text>
-                     
+                    
                    </View>
+                   <View style={styles.line} />
                    <View style={{ height: 20 }}/>
                    <Text style={styles.title}>
                         VISUALIZACION DEL EXPEDIENTE
                     </Text>
                    
-                 <View style={styles.inlineTextContainer}>
+                 <View style={styles.inlineTextContainer2}  >
                         <Text style={styles.labelText}>Legajo:</Text>
                         <Text style={styles.valueText}> {expediente.legajo} - Ingresado: {formatearFecha(new Date(expediente.fechaIngreso)) + "-- (" + expediente.estadoExp + ")"}
                          </Text>
@@ -201,7 +218,7 @@ const ExpedientePdf = ({ expediente, pasesOrdenados }) => {
                                         <Text style={styles.tableCell}>{formatearFecha(new Date(pase.fecha_pase))}</Text>
                                     </View>
                                     <View style={styles.tableCol0}>
-                                        <Text style={styles.tableCell}>{pase.estacion} - {pase.sub_estacion}
+                                        <Text style={styles.tableCell}>{pase.estacion}  { (pase.sub_estacion)?"-"+pase.sub_estacion:""}  
 
                                         </Text>
                                     </View>

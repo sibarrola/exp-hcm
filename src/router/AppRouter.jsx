@@ -12,12 +12,8 @@ import Tablas from '../privado/pages/Tablas'
 import CargaPases from '../privado/pages/CargaPases'
 
 
-
-
- 
- 
+  
 const AppRouter = () => {
-
    
     return (
       
@@ -32,17 +28,12 @@ const AppRouter = () => {
             <Route path='/privado/edicion'element={ <ListaEdicionExpedientes/> } />
             <Route path='/privado/pases'element={ <CargaPases/> } />
        
-
-
             {/* Login y Registro......................................... */}
             <Route path='/auth/login' element={<LoginPage />} />
             <Route path='/auth/register' element={<RegisterPage />} />
             <Route path='/auth/logout' element={<LogoutPage/>} />
             <Route path='/auth/*' element={<LoginPage />} />
-
-     
-
-           
+  
 
             {/* public */}
             {/*   <Route path='/expedientes' element={<PublicoRoutes/>}/> */}
