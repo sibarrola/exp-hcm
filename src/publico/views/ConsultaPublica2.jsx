@@ -1,15 +1,14 @@
 import { useState } from 'react';
 
-import { Container, Grid, Typography,Box } from '@mui/material';
-import ExpedientesDataGrid from '../../privado/componentes/ExpedientesDataGrid';
+import { Grid} from '@mui/material';
+ import ExpedientesDataGridPublico  from '../components/ExpedientesDataGridPublico';
+
  
 import ExpedienteCardPublico from '../components/ExpedienteCardPublico';
  
-
  
 const ConsultaPublica = () => {
- 
- 
+
   
     const [expedienteSeleccionado, setExpedienteSeleccionado] = useState({
         _id: "",
@@ -61,8 +60,8 @@ const ConsultaPublica = () => {
         <Grid container   spacing={2} sx={{ display: 'flex' ,mt:'2%', justifyContent:'center'     }}    > 
           
              {  seleccionado && (
-                   <Grid item xs={12}   >
-                    <ExpedientesDataGrid onSelectExpediente={handleExpedienteSelect} isEditing={isEditing} setIsEditing={setIsEditing} seleccionado={seleccionado} setSeleccionado={setSeleccionado}
+                   <Grid item xs={10}   >
+                    <ExpedientesDataGridPublico onSelectExpediente={handleExpedienteSelect} isEditing={isEditing} setIsEditing={setIsEditing} seleccionado={seleccionado} setSeleccionado={setSeleccionado}
                  />
                 </Grid>
                    )}
@@ -70,7 +69,7 @@ const ConsultaPublica = () => {
             
 
 
-            <Grid item xs={12} lg={9}    sx={{ justifyContent: 'center' }} >
+            <Grid item xs={10} lg={9}    sx={{ justifyContent: 'center' }} >
                 <ExpedienteCardPublico
                     expediente={expedienteSeleccionado}seleccionado={seleccionado} setSeleccionado={setSeleccionado}  />
  

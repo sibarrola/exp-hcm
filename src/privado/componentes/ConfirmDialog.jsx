@@ -24,7 +24,7 @@ const ConfirmDialog = ({ open, onClose, title, contentText, onConfirm, titulo_fo
             open={open}
             onClose={onClose}
             maxWidth="md"
-            minHight="300px"
+           /*  minHight="300px" */
         >
             {/*   <DialogTitle>{title}</DialogTitle> */}
             <CustomTitle id="alert-dialog-title">

@@ -153,8 +153,8 @@ const ExpedientePdf = ({ expediente, pasesOrdenados }) => {
                     </Text>
                    
                  <View style={styles.inlineTextContainer2}  >
-                        <Text style={styles.labelText}>Legajo:</Text>
-                        <Text style={styles.valueText}> {expediente.legajo} - Ingresado: {formatearFecha(new Date(expediente.fechaIngreso)) + "-- (" + expediente.estadoExp + ")"}
+                        <Text style={styles.labelText}>N°:</Text>
+                        <Text style={styles.valueText}> {expediente.legajo} - Ingresado: {formatearFecha(new Date(expediente.fechaIngreso))}  - ({ (expediente.estadoExp=='Estudio')?'En tratamiento':expediente.estadoExp }) 
                          </Text>
                     </View>
                     <View style={{ height: 25 }}/>
@@ -171,7 +171,8 @@ const ExpedientePdf = ({ expediente, pasesOrdenados }) => {
 
                     <View style={styles.inlineTextContainer}>
                         <Text style={styles.labelText}>Presentó:</Text>
-                        <Text style={styles.valueText}> {expediente.nombres} {expediente.apellido + "  "} / {expediente.dni ? "DNI:" + expediente.dni : ""} {expediente.celular ? "/ Cel.:" + expediente.celular : ""}    {expediente.domicilio ? "/ Domicilio:" + expediente.domicilio : ""}</Text>
+                        {/* <Text style={styles.valueText}> {expediente.nombres} {expediente.apellido + "  "} / {expediente.dni ? "DNI:" + expediente.dni : ""} {expediente.celular ? "/ Cel.:" + expediente.celular : ""}    {expediente.domicilio ? "/ Domicilio:" + expediente.domicilio : ""}</Text> */}
+                        <Text style={styles.valueText}> {expediente.nombres} {expediente.apellido + "  "} - {expediente.dni ? "DNI:" + expediente.dni : ""}  </Text>
                     </View>
                     <View style={{ height: 20 }}/>
                     <Text style={styles.subtitle}>

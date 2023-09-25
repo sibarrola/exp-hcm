@@ -34,7 +34,7 @@ const useFetchAxios = () => {
             if (response.data.success) {
                 
                
-                // Aquí manejas la respuesta exitosa
+                // Aquí  la respuesta exitosa
                 setAlert({
                     open: true,
                     severity: 'success',  // Cambiado a 'success'
@@ -63,7 +63,7 @@ const useFetchAxios = () => {
         }
     }
   
-    return [executeRequest, isSuccessful, alert, setAlert,respuesta];
+    return [executeRequest, isSuccessful, setIsSuccessful,alert, setAlert,respuesta];
 }
 
 export default useFetchAxios;

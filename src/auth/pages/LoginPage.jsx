@@ -79,7 +79,7 @@ const LoginPage = () => {
                 
  
                 } else {
-                    console.log(data.success,"no es true");
+             
                                   
                     setAlert({
                         open: true,
@@ -93,7 +93,7 @@ const LoginPage = () => {
                 setAlert({
                     open: true,
                     severity: 'error',
-                    message: `Ocurrió un error en el inicio de sesión  `
+                    message: `Ocurrió un error en el inicio de sesión (puede ocurrir que no tenga el rol correspondiente)`
                    
                 });
             });

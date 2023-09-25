@@ -16,30 +16,30 @@ import {
 } from '@mui/material';
 import { Global } from '../../helpers/Global.jsx';
 import { extractDigits } from "../../helpers/funcionesVarias.jsx";
-import axios from 'axios';
+ 
 import CustomDialog from '../componentes/CustomDialog.jsx';
 /*  TRAIGO LA FUNCION-----------------------------------------*/
 import useFetchCombos from '../../hooks/useFetchCombos.jsx';
 import useAuth from "../../hooks/useAuth.jsx";
 import CelularField from "./CelularField.jsx";
 import DniField from "./DniField.jsx";
-import { PropTypes } from "prop-types";
-import CustomAlert from "./CustomAlert.jsx";
+ 
 import useFetchAxios from "../../hooks/useFetchAxios.jsx";
 let url =Global.url ;
 const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEditing} ) => {
  
-    const [executeRequest, isSuccessful, alert, setAlert] = useFetchAxios();
+    const [executeRequest, isSuccessful, setIsSuccessful,alert, setAlert] = useFetchAxios();
+    
 
-   let expedienteLimpio={
-    _id:"",
+   
+  let expedienteLimpio={
     legajo: "",
     folios: "",
     estadoExp: "Estudio",
     motivo: "",
     nuevoMotivo: "",
-    comentario: " ",
-    fechaIngreso: "",
+    comentario: "",
+    fechaIngreso:new Date().toISOString().substring(0, 10),
     categoria: "",
     institucion: "",
     organismo: "",
@@ -55,18 +55,14 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
     domicilio: "",
     estado: "true",
 
-};
+};  
   
       const [values, setValues] = useState(expedienteLimpio)
      const { auth } = useAuth();  // usuario logueado
     const [ guardado, setGuardado ] = useState(false);
     
     const [errors, setErrors] = useState({});
- /*    const [alert, setAlert] = useState({
-        open: false,
-        severity: 'success',
-        message: '',
-    }); */
+ 
     const {
         motivos,
         institucionesp,
@@ -86,23 +82,21 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
      
     const dniRef=useRef(null);  
   /* limpia los campos del estado del formulario para comenzar a cargar otro expediente */
-  const handleLimpio = () => {
+   const handleLimpio = () => {
     setValues(expedienteLimpio);
-    console.log(values,"values")
-    
+    console.log(values,"values");
 }
-
+   
     useEffect(() => {
         setValues(expediente);
       }, [expediente]);
- 
+      
+     
       useEffect(() => {
         if(isSuccessful){
-            handleLimpio();
-            setGuardado(true);
-            setIsEditing(true)
-            
-         } 
+            setValues(expedienteLimpio);
+            setIsSuccessful(false);
+          } 
      }, [isSuccessful]);
 /*  esto es para desactivar la tecla ENTER */
     const handleKeyDown = (event) => {
@@ -191,10 +185,11 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
         let solicitanteg = (!values.solicitante || values.solicitante.length == 0) ? (values.apellido + " " + values.nombres) : values.solicitante
         console.log( "solicitante",values.solicitante.length);
         console.log("junto",values.apellido + " " + values.nombres)
-        let motivog = (values.motivo &&values.motivo == "Otro") ? values.nuevoMotivo : values.motivo;
+        let motivog = (values.motivo && values.motivo == "Otro") ? values.nuevoMotivo : values.motivo;
 
         let dnig = extractDigits(values.dni);
-       let celularg= (values.celular&&values.celular.length>1)?extractDigits(values.celular):""
+       let celularg= (values.celular && 
+        values.celular.length>1)?extractDigits(values.celular):""
 
         let legajog = parseInt(values.legajo);
         let foliosg = parseInt(values.folios);
@@ -240,13 +235,12 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
        method="PUT"
         }
        // llamo a la funcion executeRequest del useFetchAxios()------------ 
-    
+     console.log("expediente guardar",expediente_guardar);
+     console.log("isSuccessful",isSuccessful);
+     console.log("estadoCarga",estadoCarga);
+     console.log(url2,method,expediente_guardar,token);
        await executeRequest(url2, method, expediente_guardar, token)  ;
       
-   
-   // alert contiene la alerta actual.
-   // setAlert te permite modificar la alerta si necesitas hacerlo fuera del hook.
-
          
          
     }
@@ -264,40 +258,6 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
         }
 // ver si quiero validaar algo mas......................
 
-       /*  if (!values.motivo) {
-            setErrors((errors) => ({ ...errors, motivo: "El campo motivo es requerido" }));
-            motivoRef.current.focus();
-            return
-        }
-        if (!values.categoria) {
-            setErrors((errors) => ({ ...errors, categoriaRef: "El campo categoria es requerido" }));
-            categoriaRef.current.focus();
-            return
-        } */
-     /*     if (!values.organismo && estadoCarga=="Carga") {
-            setErrors((errors) => ({ ...errors, categoriaRef: "El campo organismo es requerido" }));
-            organismoRef.current.focus();
-            return
-        }  */ 
-        /*      if (!values.email || !/\S+@\S+\.\S+/.test(values.email)) {
-                 setErrors((errors) => ({ ...errors, email: "Introduce un correo electrónico válido" }));
-                 emailRef.current.focus();
-                 return;
-             } */
-
-       /*  if (!values.dni || values.dni.length !=10) {
-            setErrors((errors) => ({ ...errors, dni: "Introduce un DNI válido  " }));
-            dniRef.current.focus();
-            return;
-        }
-        if (values.celular.length<11) {
-            setErrors((errors) => ({ ...errors, celular: "Introduce un número de celular válido " }));
-            celularRef.current.focus();
-            return;
-        } */
-
-        /*  if (!values.celular || !/^(\+54|0)(15)?\d{8}$/.test(values.celular)) { */
-        /*    if (!values.celular || isNaN(values.celular)) { */
         
         if (!values.apellido || values.apellido.length<3) {
             setErrors((errors) => ({ ...errors, apellido: "El campo Apellido es requerido" }));

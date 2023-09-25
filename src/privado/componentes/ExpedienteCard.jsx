@@ -23,7 +23,7 @@ import ConfirmDialog from './ConfirmDialog';
 
 /* ====================================================================== */
 const ExpedienteCard = ({ expediente,  onPaseEdit, onPaseDelete }) => {
-
+ 
   let pasesOrdenados = [...expediente.pases].sort((a, b) => new Date(a.fecha_pase) - new Date(b.fecha_pase));
     /* los ... son para copiar y no perder el original */
 
@@ -58,13 +58,8 @@ const ExpedienteCard = ({ expediente,  onPaseEdit, onPaseDelete }) => {
         console.log("paseTodelete", paseToDelete)
         setDialogOpen(false);
     };
-    /* -------------------- */
-/*     useEffect(()=>{
 
-       let pasesOrdenados = [...expediente.pases].sort((a, b) => new Date(a.fecha_pase) - new Date(b.fecha_pase));
-      
-              
-    },[expediente]) */
+    
     return (
         <Card variant="outlined" sx={{ borderColor: 'blue' }} >
             <Grid sx={{ ml: "30px" }} >
@@ -72,7 +67,7 @@ const ExpedienteCard = ({ expediente,  onPaseEdit, onPaseDelete }) => {
                     VISUALIZACION EXPEDIENTE - {`Legajo: ${expediente.legajo}`}
                 </h3>
                 <Typography sx={{ fontWeight: 800 }}  > Ingresado:</Typography>
-                <Typography sx={colortema.typography.texto} >{formatearFecha(new Date(expediente.fechaIngreso)) + "-- (" + expediente.estadoExp + ")"}</Typography>
+                <Typography sx={colortema.typography.texto} >{formatearFecha(new Date(expediente.fechaIngreso))}  - ({ (expediente.estadoExp=='Estudio')?'En tratamiento':expediente.estadoExp })</Typography>
 
             </Grid>
 
@@ -138,7 +133,7 @@ const ExpedienteCard = ({ expediente,  onPaseEdit, onPaseDelete }) => {
                                 {/* map ---------------------------------------------------- */}
                                 {pasesOrdenados.map((pase, index) => {
                                     let diasEnEstacion = 0;
-                                    
+                             
                              // Determina  si es la última fila
                                 const isLastRow = index === pasesOrdenados.length - 1;  
                                    /* calculo dias de estación----------------- */
@@ -200,7 +195,7 @@ const ExpedienteCard = ({ expediente,  onPaseEdit, onPaseDelete }) => {
                                             </TableCell>
                                         </TableRow>
                                     )
-                                })}
+                                 })}
                             </TableBody>
 
                         </Table>

@@ -25,14 +25,14 @@ import useFetchAxios from "../../hooks/useFetchAxios.jsx";
 
 /* comienza el componente------------------------------------------------ */
 /* const PasesCarga = ({ expediente, handleExpedienteSelect, setSeleccionado, pase,setPase, onPaseAdd, editingPase, setEditingPase, handlePaseEdit, onPaseDelete,estadoCarga,setEstadoCarga }) => { */
-const PasesCarga = ({ expediente,handleExpedienteSelect, paseAEditar,modo,setModo,onGuardar,handlePaseEdit,handleLimpio }) => {
-
-    let [executeRequest, isSuccessful, alert, setAlert,respuesta] = useFetchAxios();
+const PasesCarga = ({ expediente,handleExpedienteSelect, paseAEditar,modo,setModo, handlePaseEdit,handleLimpio }) => {
+ 
+    let [executeRequest, isSuccessful, setIsSuccessful,alert, setAlert,respuesta] = useFetchAxios();
     const url = Global.url;
     const [nuevoPase, setNuevoPase] = useState(paseAEditar);
     let idexp = expediente._id;
     const today = new Date().toISOString().split('T')[0]; //esta va a ser la fecha máxima que me permitirá seleccionar (para que no carguen un pase hacia adelante)
-
+    console.log("alert",alert)
     /* Si quisiera dar parmiso por 2 días hacia adelante: */
     /*  const currentDate = new Date();
       currentDate.setDate(currentDate.getDate() + 2);
@@ -99,16 +99,7 @@ const PasesCarga = ({ expediente,handleExpedienteSelect, paseAEditar,modo,setMod
            
          } 
      }, [respuesta]);  
- /*     useEffect(() => {
-     
-            console.log("response",respuesta)
-            handleExpedienteSelect(respuesta);
-            setEditingPase(false)  
-            setEstadoCarga("NUEVO PASE");
-            setNuevoPase(formData);  
-           
-      
-     }, [respuesta]); */
+
    
     /* traigo del hookFormu-------------------------------------------------- */
     const onInputChange = ({ target }) => {
@@ -135,12 +126,7 @@ const PasesCarga = ({ expediente,handleExpedienteSelect, paseAEditar,modo,setMod
             event.preventDefault();
         }
     };
-/*      const [alert, setAlert] = useState({
-        open: false,
-        severity: 'success',
-        message: '',
-    });  
- */
+
     /* graba SUBMIT-------------------------------------------------- */
     const savePase = async (e) => {
         e.preventDefault();
@@ -208,7 +194,7 @@ const PasesCarga = ({ expediente,handleExpedienteSelect, paseAEditar,modo,setMod
         let url2=`${url}/expedientes/${expediente_guardar._id}`;
         // llamo a la funcion executeRequest del useFetchAxios()------------ 
        await executeRequest(url2, method, expediente_guardar, token)  ;
-         
+         console.log("modo",modo)
        
     }
 
@@ -418,12 +404,14 @@ PasesCarga.propTypes = {
 
     expediente: PropTypes.object,
     handleExpedienteSelect: PropTypes.func,
-    setSeleccionado: PropTypes.func,
-    pase: PropTypes.object,
-setPase:PropTypes.func,
-    onPaseAdd: PropTypes.func,
-    editingPase: PropTypes.bool,
-    setEditedPase: PropTypes.func,
+    
+    paseAEditar: PropTypes.object,
+    modo:PropTypes.string,
+     setModo: PropTypes.func,
+   onGuardar: PropTypes.bool,
+     
     handlePaseEdit: PropTypes.func,
-    onPaseDelete: PropTypes.func,
+    handleLimpio: PropTypes.func,
 };
+
+ 
