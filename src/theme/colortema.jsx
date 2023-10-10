@@ -13,7 +13,8 @@ export const colortema =createTheme({
             /*  main: '#FF0000',    */ 
            /*  main:'#d6140d'   */
            /* main:'#2a3eb1'*/
-            main:'#1c54b2'  
+              main:'#1c54b2'   
+     /*    main:'#795548' */  /* marron */
          
         }, 
         secondary: {
@@ -22,7 +23,9 @@ export const colortema =createTheme({
            /* main: '#0d0487' */
          /*   main: '#0e13ab' */
       /*    main: '#b2102f'  // rojo mas oscuro*/
-         main:red.A400
+           main:red.A400 
+        /*   main:"#795548" */ /* marron mas claro */
+
           },
         fondo:{
            /*  backgroundColor:"#eee6ff" */

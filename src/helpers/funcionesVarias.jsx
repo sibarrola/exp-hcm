@@ -1,3 +1,5 @@
+import { fileUpload } from "./fileUpload";
+
  
 
 export const extractDigits = (value)=> {
@@ -23,3 +25,11 @@ export const extractDigits = (value)=> {
      return fecha.split('/').reverse().join('-');
      
   }
+
+ /*  export const startUploadingFiles =(files=[])=>{
+    console.log(files,"estoy en startuploadingfiles");
+    
+    return async()=>{
+        await fileUpload(files[0]);
+    }
+  } */

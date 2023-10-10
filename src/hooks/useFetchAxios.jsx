@@ -2,7 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 /* A ESTE LO ARMÉ PARA QUE MUESTRE BIEN LOS ERRORES...................  */
 const useFetchAxios = () => {
-    const [alert, setAlert]   = useState({
+    const [alert, setAlert] = useState({
         open: false,
         severity: 'success',
         message: '',
@@ -12,28 +12,26 @@ const useFetchAxios = () => {
     const executeRequest = async (url, method, data, token = "") => {
         let response
         try {
-            
+
             const config = {
                 headers: {
-                    "Content-Type":"application/json",
-                    "x-token":token
+                    "Content-Type": "application/json",
+                    "x-token": token
                 }
             };
 
-            switch(method) {
+            switch (method) {
                 case "POST":
                     response = await axios.post(url, data, config);
                     break;
                 case "PUT":
-                    
+
                     response = await axios.put(url, data, config);
                     break;
-                
+
             }
 
             if (response.data.success) {
-                
-               
                 // Aquí  la respuesta exitosa
                 setAlert({
                     open: true,
@@ -53,7 +51,7 @@ const useFetchAxios = () => {
             }
         } catch (error) {
             // Aquí manejas errores de la petición
-            console.log("error respnse",error.response)
+            console.log("error respnse", error.response)
             let mens = (error.response.status === '401') ? error.data.msg : error.message;
             setAlert({
                 open: true,
@@ -62,8 +60,8 @@ const useFetchAxios = () => {
             });
         }
     }
-  
-    return [executeRequest, isSuccessful, setIsSuccessful,alert, setAlert,respuesta];
+
+    return [executeRequest, isSuccessful, setIsSuccessful, alert, setAlert, respuesta];
 }
 
 export default useFetchAxios;

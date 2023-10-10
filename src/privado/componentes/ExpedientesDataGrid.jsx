@@ -53,11 +53,12 @@ const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, sele
     }, [estadoExp]);
 
     useEffect(() => {
-        if (isEditing == true) {
+        if (!!isEditing == true) {
             console.log("isEditing dataGrid cuando cambia", isEditing)
-            fetchExpedientes(page, pageSize);
-            setIsEditing(false);
+             fetchExpedientes(page, pageSize);
+           
         }
+        setIsEditing(false);
     }, [isEditing]);
 
 
@@ -94,6 +95,7 @@ const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, sele
         domicilio: expediente.domicilio,
         id: expediente._id,
         categoria: expediente.categoria,
+        sancion:expediente.sancion,
         pases: expediente.pases,
         estadoExp: expediente.estadoExp,
     }));
@@ -106,7 +108,7 @@ const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, sele
         expediente.domicilio = expediente.domicilio == null ? " " : row.domicilio;
         const fechaISO = expediente.fechaIngreso.split('/').reverse().join('-');
         expediente.fechaIngreso = fechaISO;
-        console.log(expediente, "expediente de handleRowClick")
+ 
         onSelectExpediente(expediente);
         setSeleccionado(false);
         /*  const pasesOrdenados = [...expediente.pases].sort((a, b) => new Date(a.fecha_pase) - new Date(b.fecha_pase)); */

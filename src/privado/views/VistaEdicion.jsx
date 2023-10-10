@@ -58,9 +58,9 @@ const VistaEdicion = () => {
                   {/*   <ExpedientesEdicion */}
                  <ExpedientesCarga
                         titulo="Edicion"
-                        expediente={expedienteSeleccionado}
+                        expedienteSeleccionado={expedienteSeleccionado}
                         estadoCarga="Edicion"
-               
+                        onSelectExpediente={handleExpedienteSelected}
                         isEditing={isEditing} 
                         setIsEditing={setIsEditing}
                     /> 

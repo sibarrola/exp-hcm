@@ -23,7 +23,7 @@ const ConfirmDialog = ({ open, onClose, title, contentText, onConfirm, titulo_fo
         <Dialog
             open={open}
             onClose={onClose}
-            maxWidth="md"
+           /*  maxWidth="md" */
            /*  minHight="300px" */
         >
             {/*   <DialogTitle>{title}</DialogTitle> */}

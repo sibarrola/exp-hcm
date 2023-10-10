@@ -20,14 +20,15 @@ import {
 import { fechaReves, formatearFecha } from '../../helpers/funcionesVarias'
 import { colortema } from '../../theme';
 import ConfirmDialog from './ConfirmDialog';
-
+import CustomAlert from '../../privado/componentes/CustomAlert';
+import { Link } from 'react-router-dom';
 /* ====================================================================== */
 const ExpedienteCard = ({ expediente,  onPaseEdit, onPaseDelete }) => {
- 
-  let pasesOrdenados = [...expediente.pases].sort((a, b) => new Date(a.fecha_pase) - new Date(b.fecha_pase));
+ console.log("expediente",expediente);
+  let pasesOrdenados0 = [...expediente.pases].sort((a, b) => new Date(a.fecha_pase) - new Date(b.fecha_pase));
+    let pasesOrdenados = pasesOrdenados0.filter((pase) => pase.estado_pase === true);
     /* los ... son para copiar y no perder el original */
-
-    console.log("expedienteCarrd",expediente.pases)
+    const [open, setOpen]=useState('false');
     const columnWidths = [
         { width: '100px' },   // Para la columna 'Fecha'
         { width: '150px' },   // Para la columna 'Pase a'
@@ -64,13 +65,15 @@ const ExpedienteCard = ({ expediente,  onPaseEdit, onPaseDelete }) => {
         <Card variant="outlined" sx={{ borderColor: 'blue' }} >
             <Grid sx={{ ml: "30px" }} >
                 <h3>
+                   {/* {JSON.stringify(expediente)} */}
                     VISUALIZACION EXPEDIENTE - {`Legajo: ${expediente.legajo}`}
                 </h3>
                 <Typography sx={{ fontWeight: 800 }}  > Ingresado:</Typography>
-                <Typography sx={colortema.typography.texto} >{formatearFecha(new Date(expediente.fechaIngreso))}  - ({ (expediente.estadoExp=='Estudio')?'En tratamiento':expediente.estadoExp })</Typography>
-
+                <Typography sx={{color:'InfoText'}} >{formatearFecha(new Date(expediente.fechaIngreso))}  - ({ (expediente.estadoExp=='Estudio')?'En tratamiento':expediente.estadoExp })
+                {expediente.estadoExp=='Aprobado' && !!expediente.sancion.secure_url && <a  href={expediente.sancion.secure_url}  target="_blank" style={{marginLeft:'10px'}}>Bajar Sanción </a>}</Typography>
+            
             </Grid>
-
+           
 
             <CardContent>
                 <Grid component={Paper} maxWidth="100%" sx={{ paddingLeft: 2 }}>
@@ -99,8 +102,13 @@ const ExpedienteCard = ({ expediente,  onPaseEdit, onPaseDelete }) => {
                             context_fondo='yellowlight'
                             context_color='secondary'
                         />
-
-
+                              <CustomAlert 
+                open={alert.open}
+                onClose={() => setAlert({ ...alert, open: false })}
+              /*   onClose={() => setOpen(false)} // opcional: para cerrar el me */
+              severity="success"
+                message={alert.message}
+            />
                         <Table sx={{ minWidth: "100%" }}>
                             <TableHead
                                 sx={{
@@ -132,6 +140,9 @@ const ExpedienteCard = ({ expediente,  onPaseEdit, onPaseDelete }) => {
                             <TableBody  >
                                 {/* map ---------------------------------------------------- */}
                                 {pasesOrdenados.map((pase, index) => {
+                                    
+
+                                    
                                     let diasEnEstacion = 0;
                              
                              // Determina  si es la última fila
@@ -195,7 +206,7 @@ const ExpedienteCard = ({ expediente,  onPaseEdit, onPaseDelete }) => {
                                             </TableCell>
                                         </TableRow>
                                     )
-                                 })}
+                                 } )}
                             </TableBody>
 
                         </Table>

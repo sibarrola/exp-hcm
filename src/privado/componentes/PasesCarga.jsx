@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 
 import {
     Select,
@@ -9,30 +9,35 @@ import {
     FormControl,
     InputLabel,
     Container,
-    Paper
+    Paper,
+    IconButton
 
 } from '@mui/material';
 import { Global } from '../../helpers/Global.jsx';
 import { useState, useEffect } from 'react';
 import useFetchCombos from '../../hooks/useFetchCombos.jsx'
-
-import CustomDialog from '../../privado/componentes/CustomDialog';
+import CustomAlert from '../../privado/componentes/CustomAlert';
+/* import CustomDialog from '../../privado/componentes/CustomDialog'; */
 import useAuth from "../../hooks/useAuth.jsx";
-const url = Global.url;
+
 import { PropTypes } from "prop-types";
 import useFetchAxios from "../../hooks/useFetchAxios.jsx";
-/* ver de traer este estadao......... */
+ 
+
+import { fileUpload } from '../../helpers/fileUpload.jsx';
+ 
+const url = Global.url;
 
 /* comienza el componente------------------------------------------------ */
 /* const PasesCarga = ({ expediente, handleExpedienteSelect, setSeleccionado, pase,setPase, onPaseAdd, editingPase, setEditingPase, handlePaseEdit, onPaseDelete,estadoCarga,setEstadoCarga }) => { */
-const PasesCarga = ({ expediente,handleExpedienteSelect, paseAEditar,modo,setModo, handlePaseEdit,handleLimpio }) => {
- 
-    let [executeRequest, isSuccessful, setIsSuccessful,alert, setAlert,respuesta] = useFetchAxios();
+const PasesCarga = ({ expediente, handleExpedienteSelect, paseAEditar, modo, setModo, handlePaseEdit, handleLimpio }) => {
+
+    let [executeRequest, isSuccessful, setIsSuccessful, alert, setAlert, respuesta] = useFetchAxios();
     const url = Global.url;
     const [nuevoPase, setNuevoPase] = useState(paseAEditar);
-    let idexp = expediente._id;
+    const [subir, setSubir]=useState([]);
     const today = new Date().toISOString().split('T')[0]; //esta va a ser la fecha máxima que me permitirá seleccionar (para que no carguen un pase hacia adelante)
-    console.log("alert",alert)
+    console.log("alert", alert)
     /* Si quisiera dar parmiso por 2 días hacia adelante: */
     /*  const currentDate = new Date();
       currentDate.setDate(currentDate.getDate() + 2);
@@ -40,7 +45,7 @@ const PasesCarga = ({ expediente,handleExpedienteSelect, paseAEditar,modo,setMod
     */
 
     const { auth } = useAuth();  // usuario logueado
-
+    const [open, setOpen] = useState('false');
 
     const {
         estaciones,
@@ -59,14 +64,14 @@ const PasesCarga = ({ expediente,handleExpedienteSelect, paseAEditar,modo,setMod
         dem: "",
         estado: "",
         usuario_pase: "",
-        usuario_pase_nombre:"",
+        usuario_pase_nombre: "",
         comentario: ""
     }
 
-
+ const fileInputRef=useRef();
 
     useEffect(() => {
-        if (modo=="Editar") {
+        if (modo == "Editar") {
 
             switch (paseAEditar.estacion) {
                 case 'Externos-DEM':
@@ -78,29 +83,25 @@ const PasesCarga = ({ expediente,handleExpedienteSelect, paseAEditar,modo,setMod
                 case "Comisión de Trabajo":
                     paseAEditar.comision = paseAEditar.sub_estacion;
                     break;
-               
+
             }
             paseAEditar.usuario_pase_nombre = auth.nombre; // actualizo con el nombre del que edita
             setNuevoPase(paseAEditar);
-           
+
         }
-         
-    }, [paseAEditar]) ;
-     //cuando cambia el pase
-  useEffect(() => {
-        if(isSuccessful){
-          
+
+    }, [paseAEditar]);
+    //cuando cambia el pase
+    useEffect(() => {
+        if (isSuccessful) {
+
             handleExpedienteSelect(respuesta);
             setNuevoPase(formData);
-          /*   setEditingPase(false)   */
-           /*  setMotivo("Cargar"); */
-            console.log("tuvo exito el put",isSuccessful);
-            console.log("expediente compartido",expediente)
-           
-         } 
-     }, [respuesta]);  
+        
+        }
+    }, [respuesta]);
 
-   
+
     /* traigo del hookFormu-------------------------------------------------- */
     const onInputChange = ({ target }) => {
         const { name, value } = target;
@@ -118,7 +119,11 @@ const PasesCarga = ({ expediente,handleExpedienteSelect, paseAEditar,modo,setMod
         });
 
     }
-
+    const onFileInputChange =   ({ target }) => {
+        if(target.files===0) return
+       setSubir(target.files);
+         
+    }
 
     /*  esto es para desactivar la tecla ENTER */
     const handleKeyDown = (event) => {
@@ -131,10 +136,10 @@ const PasesCarga = ({ expediente,handleExpedienteSelect, paseAEditar,modo,setMod
     const savePase = async (e) => {
         e.preventDefault();
         let expedienteNuevo;
-        if (modo=="Editar") {
+        if (modo == "Editar") {
 
             // si edito voy a la función que trae los pases, busca el editado y lo reemplaza
-            expedienteNuevo= handlePaseEdit(nuevoPase)
+            expedienteNuevo = handlePaseEdit(nuevoPase)
 
         } else {
             let paseg = {
@@ -144,57 +149,52 @@ const PasesCarga = ({ expediente,handleExpedienteSelect, paseAEditar,modo,setMod
                 estado: "true",
                 usuario_pase: auth.uid,
                 usuario_pase_nombre: auth.nombre,
-                comentario: nuevoPase.comentario}
-            
+                comentario: nuevoPase.comentario
+            }
+
             expedienteNuevo = { ...expediente, pases: [...expediente.pases, paseg] };
 
-              // cambio el estado si es un pase nuevo
-              switch(nuevoPase.estacion){
+            // cambio el estado si es un pase nuevo
+            switch (nuevoPase.estacion) {
                 case "Sanción":
-                    expedienteNuevo.estadoExp="Aprobado";
+                    expedienteNuevo.estadoExp = "Aprobado";
                     console.log(expedienteNuevo.estadoExp)
                     break;
                 case "Notificación al Ejecutivo":
-                   expedienteNuevo.estadoExp="Notificado"
-                     break;  
+                    expedienteNuevo.estadoExp = "Notificado"
+                    break;
                 case "Archivo":
-                   expedienteNuevo.estadoExp="Archivado"
-                     break;  
-                     case "Finalizado":
-                   expedienteNuevo.estadoExp="Finalizado"
-                     break;  
-              default:
-                expedienteNuevo.estadoExp="Estudio"
-            } 
-           
+                    expedienteNuevo.estadoExp = "Archivado"
+                    break;
+                case "Finalizado":
+                    expedienteNuevo.estadoExp = "Finalizado"
+                    break;
+                default:
+                    expedienteNuevo.estadoExp = "Estudio"
             }
-         // Utiliza reduce() para encontrar el objeto con la fecha más grande
 
-
-  // Inicializa maxPase con el primer elemento del array
-          
-                       
-              
-
-
-           console.log("eXPEDIENTE NUEVO",expedienteNuevo,modo);
-
-        /*  await onGuardar(expedienteNuevo);
-          setNuevoPase(formData);
+        }
+        let resp;
+        if(subir.length>0){
+           /*  console.log("pasesCarga subir",subir[0]) */
+            resp= await fileUpload(subir[0]);
+            console.log("resp",resp.secure_url)
+            expedienteNuevo.sancion= {'secure_url':resp.secure_url ,'public_id':resp.public_id} 
+           
+            /* expedienteNuevo.file=subir[0] */
+          }
       
-         setModo("Cargar"); */
 
-         // GUARDO
-         let token=auth.token;  
-         let method = "PUT";
-         let expediente_guardar=expedienteNuevo;
-       
-         setModo("Cargar");
-         setNuevoPase(formData);
-        let url2=`${url}/expedientes/${expediente_guardar._id}`;
+        let token = auth.token;
+        let method = "PUT";
+        let expediente_guardar = expedienteNuevo;
+ 
+        setModo("Cargar");
+        setNuevoPase(formData);
+       //----------------------put expediente-------------------
+        let url2 = `${url}/expedientes/${expediente_guardar._id}`;
         // llamo a la funcion executeRequest del useFetchAxios()------------ 
-       await executeRequest(url2, method, expediente_guardar, token)  ;
-         console.log("modo",modo)
+        await executeRequest(url2, method, expediente_guardar, token);
        
     }
 
@@ -204,14 +204,24 @@ const PasesCarga = ({ expediente,handleExpedienteSelect, paseAEditar,modo,setMod
 
             <h3>{modo}</h3>
             <h4>Exp. Legajo {expediente.legajo}   </h4>
-            <form onSubmit={savePase}>
-               
-            <CustomDialog
+            <form onSubmit={savePase} encType='multipart/form-data'>
+                {open && (
+                    <CustomAlert
+                        open={alert.open}
+                        onClose={() => setAlert({ ...alert, open: false })}
+                        /*   onClose={() => setOpen(false)} // opcional: para cerrar el me */
+                        severity="success"
+                        message={alert.message}
+                    />
+
+
+                )}
+                {/*   <CustomDialog
                     open={alert.open}
                     onClose={() => setAlert({ ...alert, open: false })}
                     severity={alert.severity}
                     message={alert.message}
-                    title="Aviso de ingreso" />
+                    title="Aviso de ingreso" /> */}
                 <Grid container spacing={2}>
                     <Grid item xs={12}  >
                         <TextField
@@ -356,6 +366,32 @@ const PasesCarga = ({ expediente,handleExpedienteSelect, paseAEditar,modo,setMod
                         /* ................. */
                     )}
 
+{nuevoPase.estacion === "Sanción" && (  
+ 
+ <Grid item xs={12} sx={{border:'1'}} >
+    {/* necesito este boton, pero lo oculto para mostrar el icono */}
+     <h5>
+     Busque la sanción a subir :  
+     
+        
+     <input type="file"
+     style={{fontStyle:'oblique'}}
+     multiple
+     ref={fileInputRef}
+      onChange={onFileInputChange}
+      
+       />
+          </h5>
+        {/* <IconButton
+        color="secondary"
+        onClick={()=>fileInputRef.current.click()}>
+            <UploadOutlined/>
+        </IconButton> */}
+         
+ </Grid>
+
+)}
+
 
                 </Grid>
                 <Grid item xs={12} sx={{ mt: 2 }}>
@@ -404,14 +440,13 @@ PasesCarga.propTypes = {
 
     expediente: PropTypes.object,
     handleExpedienteSelect: PropTypes.func,
-    
+
     paseAEditar: PropTypes.object,
-    modo:PropTypes.string,
-     setModo: PropTypes.func,
-   onGuardar: PropTypes.bool,
-     
+    modo: PropTypes.string,
+    setModo: PropTypes.func,
+    onGuardar: PropTypes.bool,
+
     handlePaseEdit: PropTypes.func,
     handleLimpio: PropTypes.func,
 };
 
- 

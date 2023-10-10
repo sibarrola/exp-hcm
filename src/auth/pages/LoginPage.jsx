@@ -146,12 +146,12 @@ const LoginPage = () => {
                 </Grid>
                 <Grid container spacing={2} sx={{ mb: 2, mt: 1 }}>
                     <Grid item xs={12} sm={6}>
-                        <Button type="submit" variant='contained' fullWidth>
+                        <Button type="submit" variant='contained' fullWidth color="primary"  >
                             Login
                         </Button>
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <Button variant='contained' fullWidth>
+                        <Button variant='contained' fullWidth color="secondary" >
                             <Google />
                             <Typography sx={{ ml: 1 }}>Google</Typography>
                         </Button>

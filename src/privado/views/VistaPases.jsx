@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Grid, Typography } from '@mui/material';
 import ExpedientesDataGrid from '../componentes/ExpedientesDataGrid';
@@ -9,7 +9,9 @@ import { Global } from '../../helpers/Global'
 import { colortema } from '../../theme';
 import useAuth from "../../hooks/useAuth.jsx";
 import useFetchAxios from "../../hooks/useFetchAxios.jsx";
-const VistaPases = () => {
+import { eliminarArchivoCloudinary } from '../../helpers/eliminarArchivoCloudinary';
+ 
+const VistaPases =  () => {
 
     const [expedienteSeleccionado, setExpedienteSeleccionado] = useState({
         _id: "",
@@ -83,26 +85,31 @@ const VistaPases = () => {
         let expedienteNuevo = expedienteSeleccionado;
         expedienteNuevo.pases = updatedPases;
  
-            updatedPases.map((pasei, index) => {    
-            switch(pasei.estacion){
-                case "Sanción":
-                    expedienteNuevo.estadoExp="Aprobado";
-                    console.log(expedienteNuevo.estadoExp)
-                    break;
-                case "Notificación al Ejecutivo":
-                   expedienteNuevo.estadoExp="Notificado"
-                     break;  
-                case "Archivo":
-                   expedienteNuevo.estadoExp="Archivado"
-                     break;  
-                   
-              default:
-                expedienteNuevo.estadoExp="Estudio"
-            } 
+            updatedPases.map((pasei, index) => {   
+                if(pasei.estado_pase===true) {   //si fuera false está borrado
+                    switch(pasei.estacion){
+                        case "Sanción":
+                            expedienteNuevo.estadoExp="Aprobado";
+                            console.log(expedienteNuevo.estadoExp)
+                            break;
+                        case "Notificación al Ejecutivo":
+                           expedienteNuevo.estadoExp="Notificado"
+                             break;  
+                        case "Archivo":
+                           expedienteNuevo.estadoExp="Archivado"
+                             break;  
+                           
+                      default:
+                        expedienteNuevo.estadoExp="Estudio"
+                    } 
+
+
+                }
+           
 
         });
          
-        console.log("estod del expediente modificado",expedienteNuevo.estadoExp)
+    
 
         return expedienteNuevo;
         /*   handleExpedienteSelect(expediente_nuevo);
@@ -119,53 +126,87 @@ const VistaPases = () => {
     const onGuardar = async (expedienteNuevo) => {
         let token = auth.token;
         let method = "PUT";
-        let expediente_guardar = expedienteNuevo;
-       
+       /*  let expediente_guardar = expedienteNuevo; */
+       console.log("expedient guardar en onGuardar",expedienteNuevo)
         setPaseAEditar(nuevo_pase);
         setModo("Cargar");
-        let url2 = `${url}/expedientes/${expediente_guardar._id}`;
+        let url2 = `${url}/expedientes/${expedienteNuevo._id}`;
         // llamo a la funcion executeRequest del useFetchAxios()------------ 
-        await executeRequest(url2, method, expediente_guardar, token);
-
-
-
+        await executeRequest(url2, method, expedienteNuevo, token);
+          handleExpedienteSelect(expedienteNuevo);
     }
+
+     const onLimpioSancion=async(publicId)=>{
+     let borra=await eliminarArchivoCloudinary( publicId,url )  ;
+     console.log(borra);
+    }
+
+      
 
     const handleLimpio = () => {
 
         setSeleccionado(true); /* esto es para que muestre de nuevo los exped para elegir , la GRID*/
 
     }
-
+ 
+     
     /* -------------------BORRA EL PASE------------------------------------ */
     const handlePaseDelete = async (paseId) => {
-        console.log("pase delete", paseId);
+       
         const vectorPases = expedienteSeleccionado.pases;
         const expedienteNuevo = expedienteSeleccionado;
-        const updatedPases = vectorPases.filter((pase) => pase._id !== paseId);
-    
-        expedienteNuevo.pases = updatedPases;
-        
-        updatedPases.map((pasei, index) => {    
-            switch(pasei.estacion){
+        let publicId;
+     /*    console.log("publicID",expedienteNuevo.sancion);
+          if(!!expedienteNuevo.sancion) {
+             
+          } */
+         const updatedPases = vectorPases.filter((pase) => pase._id !== paseId); 
+         const paseBorro = vectorPases.filter((pase) => pase._id === paseId); 
+         if(paseBorro.estacion=="Sanción" && !!expedienteNuevo.sancion){
+            publicId=expedienteNuevo.sancion.public_id;
+         }
+       updatedPases.map((pase) => {
+        console.log("recorreo vector pases")
+       
+            switch(pase.estacion){
                 case "Sanción":
                     expedienteNuevo.estadoExp="Aprobado";
-                    console.log(expedienteNuevo.estadoExp)
+                    
                     break;
                 case "Notificación al Ejecutivo":
-                   expedienteNuevo.estadoExp="Notificado"
+                   expedienteNuevo.estadoExp="Notificado";
+                  
                      break;  
                 case "Archivo":
-                   expedienteNuevo.estadoExp="Archivado"
+                   expedienteNuevo.estadoExp="Archivado";
+                   
                      break;  
                    
               default:
-                expedienteNuevo.estadoExp="Estudio"
+                expedienteNuevo.estadoExp="Estudio";
+                //expedienteNuevo.sancion={};
             } 
-
-        });
-
-        await onGuardar(expedienteNuevo);
+                
+     /*      return {
+            ...pase,
+            estado_pase: false // Modificar el estado
+          };
+        }
+        return pase; */
+      });
+      console.log("updatedPases",updatedPases);
+     
+        expedienteNuevo.pases = updatedPases;
+        
+       
+          if(!!publicId){
+            console.log("publicID");
+            await onLimpioSancion(publicId);
+            expedienteNuevo.sancion={};
+         }
+         console.log("EXPEDIENTE NUEVO",expedienteNuevo)
+         await onGuardar(expedienteNuevo);
+        
 
     };
     return (

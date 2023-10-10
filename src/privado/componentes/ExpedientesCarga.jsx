@@ -1,6 +1,6 @@
 /* ESTE ES EL FORMULARIO QUE VA PARA LA CARGA DE EXPEDIENTES */
 
-import { useState, useRef,useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 
 import {
     Select,
@@ -12,57 +12,57 @@ import {
     InputLabel,
     Container,
     Paper
-  
+
 } from '@mui/material';
 import { Global } from '../../helpers/Global.jsx';
 import { extractDigits } from "../../helpers/funcionesVarias.jsx";
- 
-import CustomDialog from '../componentes/CustomDialog.jsx';
+
+/* import CustomDialog from '../componentes/CustomDialog.jsx'; */
 /*  TRAIGO LA FUNCION-----------------------------------------*/
 import useFetchCombos from '../../hooks/useFetchCombos.jsx';
 import useAuth from "../../hooks/useAuth.jsx";
 import CelularField from "./CelularField.jsx";
 import DniField from "./DniField.jsx";
- 
+import CustomAlert from '../../privado/componentes/CustomAlert';
 import useFetchAxios from "../../hooks/useFetchAxios.jsx";
-let url =Global.url ;
-const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEditing} ) => {
+let url = Global.url;
+const ExpedientesCarga = ({ titulo, expedienteSeleccionado, estadoCarga,  onSelectExpediente , isEditing, setIsEditing }) => {
+
+    const [executeRequest, isSuccessful, setIsSuccessful, alert, setAlert,respuesta] = useFetchAxios();
+
+
+
+    let expedienteLimpio = {
+        legajo: "",
+        folios: "",
+        estadoExp: "Estudio",
+        motivo: "",
+        nuevoMotivo: "",
+        comentario: "",
+        fechaIngreso: new Date().toISOString().substring(0, 10),
+        categoria: "",
+        institucion: "",
+        organismo: "",
+        nuevaInstitucion: "",
+        dem: "",
+        nuevoDem: "",
+        nuevoOrganismo: "",
+        solicitante: "",
+        apellido: "",
+        nombres: "",
+        dni: "",
+        celular: "",
+        domicilio: "",
+        estado: "true",
+
+    };
+
+    const [values, setValues] = useState(expedienteLimpio)
+    const { auth } = useAuth();  // usuario logueado
  
-    const [executeRequest, isSuccessful, setIsSuccessful,alert, setAlert] = useFetchAxios();
-    
-
-   
-  let expedienteLimpio={
-    legajo: "",
-    folios: "",
-    estadoExp: "Estudio",
-    motivo: "",
-    nuevoMotivo: "",
-    comentario: "",
-    fechaIngreso:new Date().toISOString().substring(0, 10),
-    categoria: "",
-    institucion: "",
-    organismo: "",
-    nuevaInstitucion: "",
-    dem: "",
-    nuevoDem: "",
-    nuevoOrganismo: "",
-    solicitante: "",
-    apellido: "",
-    nombres: "",
-    dni: "",
-    celular: "",
-    domicilio: "",
-    estado: "true",
-
-};  
-  
-      const [values, setValues] = useState(expedienteLimpio)
-     const { auth } = useAuth();  // usuario logueado
-    const [ guardado, setGuardado ] = useState(false);
-    
+    const [open, setOpen]=useState('false');
     const [errors, setErrors] = useState({});
- 
+
     const {
         motivos,
         institucionesp,
@@ -76,29 +76,32 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
     } = useFetchCombos(url);
 
     const legajoRef = useRef(null);
-  
-    const apellidoRef=useRef(null);
-    const nombresRef=useRef(null);  
-     
-    const dniRef=useRef(null);  
-  /* limpia los campos del estado del formulario para comenzar a cargar otro expediente */
-   const handleLimpio = () => {
-    setValues(expedienteLimpio);
-    console.log(values,"values");
-}
-   
+
+    const apellidoRef = useRef(null);
+    const nombresRef = useRef(null);
+
+    const dniRef = useRef(null);
+    /* limpia los campos del estado del formulario para comenzar a cargar otro expediente */
+    const handleLimpio = () => {
+        setValues(expedienteLimpio);
+        console.log(values, "values");
+    }
+
     useEffect(() => {
-        setValues(expediente);
-      }, [expediente]);
-      
-     
-      useEffect(() => {
-        if(isSuccessful){
+        setValues(expedienteSeleccionado);
+        console.log("use effect expedienteSeleccionado",expedienteSeleccionado)
+    }, [expedienteSeleccionado]);
+
+
+    useEffect(() => {
+        if (isSuccessful) {
             setValues(expedienteLimpio);
+         
             setIsSuccessful(false);
-          } 
-     }, [isSuccessful]);
-/*  esto es para desactivar la tecla ENTER */
+        }
+    }, [isSuccessful]);
+
+    /*  esto es para desactivar la tecla ENTER */
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
@@ -179,23 +182,23 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
     };
 
 
-  
+
 
     const guardarExpedienteEnBD = async () => {
         let solicitanteg = (!values.solicitante || values.solicitante.length == 0) ? (values.apellido + " " + values.nombres) : values.solicitante
-        console.log( "solicitante",values.solicitante.length);
-        console.log("junto",values.apellido + " " + values.nombres)
+        console.log("solicitante", values.solicitante.length);
+        console.log("junto", values.apellido + " " + values.nombres)
         let motivog = (values.motivo && values.motivo == "Otro") ? values.nuevoMotivo : values.motivo;
 
         let dnig = extractDigits(values.dni);
-       let celularg= (values.celular && 
-        values.celular.length>1)?extractDigits(values.celular):""
+        let celularg = (values.celular &&
+            values.celular.length > 1) ? extractDigits(values.celular) : ""
 
         let legajog = parseInt(values.legajo);
         let foliosg = parseInt(values.folios);
 
         let expediente_guardar = {
-            _id:values._id,
+            _id: values._id,
             legajo: legajog,
             folios: foliosg,
             estadoExp: 'Estudio',
@@ -211,38 +214,35 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
             domicilio: values.domicilio,
             estado: "true",
             usuario: auth.uid,
-            pases:[{
-                fecha_pase:values.fechaIngreso,
-                estacion:"Mesa de Entrada",
-                sub_estacion:"",
-                usuario_pase:auth.uid,
-                usuario_pase_nombre:auth.nombre,
-                comentario:""
+            pases: [{
+                fecha_pase: values.fechaIngreso,
+                estacion: "Mesa de Entrada",
+                sub_estacion: "",
+                usuario_pase: auth.uid,
+                usuario_pase_nombre: auth.nombre,
+                comentario: ""
             }]
         }
         /* si el estadoCarga es Guardar lo guardo y si no lo actualizo */
-       let token=auth.token;  
-       let method;
-       let url2;
-        if (estadoCarga=="Carga") {
-            method="POST"
-         url2=url+"/expedientes" ;   
+        let token = auth.token;
+        let method;
+        let url2;
+        if (estadoCarga == "Carga") {
+            method = "POST"
+            url2 = url + "/expedientes";
         }
-        else
-        {
-       
-       url2=url+"/expedientes/"+values._id ;
-       method="PUT"
+        else {
+
+            url2 = url + "/expedientes/" + values._id;
+            method = "PUT"
         }
-       // llamo a la funcion executeRequest del useFetchAxios()------------ 
-     console.log("expediente guardar",expediente_guardar);
-     console.log("isSuccessful",isSuccessful);
-     console.log("estadoCarga",estadoCarga);
-     console.log(url2,method,expediente_guardar,token);
-       await executeRequest(url2, method, expediente_guardar, token)  ;
-      
-         
-         
+        // llamo a la funcion executeRequest del useFetchAxios()------------ 
+        
+        console.log(url2, method, expediente_guardar, token);
+        await executeRequest(url2, method, expediente_guardar, token);
+     
+        onSelectExpediente(expediente_guardar);
+
     }
     /* SUBMIT DEL FORMULARIO ----------------------------------------------------------- */
     const handleSubmit = async (event) => {
@@ -251,30 +251,30 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
         // Reset errors
         setErrors({});
         /*  VALIDACIONES DE LOS CAMPOS Y SETEO DE LOS ERRORES ENCONTRADOS............ */
-        if (!values.legajo || values.legajo.length<1) {
+        if (!values.legajo || values.legajo.length < 1) {
             setErrors((errors) => ({ ...errors, legajo: "El campo legajo es requerido" }));
             legajoRef.current.focus();
             return
         }
-// ver si quiero validaar algo mas......................
+        // ver si quiero validaar algo mas......................
 
-        
-        if (!values.apellido || values.apellido.length<3) {
+
+        if (!values.apellido || values.apellido.length < 3) {
             setErrors((errors) => ({ ...errors, apellido: "El campo Apellido es requerido" }));
             apellidoRef.current.focus();
             return
         }
-        if (!values.nombres||values.nombres.length<3) {
+        if (!values.nombres || values.nombres.length < 3) {
             setErrors((errors) => ({ ...errors, nombres: "El campo Nombres es requerido" }));
             nombresRef.current.focus();
             return
         }
-      
+
 
         /*=====================================================  */
 
         // Si no hay errores, enviar los datos
-        if (Object.keys(errors).length <=1) {
+        if (Object.keys(errors).length <= 1) {
 
             if (values.motivo == "Otro" && values.nuevoMotivo.length > 0) {
                 await addMotivo(values.nuevoMotivo);
@@ -315,7 +315,7 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
                  }) */
             }
             await guardarExpedienteEnBD();
-        
+
 
 
         }
@@ -328,19 +328,30 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
 
 
     return (
-        <Container    component={Paper}  sx={{ padding: 1 ,border:1,borderColor:'blue'}}>
+        <Container component={Paper} sx={{ padding: 1, border: 1, borderColor: 'blue' }}>
             <form onSubmit={handleSubmit}>
-                <CustomDialog
+              {/*   <CustomDialog
                     open={alert.open}
                     onClose={() => setAlert({ ...alert, open: false })}
                     severity={alert.severity}
                     message={alert.message}
-                    title="Aviso de ingreso" />
+                    title="Aviso de ingreso" /> */}
+                     {open && (
+            <CustomAlert 
+                open={alert.open}
+                onClose={() => setAlert({ ...alert, open: false })}
+              /*   onClose={() => setOpen(false)} // opcional: para cerrar el me */
+                message={alert.message}
+            />
+                
+             
+        )}
+          
                 <h3>{titulo}</h3>
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={4}>
-                    <TextField
- 
+                        <TextField
+
                             label="Fecha de Ingreso"
                             type="date"
                             name="fechaIngreso"
@@ -358,7 +369,7 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
                     </Grid>
                     <Grid item xs={12} sm={4} >
                         <TextField
-                         required
+                            required
                             label="Legajo"
                             type="number"
                             name="legajo"
@@ -373,36 +384,36 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
                     </Grid>
                     <Grid item xs={12} sm={4} >
                         <TextField
-                          required
+                            required
                             label="Folios"
                             name="folios"
                             value={values.folios}
                             onChange={handleChange}
                             onKeyDown={handleKeyDown}
-                           /*  error={!!errors.folios}
-                            helperText={errors.folios} */
+                            /*  error={!!errors.folios}
+                             helperText={errors.folios} */
                             fullWidth
                         />
                     </Grid>
                     <Grid item xs={12}  >
                         <FormControl fullWidth>
-                            
+
                             <InputLabel
                                 shrink={true}
                                 style={{ backgroundColor: '#ffff' }}  // <-- Estilo en línea para cambiar el color de fondo
                             >
                                 Motivo</InputLabel>
                             <Select
-                             required
+                                required
                                 name="motivo"
                                 value={values.motivo}
                                 onChange={handleMotivosChange}
-                               /*  error={!!errors.motivo}
-                                inputRef={motivoRef}
-                                helperText={errors.motivo}*/
-                                
-                            > 
-                            
+                            /*  error={!!errors.motivo}
+                             inputRef={motivoRef}
+                             helperText={errors.motivo}*/
+
+                            >
+
                                 {motivos.map((motivo) => (
                                     <MenuItem key={motivo.motivo} value={motivo.motivo}>
                                         {motivo.motivo}
@@ -423,7 +434,7 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
                                 onKeyDown={handleKeyDown}
                                 /* error={!!errors.nuevoMotivo}
                                 helperText={errors.nuevoMotivo} */
-                             
+
                                 fullWidth
                             />
                         </Grid>
@@ -436,9 +447,9 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
                             value={values.comentario}
                             onChange={handleChange}
                             onKeyDown={handleKeyDown}
-                          /*   error={!!errors.comentario}
-                            helperText={errors.comentario} */
-                           /*  inputRef={comentarioRef} */
+                            /*   error={!!errors.comentario}
+                              helperText={errors.comentario} */
+                            /*  inputRef={comentarioRef} */
                             fullWidth
                             multiline
                         />
@@ -451,13 +462,13 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
                             >
                                 Categoría</InputLabel>
                             <Select
-                            required
+                                required
                                 name="categoria"
                                 value={values.categoria}
                                 onChange={handleChange}
-                             /*    error={!!errors.categoria}
-                                inputRef={categoriaRef}
-                                helperText={errors.categoria} */
+                            /*    error={!!errors.categoria}
+                               inputRef={categoriaRef}
+                               helperText={errors.categoria} */
                             >
                                 {categorias.map((categoria, index) => (
                                     <MenuItem key={index} value={categoria}>
@@ -477,16 +488,16 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
                                 >
                                     Organismo</InputLabel>
                                 <Select
-                                   required= {estadoCarga=="Carga"?"required":""}
+                                    required={estadoCarga == "Carga" ? "required" : ""}
                                     name="organismo"
                                     value={values.organismo}
                                     onChange={handleOrganismoChange}
-                                    /*  error={!!errors.organismo}
-                                    helperText={errors.organismo}
-                                    inputRef={organismoRef}  */
-                                > 
-                                
-                                 
+                                /*  error={!!errors.organismo}
+                                helperText={errors.organismo}
+                                inputRef={organismoRef}  */
+                                >
+
+
                                     {organismos.map((organizacion, index) => (
                                         <MenuItem key={index} value={organizacion.organizacion}>
                                             {organizacion.organizacion}
@@ -503,14 +514,14 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
                         values.organismo === "Otro" && (
                             <Grid item xs={12}>
                                 <TextField
-                                required
+                                    required
                                     label="Nuevo Organismo"
                                     name="nuevoOrganismo"
                                     value={values.nuevoOrganismo}
                                     onChange={handleOrganismoNuevo}
                                     onKeyDown={handleKeyDown}
-                                   /*  error={!!errors.nuevoOrganismo}
-                                    helperText={errors.nuevoOrganismo} */
+                                    /*  error={!!errors.nuevoOrganismo}
+                                     helperText={errors.nuevoOrganismo} */
                                     fullWidth
                                 />
                             </Grid>
@@ -524,7 +535,7 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
                                 >
                                     Institución</InputLabel>
                                 <Select
-                                required= {estadoCarga=="Carga"?"required":""}
+                                    required={estadoCarga == "Carga" ? "required" : ""}
                                     name="institucion"
                                     value={values.institucion}
                                     onChange={handleInstitucionChange}
@@ -547,13 +558,13 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
                         values.institucion === "Otro" && (
                             <Grid item xs={12}>
                                 <TextField
-                                required
+                                    required
                                     label="Nueva Institucion"
                                     name="nuevaInstitucion"
                                     value={values.nuevaInstitucion}
                                     onChange={handleInstitucionNueva}
                                     onKeyDown={handleKeyDown}
-                                  
+
                                     fullWidth
                                 />
                             </Grid>
@@ -568,11 +579,11 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
                                 >
                                     Dep.DEM</InputLabel>
                                 <Select
-                                required= {estadoCarga=="Carga"?"required":""}
+                                    required={estadoCarga == "Carga" ? "required" : ""}
                                     name="dem"
                                     value={values.dem}
                                     onChange={handleDemChange}
-                                    /* error={!!errors.dem} */
+                                /* error={!!errors.dem} */
                                 >
                                     {dems.map((dem, index) => (
                                         <MenuItem key={index} value={dem.dem}>
@@ -589,14 +600,14 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
                         values.dem === "Otro" && (
                             <Grid item xs={12}>
                                 <TextField
-                                required
+                                    required
                                     label="Nuevo D.E.M"
                                     name="nuevoDem"
                                     value={values.nuevoDem}
                                     onChange={handleDemNuevo}
                                     onKeyDown={handleKeyDown}
-                                   /*  error={!!errors.nuevoDem}
-                                    helperText={errors.nuevoDem} */
+                                    /*  error={!!errors.nuevoDem}
+                                     helperText={errors.nuevoDem} */
                                     fullWidth
                                 />
                             </Grid>
@@ -610,8 +621,8 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
                             value={values.solicitante}
                             onChange={handleChange}
                             onKeyDown={handleKeyDown}
-                           /*  error={!!errors.solicitante}
-                            helperText={errors.solicitante} */
+                            /*  error={!!errors.solicitante}
+                             helperText={errors.solicitante} */
                             fullWidth
                         />
                     </Grid>
@@ -624,7 +635,7 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
                     <Grid item xs={12} sm={6}  >
 
                         <TextField
-                     
+
                             label="Apellido"
                             name="apellido"
                             value={values.apellido}
@@ -640,7 +651,7 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
 
 
                         <TextField
-                         required
+                            required
                             label="Nombres"
                             name="nombres"
                             value={values.nombres}
@@ -654,34 +665,34 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
                     </Grid>
                     <Grid item xs={12} sm={6}>
 
-                  {/*   <DniField */}
-                  <DniField
-                     required
+                        {/*   <DniField */}
+                        <DniField
+                            required
                             label="DNI"
                             name="dni"
                             value={values.dni}
                             onChange={handleChange}
                             onKeyDown={handleKeyDown}
-                           
+
                             /* error={!!errors.dni}
-                            helperText={errors.dni}   */  
+                            helperText={errors.dni}   */
                             fullWidth
-                            inputRef={dniRef}  
+                            inputRef={dniRef}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                       <CelularField  
-                    
+                        <CelularField
+
                             name="celular"
                             label="Celular (342-436 4723)"
                             value={values.celular}
                             onChange={handleChange}
                             onKeyDown={handleKeyDown}
-                           
-                          /*   error={Boolean(errors.celular)}
-                            helperText={!!errors.celular} */
+
+                            /*   error={Boolean(errors.celular)}
+                              helperText={!!errors.celular} */
                             fullWidth
-                         /*    inputRef={celularRef} */
+                        /*    inputRef={celularRef} */
                         />
                     </Grid>
                     <Grid item xs={12}>
@@ -693,8 +704,8 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
                             value={values.domicilio}
                             onChange={handleChange}
                             onKeyDown={handleKeyDown}
-                        /*     error={!!errors.domicilio}
-                            helperText={errors.domicilio} */
+                            /*     error={!!errors.domicilio}
+                                helperText={errors.domicilio} */
                             fullWidth
                         />
                     </Grid>
@@ -702,10 +713,10 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
                     {/* ... falta poner el usuario que lo lee del req ... */}
 
                     <Grid item xs={12} marginTop="18px" marginRight='20px' alignContent="right">
-                        {(estadoCarga=="Carga")?(
-                        <Button size="small" variant="contained" color="primary" type='submit' style={{ marginRight: 20 }}>Guardar</Button>):
-                        <Button size="small" variant="contained" color="primary" type='submit' style={{ marginRight: 20 }}>Actualizar</Button>
-                         
+                        {(estadoCarga == "Carga") ? (
+                            <Button size="small" variant="contained" color="primary" type='submit' style={{ marginRight: 20 }}>Guardar</Button>) :
+                            <Button size="small" variant="contained" color="primary" type='submit' style={{ marginRight: 20 }}>Actualizar</Button>
+
 
                         }
 
@@ -722,11 +733,10 @@ const ExpedientesCarga = ({titulo ,expediente, estadoCarga , isEditing,setIsEdit
 export default ExpedientesCarga;
 
 
-  
-   ExpedientesCarga.defaultProps = {
+
+ExpedientesCarga.defaultProps = {
     titulo: "Carga de Expediente",
-    expediente: {},
-    estadoCarga:"",
-    isEditing:false
-  };
-   
+    expedienteSeleccionado: {},
+    estadoCarga: "",
+    isEditing: false
+};

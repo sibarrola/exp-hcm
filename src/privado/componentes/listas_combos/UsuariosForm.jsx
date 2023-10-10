@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Container, Paper, Box, Typography } from '@mui/material';
+import axios, { AxiosError } from 'axios';
+import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Container, Paper, Box, Typography, Alert } from '@mui/material';
 import { Global } from '../../../helpers/Global';
 import ConfirmDialog from '../ConfirmDialog';
+import CustomAlert from '../CustomAlert';    
+import useAuth from "../../../hooks/useAuth.jsx";
 const url = Global.url;
+
 const UsuariosForm = () => {
 
     // estados
@@ -16,6 +19,12 @@ const UsuariosForm = () => {
     const [isBorrando, setIsBorrando] = useState(false);
     const [borraUsuario, setBorraUsuario] = useState(null);
     const [nombre, setNombre] = useState("");
+    // para mostrar un Alert----------------------------
+    const [open, setOpen] = useState(false);  
+const [errorMessage, setErrorMessage] = useState('');
+  
+    const { auth } = useAuth();
+    const token=auth.token;
     //-------------------------------------------------------------
     const fetchUsuario = async () => {
    
@@ -24,8 +33,7 @@ const UsuariosForm = () => {
             console.log("data",res.data.usuarios)
             if (Array.isArray(res.data.usuarios)) {
                 setUsuarios(res.data.usuarios);
-                console.log("usuarios", usuarios)
-
+         
             } else {
                 console.error('Server did not return an array');
             }
@@ -44,12 +52,25 @@ const UsuariosForm = () => {
     };
 
     const updateUsuario = async usuario => {
+        console.log("update Usuario",usuario);
         try {
+            
+            const config = {
+                headers: {
+                    "Content-Type":"application/json",
+                    "x-token":token
+                }
+            };
             console.log("updateUsuario");
-            await axios.put(`${url}/usuarios/${usuario.uid}`, usuario);
+           await axios.put(`${url}/usuarios/${usuario.uid}`, usuario,config);
+           
+            
            await  fetchUsuario();  // Fetch latest list of 'usuarios' after updating an existing one
         } catch (error) {
-            console.log('Error', error);
+            console.log('Error', error.response.data.msg);
+            setErrorMessage(error.response.data.msg);
+            setOpen(true);
+             
         }
     };
     // borrar ---------------------------------------------------
@@ -86,6 +107,14 @@ const UsuariosForm = () => {
         }
         handleDialogClose();
     };
+
+
+    const OpenDeletUsuario = (usuario) => {
+        setBorraUsuario(usuario);
+        setIsBorrando(true)
+        setNombre(usuario.correo);
+        setDialogOpen2(true)
+    };
     // ventana dialogo para confimar el borrado ---------------------------------
     const handleDialogClose2 = () => {
         setDialogOpen2(false);
@@ -93,11 +122,12 @@ const UsuariosForm = () => {
     };
     const handleDialogConfirm2 = async() => {
         if (isBorrando) {
-            setEditUsuario(...editUsuario,estado='false');
-
-           await updateUsuario(editUsuario); //envia el id almacenado en BorraDEm
+            console.log("borraUsuario", borraUsuario);
+            const updatedUser = { ...borraUsuario, estado: false };
+            setBorraUsuario(updatedUser);
+            await updateUsuario(updatedUser); 
         }
-        setBorraUsuario(null)
+        setBorraUsuario(null);
         handleDialogClose2();
     };
 
@@ -108,6 +138,15 @@ const UsuariosForm = () => {
             <Container component={Paper} maxWidth="sm" sx={{ padding: 2 }}>
                 <Typography variant='h5'>TABLA DE USUARIOS </Typography>
                 <hr />
+                {open && (
+            <CustomAlert 
+                open={open}
+                onClose={() => setOpen(false)} // opcional: para cerrar el me
+                message={errorMessage}
+            />
+                
+             
+        )}
                 <Box sx={{ m: '30px', textAlign: 'lefth' }}>
                     <Button variant="contained" color="primary" onClick={() => handleDialogOpen()}>
                         Nuevo
@@ -153,7 +192,7 @@ const UsuariosForm = () => {
                                         </Button>
                                     </TableCell>
                                     <TableCell>
-                                        <Button size="small" variant="contained" color="error" onClick={() => OpenUsuario(usuario._id, usuario.correo, usuario.rol)}>
+                                        <Button size="small" variant="contained" color="error" onClick={() => OpenDeletUsuario(usuario)}>
                                             Borrar
                                         </Button>
                                     </TableCell>
