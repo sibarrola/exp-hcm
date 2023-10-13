@@ -1,4 +1,4 @@
-import { Toolbar } from '@mui/material';
+import { Toolbar, Typography } from '@mui/material';
 import { Box } from '@mui/system'
 import { NavBarFijo } from '../components/NavBarFijo';
 
@@ -10,15 +10,11 @@ import { Article } from '@mui/icons-material';
 import ContactPageIcon from '@mui/icons-material/ContactPage';
 import { NavLink } from 'react-router-dom';
 const navVectLinks = [
-  /*   {
-        title: "Inicio", path: "/", icon: <HomeIcon />
-    }, */
+    
     {
         title: "Empleado", path: "/auth/login", icon: <PersonIcon />
     }
-   /*  {
-        title: "Registro", path: "/auth/register", icon: <AssignmentIcon />
-    }, */
+   
 
 ]
 const navVectCiudadanos = [
@@ -45,19 +41,37 @@ export const LayoutPublico = ({ children }) => {
     return (
 
         /*EL BOX ES COMO UN DIV  */
-        <Box sx={{ display: 'flex',backgroundColor:'antiquewhite'}}>
+        <Box
+            sx={{
+                display: 'flex',
+                backgroundColor: 'antiquewhite',
+                flexDirection: {
+                    xs: 'column',
+                    md: 'row'
+                }
+            }}
+        >
 
             <NavBarFijo navVectLinks={navVectLinks} navVectCiudadanos={navVectCiudadanos} NavLink={NavLink} setOpen={setOpen} />
 
             <Box
                 component='main'
-                sx={{ flexGrow: 1, p: 2 }}
+                sx={{
+                    flexGrow: 1,
+                    p: 2,
+                    order: {
+                        xs: 2,
+                        md: 1
+                    }
+                }}
             >
                 <Toolbar />
                 {/* aqui aparecen los hijos */}
                 {children}
 
             </Box>
-        </Box>
+           
+    </Box>
+ 
     )
 }

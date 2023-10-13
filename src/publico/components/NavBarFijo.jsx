@@ -50,12 +50,12 @@ export const NavBarFijo = ({ navVectLinks, navVectCiudadanos, NavLink }) => {
                         ml: 8,
                         fontSize: { xs: '12px', lg: '22px' },  // Tamaño de fuente para diferentes tamaños de pantalla
                     }} > {isSmallScreen ? 'SISTEMA EXPEDIENTES- HCM RINCON' : 'SISTEMA DE GESTION DE EXPEDIENTES DEL HONORABLE CONCEJO MUNICIPAL DE S.J. DEL RINCON'} </Typography>
-                    <Box width="230px"   sx={{fontSize:'10px', color:'pink'}}>
+                   {/*  <Box width="230px"   sx={{fontSize:'10px', color:'pink'}}>
                     <Avatar sx={{ bgcolor: 'pink', color: 'red' ,   width: 30, height: 30   }}  size="small" onClick={() => window.open('https://www.instagram.com/concejo_municipal_rincon/', '_blank')}>
                     <InstagramIcon />
                 </Avatar>
                 Instagram
-                    </Box>
+                    </Box> */}
                     
 
                     {/*  <Button color="inherit">Inicio</Button>

@@ -13,9 +13,10 @@ export const colortema =createTheme({
             /*  main: '#FF0000',    */ 
            /*  main:'#d6140d'   */
            /* main:'#2a3eb1'*/
-              main:'#1c54b2'   
-     /*    main:'#795548' */  /* marron */
-         
+             /*  main:'#1c54b2'  */  
+          /* main:'#795548'  */   /* marron */
+           main:'#002984' 
+       /*     main:'#aa2e25' rojo */
         }, 
         secondary: {
            /*  main:'#aea9eb' */
@@ -29,7 +30,8 @@ export const colortema =createTheme({
           },
         fondo:{
            /*  backgroundColor:"#eee6ff" */
-              main:'#ef5350'
+               main:'#ef5350'  
+           /*   main:'#80d8ff', */
         },
         amarillo:{
             main:"#fcc032",

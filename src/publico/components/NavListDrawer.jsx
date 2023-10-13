@@ -8,11 +8,12 @@ export const NavListDrawer = ({ navVectLinks,navVectCiudadanos, NavLink,setOpen 
      return (
        /*  <Box sx={{ bgcolor: '#ede7f6', height: '100vh', width:'170px'}}  >  */
         <Box sx={{ bgcolor:  "#fffde7" , height: '100vh', width:'170px'   }}   >
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center', boxSizing: 'border-box', color: 'black' }} >
-                <img src={logo1} alt="logo" height={80} />
-            </Box>
-            <Typography variant="body2" sx={{ mb:2, display: 'flex', justifyContent: 'center', fontWeight: 900 }}>HCM S.J. del Rincón</Typography>
-             <Divider color="#red" />  
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center', boxSizing: 'border-box', color: 'black',bgcolor:  "#002984"  }} >
+                <img src={logo1} alt="logo" height={90} />
+                </Box>
+            <Typography variant="body2" sx={{ paddingBottom:2, display: 'flex', justifyContent: 'center', fontWeight: 900, color:'#ffffff' ,bgcolor:  "#002984" }}>HCM S.J. del Rincón</Typography>
+         
+             
             <Typography variant="body1" fontWeight="bold" sx={{mt:3,ml:1,mr:1, justifyContent:'center'}} >Ciudadanos</Typography>
          
                 <List>

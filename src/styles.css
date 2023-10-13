@@ -18,3 +18,19 @@ dialogo {
     width: '70%';  
     margin-left: 'auto';
     margin-right: 'auto';}
+
+    .grid-layout{
+      
+        display:flex-Grow;
+       
+        margin-top:50px ;
+         
+        height: 600px;
+         
+         
+        
+    }
+    .caja {
+       border:1px solid red;
+       height:'20px';
+    }
