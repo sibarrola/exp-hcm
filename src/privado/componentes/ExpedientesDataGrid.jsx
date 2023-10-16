@@ -7,14 +7,14 @@ import { Container, Paper, TextField, Box, Button, Fab } from '@mui/material';
 import RestartAlt from '@mui/icons-material/RestartAlt';
 import { PropTypes } from "prop-types";
 
-const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, seleccionado, setSeleccionado, pases, setPases }) => {
+const ExpedientesDataGrid = ({ handleExpedienteSelected, isEditing, setIsEditing, seleccionado, setSeleccionado, pases, setPases }) => {
     const [expedientes, setExpedientes] = useState([]);
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(10);
     const [totalExpedientes, setTotalExpedientes] = useState(0);
     const [estadoExp, setEstadoExp] = useState('Abierto');
     const [titulo, setTitulo] = useState('Listado de Expedientes en Tratamiento');
-
+    console.log("TIPO",typeof handleExpedienteSelected);
     const fetchExpedientes = async (page, pageSize) => {
         /* le mando "Abierto", que no es un estado, pero que en el servidor interpreto como todos los estadoExp que no sean "Finalizado" */
         const url = `${Global.url}/expedientes/estadoExp/` + `${estadoExp}` + `?desde=${page * pageSize}&limite=${pageSize}`;
@@ -109,7 +109,7 @@ const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, sele
         const fechaISO = expediente.fechaIngreso.split('/').reverse().join('-');
         expediente.fechaIngreso = fechaISO;
  
-        onSelectExpediente(expediente);
+        handleExpedienteSelected(expediente); 
         setSeleccionado(false);
         /*  const pasesOrdenados = [...expediente.pases].sort((a, b) => new Date(a.fecha_pase) - new Date(b.fecha_pase)); */
         /*  setPases(pasesOrdenados); */
@@ -194,7 +194,7 @@ export default ExpedientesDataGrid
 
 ExpedientesDataGrid.propTypes = {
 
-    onSelectExpediente: PropTypes.func,
+    handleExpedienteSelected: PropTypes.func,
     isEditing: PropTypes.bool,
     setIsEditing: PropTypes.func,
     seleccionado: PropTypes.bool,

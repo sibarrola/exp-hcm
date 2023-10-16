@@ -17,7 +17,7 @@ import { Global } from '../../helpers/Global.jsx';
 import { useState, useEffect } from 'react';
 import useFetchCombos from '../../hooks/useFetchCombos.jsx'
 import CustomAlert from '../../privado/componentes/CustomAlert';
-/* import CustomDialog from '../../privado/componentes/CustomDialog'; */
+  import CustomDialog from '../../privado/componentes/CustomDialog';  
 import useAuth from "../../hooks/useAuth.jsx";
 
 import { PropTypes } from "prop-types";
@@ -26,13 +26,14 @@ import useFetchAxios from "../../hooks/useFetchAxios.jsx";
 
 import { fileUpload } from '../../helpers/fileUpload.jsx';
  
+ 
 const url = Global.url;
 
 /* comienza el componente------------------------------------------------ */
 /* const PasesCarga = ({ expediente, handleExpedienteSelect, setSeleccionado, pase,setPase, onPaseAdd, editingPase, setEditingPase, handlePaseEdit, onPaseDelete,estadoCarga,setEstadoCarga }) => { */
 const PasesCarga = ({ expediente, handleExpedienteSelect, paseAEditar, modo, setModo, handlePaseEdit, handleLimpio }) => {
 
-    let [executeRequest, isSuccessful, setIsSuccessful, alert, setAlert, respuesta] = useFetchAxios();
+    let [executeRequest, isSuccessful, setIsSuccessful, prialert, setAlert, respuesta] = useFetchAxios();
     const url = Global.url;
     const [nuevoPase, setNuevoPase] = useState(paseAEditar);
     const [subir, setSubir]=useState([]);
@@ -45,7 +46,7 @@ const PasesCarga = ({ expediente, handleExpedienteSelect, paseAEditar, modo, set
     */
 
     const { auth } = useAuth();  // usuario logueado
-    const [open, setOpen] = useState('false');
+    const [open, setOpen] = useState(false);
 
     const {
         estaciones,
@@ -97,6 +98,7 @@ const PasesCarga = ({ expediente, handleExpedienteSelect, paseAEditar, modo, set
 
             handleExpedienteSelect(respuesta);
             setNuevoPase(formData);
+          
         
         }
     }, [respuesta]);
@@ -151,9 +153,11 @@ const PasesCarga = ({ expediente, handleExpedienteSelect, paseAEditar, modo, set
                 usuario_pase_nombre: auth.nombre,
                 comentario: nuevoPase.comentario
             }
-
-            expedienteNuevo = { ...expediente, pases: [...expediente.pases, paseg] };
-
+         
+           const {_id,sancion}=expediente;
+            console.log(expediente,"expediente",sancion,"sancion",_id);
+            expedienteNuevo = { _id,sancion, ...expediente, pases: [...expediente.pases, paseg] };
+            console.log(expedienteNuevo,"expedienteNuevo",sancion,"sancion",_id);
             // cambio el estado si es un pase nuevo
             switch (nuevoPase.estacion) {
                 case "Sanción":
@@ -161,7 +165,11 @@ const PasesCarga = ({ expediente, handleExpedienteSelect, paseAEditar, modo, set
                     console.log(expedienteNuevo.estadoExp)
                     break;
                 case "Notificación al Ejecutivo":
-                    expedienteNuevo.estadoExp = "Notificado"
+                    if(expedienteNuevo.estadoExp!='Aprobado'){
+                    /*    setOpen(true) */   }
+                 
+                        expedienteNuevo.estadoExp = "Notificado";
+                  
                     break;
                 case "Archivo":
                     expedienteNuevo.estadoExp = "Archivado"
@@ -170,7 +178,8 @@ const PasesCarga = ({ expediente, handleExpedienteSelect, paseAEditar, modo, set
                     expedienteNuevo.estadoExp = "Finalizado"
                     break;
                 default:
-                    expedienteNuevo.estadoExp = "Estudio"
+                    expedienteNuevo.estadoExp = "Estudio";
+                    expedienteNuevo.sancion={};
             }
 
         }
@@ -183,7 +192,7 @@ const PasesCarga = ({ expediente, handleExpedienteSelect, paseAEditar, modo, set
            
             /* expedienteNuevo.file=subir[0] */
           }
-      
+          
 
         let token = auth.token;
         let method = "PUT";
@@ -192,7 +201,7 @@ const PasesCarga = ({ expediente, handleExpedienteSelect, paseAEditar, modo, set
         setModo("Cargar");
         setNuevoPase(formData);
        //----------------------put expediente-------------------
-        let url2 = `${url}/expedientes/${expediente_guardar._id}`;
+        let url2 = `${url}/expedientes/${expediente._id}`;
         // llamo a la funcion executeRequest del useFetchAxios()------------ 
         await executeRequest(url2, method, expediente_guardar, token);
        
@@ -216,12 +225,11 @@ const PasesCarga = ({ expediente, handleExpedienteSelect, paseAEditar, modo, set
 
 
                 )}
-                {/*   <CustomDialog
-                    open={alert.open}
-                    onClose={() => setAlert({ ...alert, open: false })}
-                    severity={alert.severity}
-                    message={alert.message}
-                    title="Aviso de ingreso" /> */}
+               {/*  <CustomDialog
+                    open={open}
+                    onClose={ () => setOpen(false)}
+                       message='esta aprobado??? Si no fuera así, por favor borre este pase y  genere el pase de Sanción primero'
+                    title="Problema" />  */} 
                 <Grid container spacing={2}>
                     <Grid item xs={12}  >
                         <TextField

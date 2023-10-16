@@ -44,16 +44,19 @@ export const LayoutPublico = ({ children }) => {
         <Box
             sx={{
                 display: 'flex',
-                backgroundColor: 'antiquewhite',
+                backgroundColor: '#cfd8dc',
                 flexDirection: {
                     xs: 'column',
                     md: 'row'
-                }
+                },
+                height: '99vh',       
+                overflow: 'auto' 
+               
             }}
         >
 
             <NavBarFijo navVectLinks={navVectLinks} navVectCiudadanos={navVectCiudadanos} NavLink={NavLink} setOpen={setOpen} />
-
+            
             <Box
                 component='main'
                 sx={{
@@ -65,6 +68,7 @@ export const LayoutPublico = ({ children }) => {
                     }
                 }}
             >
+                
                 <Toolbar />
                 {/* aqui aparecen los hijos */}
                 {children}

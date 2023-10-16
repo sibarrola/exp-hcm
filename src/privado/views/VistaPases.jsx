@@ -21,7 +21,7 @@ const VistaPases =  () => {
         motivo: "",
         nuevoMotivo: "",
         comentario: " ",
-        fechaIngreso: "",
+        fechaIngreso: new Date().toISOString().substring(0, 10),
         categoria: "",
         institucion: "",
         organismo: "",
@@ -64,11 +64,12 @@ const VistaPases =  () => {
     const [isEditing, setIsEditing] = useState(false);   // esto viene de otro  */ 
     const [seleccionado, setSeleccionado] = useState(true); // expediente 
 
+
+    /* NUEVO------------------------------------------------------ */
     const handleExpedienteSelect = (expediente) => {
         setExpedienteSeleccionado(expediente);
         console.log("expediente seleccionado", expedienteSeleccionado)
     }
-    /* NUEVO------------------------------------------------------ */
 
     const handlePaseEdit = (newData) => {
         let paseId = newData._id;
@@ -221,7 +222,7 @@ const VistaPases =  () => {
             {seleccionado && (
 
                 <Grid item md={12} lg={12} sx={{ mr: "20px" }}  >
-                    <ExpedientesDataGrid onSelectExpediente={handleExpedienteSelect} isEditing={isEditing} setIsEditing={setIsEditing} seleccionado={seleccionado} setSeleccionado={setSeleccionado}
+                    <ExpedientesDataGrid handleExpedienteSelected={handleExpedienteSelect} isEditing={isEditing} setIsEditing={setIsEditing} seleccionado={seleccionado} setSeleccionado={setSeleccionado}
                  /* pases={pases} setPases={setPases} */ />
                 </Grid>
 

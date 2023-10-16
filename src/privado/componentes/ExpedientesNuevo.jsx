@@ -26,7 +26,9 @@ import DniField from "./DniField.jsx";
 import CustomAlert from '../../privado/componentes/CustomAlert';
 import useFetchAxios from "../../hooks/useFetchAxios.jsx";
 let url = Global.url;
-const ExpedientesCarga = ({ titulo, expedienteSeleccionado, estadoCarga,  setExpedienteSeleccionado,handleExpedienteSelected , isEditing, setIsEditing }) => {
+const ExpedientesCarga = ({ titulo, expediente, estadoCarga,  isEditing, setIsEditing }) => {
+
+ 
 
     const [executeRequest, isSuccessful, setIsSuccessful, alert, setAlert,respuesta] = useFetchAxios();
  
@@ -88,21 +90,18 @@ const ExpedientesCarga = ({ titulo, expedienteSeleccionado, estadoCarga,  setExp
         console.log(values, "values");
     }
 
-     useEffect(() => {
+ /*     useEffect(() => {
        
-        console.log("use effect expedienteSeleccionado",expedienteSeleccionado);
+       
         setValues(expedienteSeleccionado);
-    }, [expedienteSeleccionado]);  
+    }, [expedienteSeleccionado]);   */
 
 
     useEffect(() => {
         if (isSuccessful) {
             console.log(respuesta);
             setValues(expedienteLimpio);
-            if(estadoCarga != "Carga"){
-                handleExpedienteSelected(respuesta)
-            }
-          
+         
             setIsSuccessful(false);
         }
     }, [respuesta]);
@@ -768,10 +767,9 @@ ExpedientesCarga.defaultProps = {
 
 ExpedientesCarga.propTypes = {
     titulo:PropTypes.string,
-    expedienteSeleccionado: PropTypes.object,
+    expediente: PropTypes.object,
     estadoCarga:PropTypes.string,
-    setExpedienteSeleccionado:PropTypes.func,
-    handleExpedienteSelected:PropTypes.func,
+     
     isEditing:PropTypes.bool,
     setIsEditing:PropTypes.func
 }

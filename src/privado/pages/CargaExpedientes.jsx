@@ -1,5 +1,5 @@
 
-   import ExpedientesCarga from "../componentes/ExpedientesCarga";  
+   import ExpedientesNuevo from "../componentes/ExpedientesNuevo";  
  
 import LayoutPrivado  from "../layout/LayoutPrivado"
 import { useState } from 'react';
@@ -36,7 +36,7 @@ const CargaExpedientes = () => {
  return (
    <LayoutPrivado>
     
-     <ExpedientesCarga titulo="Carga de expedientes" expediente={expediente} estadoCarga="Carga" isEditing={isEditing} setIsEditing={setIsEditing} />
+     <ExpedientesNuevo titulo="Ingreso de expedientes" expediente={expediente} estadoCarga="Carga" isEditing={isEditing} setIsEditing={setIsEditing} />
      
    </LayoutPrivado>
  )

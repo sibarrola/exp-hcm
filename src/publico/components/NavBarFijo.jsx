@@ -30,6 +30,7 @@ export const NavBarFijo = ({ navVectLinks, navVectCiudadanos, NavLink }) => {
                             height='90px'
 
                         />
+                       <div style={{fontSize:'10px'}}>HCM S.J. del Rincón</div>  
 
                     </Box>
                     <IconButton

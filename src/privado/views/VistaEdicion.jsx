@@ -5,6 +5,11 @@ import { Grid, Typography } from '@mui/material';
 import ExpedientesCarga from '../componentes/ExpedientesCarga';
 import ExpedientesDataGrid from '../componentes/ExpedientesDataGrid';
 const VistaEdicion = () => {
+    const handleExpedienteSelected = (expediente) => {
+        setExpedienteSeleccionado(expediente);
+        setIsEditing(true);
+    };
+
     const [expedienteSeleccionado, setExpedienteSeleccionado] = useState({
         _id:"",
         legajo: "",
@@ -13,7 +18,7 @@ const VistaEdicion = () => {
         motivo: "",
         nuevoMotivo: "",
         comentario: " ",
-        fechaIngreso: "",
+        fechaIngreso: new Date().toISOString().substring(0, 10),
         categoria: "",
         institucion: "",
         organismo: "",
@@ -32,10 +37,7 @@ const VistaEdicion = () => {
     });
     const [isEditing, setIsEditing] = useState(false);
  
-    const handleExpedienteSelected = (expediente) => {
-        setExpedienteSeleccionado(expediente);
-        setIsEditing(true);
-    };
+ 
 
     // este estado  lo  pongo porque los usa el componente DATAGRID (pero en realidad los usa desde la VistaPases )
     const [seleccionado, setSeleccionado] = useState(true); // expediente 
@@ -51,7 +53,7 @@ const VistaEdicion = () => {
 
                 <Grid item md={12} lg={6} sx={{ mr: "20px" }}  >
              
-                   <ExpedientesDataGrid onSelectExpediente={handleExpedienteSelected} isEditing={isEditing} setIsEditing={setIsEditing} seleccionado={seleccionado} setSeleccionado={setSeleccionado} />
+                   <ExpedientesDataGrid handleExpedienteSelected={handleExpedienteSelected} isEditing={isEditing} setIsEditing={setIsEditing} seleccionado={seleccionado} setSeleccionado={setSeleccionado} />
 
                 </Grid>
                 <Grid item md={12} lg={5} >
@@ -60,7 +62,8 @@ const VistaEdicion = () => {
                         titulo="Edicion"
                         expedienteSeleccionado={expedienteSeleccionado}
                         estadoCarga="Edicion"
-                        onSelectExpediente={handleExpedienteSelected}
+                        setExpedienteSeleccionado={setExpedienteSeleccionado}
+                        handleExpedienteSelected={handleExpedienteSelected}
                         isEditing={isEditing} 
                         setIsEditing={setIsEditing}
                     /> 

@@ -70,7 +70,7 @@ const ExpedienteCard = ({ expediente,  onPaseEdit, onPaseDelete }) => {
                 </h3>
                 <Typography sx={{ fontWeight: 800 }}  > Ingresado:</Typography>
                 <Typography sx={{color:'InfoText'}} >{formatearFecha(new Date(expediente.fechaIngreso))}  - ({ (expediente.estadoExp=='Estudio')?'En tratamiento':expediente.estadoExp })
-                {expediente.estadoExp=='Aprobado' && !!expediente.sancion.secure_url && <a  href={expediente.sancion.secure_url}  target="_blank" style={{marginLeft:'10px'}}>Bajar Sanción </a>}</Typography>
+                {(expediente.estadoExp=='Aprobado' || expediente.estadoExp=='Notificado') && expediente.sancion.secure_url && <a  href={expediente.sancion.secure_url}  target="_blank" style={{marginLeft:'10px'}}>Bajar Sanción </a>}</Typography>
             
             </Grid>
            

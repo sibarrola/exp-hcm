@@ -66,13 +66,16 @@ const ExpedienteCardPublico = ({ expediente, seleccionado, setSeleccionado }) =>
                     </PDFDownloadLink>
                 </div>
                 <Grid sx={{ ml: "30px" }} >
+                 
                 <h3>
+                   {/* {JSON.stringify(expediente)} */}
                     VISUALIZACION EXPEDIENTE - {`Legajo: ${expediente.legajo}`}
                 </h3>
                 <Typography sx={{ fontWeight: 800 }}  > Ingresado:</Typography>
-                <Typography sx={colortema.typography.texto} >{formatearFecha(new Date(expediente.fechaIngreso))}  - ({ (expediente.estadoExp=='Estudio')?'En tratamiento':expediente.estadoExp })</Typography>
-
-                </Grid>
+                <Typography sx={{color:'InfoText'}} >{formatearFecha(new Date(expediente.fechaIngreso))}  - ({ (expediente.estadoExp=='Estudio')?'En tratamiento':expediente.estadoExp })
+                {(expediente.estadoExp=='Aprobado'||expediente.estadoExp=='Notificado') && !!expediente.sancion.secure_url && <a  href={expediente.sancion.secure_url}  target="_blank" style={{marginLeft:'10px'}}>Bajar Sanción </a>}</Typography>
+            
+            </Grid>
 
 
                 <CardContent>
