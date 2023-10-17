@@ -1,21 +1,45 @@
 import { Box, Divider, List, ListItem, ListItemButton, Toolbar, Typography } from '@mui/material';
 /* import HomeIcon from '@mui/icons-material/Home'; */
-import logo1 from '../../assets/logo-160px.fw.png'
-/* import ArticleIcon from '@mui/icons-material/Article'; */
-import { PropTypes } from 'prop-types';
+/* import logo1 from '../../assets/logo-160px.fw.png' */
+
  
-export const NavListDrawer = ({ navVectLinks,navVectCiudadanos, NavLink,setOpen }) => {
+
+import HomeIcon from '@mui/icons-material/Home';
+import PersonIcon from '@mui/icons-material/Person';
+ 
+import { Article } from '@mui/icons-material';
+import ContactPageIcon from '@mui/icons-material/ContactPage';
+import { NavLink } from 'react-router-dom';
+const navVectLinks = [
+    
+    {
+        title: "Empleado", path: "/auth/login", icon: <PersonIcon />
+    }
+   
+
+]
+const navVectCiudadanos = [
+    {
+        title: "Inicio", path: "/", icon: <HomeIcon />
+    },
+    {
+        title: "Expedientes", path: "/expedientes", icon: <Article />
+    },
+    {
+        title: "Contacto", path: "/contacto", icon: <ContactPageIcon />
+    },
+
+
+]
+
+export const NavListDrawer = ( ) => {
      return (
        /*  <Box sx={{ bgcolor: '#ede7f6', height: '100vh', width:'170px'}}  >  */
-        <Box sx={{ bgcolor:  "#fffde7" , height: '100vh', width:'170px'   }}   >
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center', boxSizing: 'border-box', color: 'black',bgcolor:  "#002984"  }} >
-                <img src={logo1} alt="logo" height={90} />
-                </Box>
-            <Typography variant="body2" sx={{ paddingBottom:2, display: 'flex', justifyContent: 'center', fontWeight: 900, color:'#ffffff' ,bgcolor:  "#002984" }}>HCM S.J. del Rincón</Typography>
-         
+        <Box sx={{ height: '50vh', width:'150px'  }}   >
+                  
              
-            <Typography variant="body1" fontWeight="bold" sx={{mt:3,ml:1,mr:1, justifyContent:'center'}} >Ciudadanos</Typography>
-         
+            <Typography variant="body1" fontWeight="bold" sx={{mt:3,ml:1,mr:1, justifyContent:'center'}} >Menú Ciudadanos</Typography>
+            <hr color='blue' />
                 <List>
                    
                       {/* slice(1) para obtener una nueva matriz que excluye el primer elemento del vector. Luego, aplicamos map a esa nueva matriz  */}
@@ -28,7 +52,7 @@ export const NavListDrawer = ({ navVectLinks,navVectCiudadanos, NavLink,setOpen 
                                 key={item.title}
                                 component={NavLink}
                                 to={item.path}
-                                onClick={() => setOpen(false)}
+                               
                                 sx={{
                                     ":hover": {
                                         bgColor: '#e0e0e0'
@@ -88,9 +112,4 @@ export const NavListDrawer = ({ navVectLinks,navVectCiudadanos, NavLink,setOpen 
     )
 }
 
-NavListDrawer.propTypes = {
-    navVectLinks: PropTypes.array,
-    navVectCiudadanos:PropTypes.array,
-    NavLink:PropTypes.any,
-    setOpen: PropTypes.any
-}
+ 

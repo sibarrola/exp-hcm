@@ -30,14 +30,14 @@ export const NavBarFijo = ({ navVectLinks, navVectCiudadanos, NavLink }) => {
                             height='90px'
 
                         />
-                       <div style={{fontSize:'10px'}}>HCM S.J. del Rincón</div>  
+                       <div style={{fontSize:'10px', mb:'2px'}}>HCM S.J. del Rincón</div>  
 
                     </Box>
                     <IconButton
                         color="inherit"
                         size="large"
                         onClick={() => setOpen(true)}
-                        sx={{ display: { xs: "flex" } }}  /* quite el sm:"none" */
+                        sx={{ display: { xs: "flex",md:'none'} }}  /* quite el sm:"none" */
                         edge="start">
 
                         <MenuOutlined sx={{ fontSize: '38px' }} />

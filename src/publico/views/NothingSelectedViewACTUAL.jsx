@@ -10,10 +10,6 @@ const NothingSelectedView = () => {
       {/* menu izq */}
 
 
-
-
-
-
     {/* Caja con la imagen */}
     <Box sx={{ flexGrow: 2, paddingRight: { md: 2 },marginLeft:'8%',   }}>
 

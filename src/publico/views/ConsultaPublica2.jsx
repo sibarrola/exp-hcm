@@ -1,10 +1,11 @@
 import { useState } from 'react';
 
-import { Grid} from '@mui/material';
+import { Grid,Box} from '@mui/material';
  import ExpedientesDataGridPublico  from '../components/ExpedientesDataGridPublico';
 
  
 import ExpedienteCardPublico from '../components/ExpedienteCardPublico';
+import { NavListDrawer } from '../components/NavListDrawer';
  
  
 const ConsultaPublica = () => {
@@ -55,12 +56,18 @@ const ConsultaPublica = () => {
     /* -------------------BORRA EL PASE------------------------------------ */
   
     return (
+        <Box sx={{display:'flex',mt:'3%' }}> 
+
+<Box sx={{ display: { xs: 'none', sm: 'none', md: 'none', lg: 'none', xl: 'flex' }  
+        }}> 
+          <NavListDrawer />
+          </Box>
 
      
-        <Grid container   spacing={2} sx={{ display: 'flex' ,mt:'2%', justifyContent:'center'     }}    > 
+        <Grid container     sx={{ display: 'flex' ,ml:'2%',justifyContent:'center'     }}    > 
           
              {  seleccionado && (
-                   <Grid item xs={10}   >
+                   <Grid item xs={11}   >
                     <ExpedientesDataGridPublico onSelectExpediente={handleExpedienteSelect} isEditing={isEditing} setIsEditing={setIsEditing} seleccionado={seleccionado} setSeleccionado={setSeleccionado}
                  />
                 </Grid>
@@ -69,7 +76,7 @@ const ConsultaPublica = () => {
             
 
 
-            <Grid item xs={10} lg={9}    sx={{ justifyContent: 'center' }} >
+            <Grid item xs={11} lg={9}    sx={{ justifyContent: 'center' }} >
                 <ExpedienteCardPublico
                     expediente={expedienteSeleccionado}seleccionado={seleccionado} setSeleccionado={setSeleccionado}  />
  
@@ -78,7 +85,8 @@ const ConsultaPublica = () => {
          
     )}
         </Grid>
-
+  
+        </Box>
     );
 }
 

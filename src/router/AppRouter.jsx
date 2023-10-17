@@ -10,8 +10,8 @@ import CargaExpedientes from '../privado/pages/CargaExpedientes'
 import ListaEdicionExpedientes from '../privado/pages/ListaEdicionExpedientes'
 import Tablas from '../privado/pages/Tablas'
 import CargaPases from '../privado/pages/CargaPases'
-
-
+import PaginaContacto from '../publico/pages/PaginaContacto'
+ 
   
 const AppRouter = () => {
    
@@ -39,6 +39,7 @@ const AppRouter = () => {
             {/*   <Route path='/expedientes' element={<PublicoRoutes/>}/> */}
             <Route path='/' element={<PaginaPublica />} />
             <Route path='/expedientes' element={<PaginaConsultaCiudadano />} />
+            <Route path='/contacto' element={<PaginaContacto />} />
             <Route path='/*' element={<Navigate to="/" />} />
 
  
