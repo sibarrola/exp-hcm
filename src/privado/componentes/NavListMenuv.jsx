@@ -9,7 +9,7 @@ export const NavListMenu = ({ navVectLinks,navVectGestion, NavLink,setOpen }) =>
     console.log("navVectGestion",navVectGestion)
      return (
      
-        <Box sx={{ bgcolor: '#ede7f6', height: '100vh', width:'160px'}}  >
+        <Box sx={{ bgcolor: '#ede7f6', height: '100vh', width:'160px', marginTop:'100px',zIndex:'-1' }}  >
             <Box sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center', boxSizing: 'border-box', color: 'black' }} >
                 <img src={logo1} alt="logo" height={80} />
             </Box>

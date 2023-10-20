@@ -24,13 +24,13 @@ export const NavBar = ({ navVectLinks, navVectGestion1, navVectGestion2, navVect
                 {/* el toolbar va a activar los espaciados y todo lo que se escriba adentro tendra la prop flex */}
                 <Toolbar>
                     {/* con el iconButtom hago un boton con un icono */}
-                    <Box sx={{ display: 'flex',  mr:5,  boxSizing: 'border-box', color: 'black' }} >
-                    <img src={logo1} alt="logo" height={70} />
+                    <Box sx={{ display: 'flex',  m:1,mr:3,  boxSizing: 'border-box', color: 'black' }} >
+                    <img src={logo1} alt="logo" height={90}   />
                   </Box>
                     <IconButton
                         color="inherit"
                         
-                        onClick={() => setOpen(true)}
+                        onClick={() => setOpen(!open)}
                         sx={{ display: { xs: "flex" } }}
                         edge="start">
                         <MenuOutlined sx={{ fontSize: '32px' }} />
@@ -80,10 +80,11 @@ export const NavBar = ({ navVectLinks, navVectGestion1, navVectGestion2, navVect
                 </Toolbar>
             </AppBar>
 
-            <Drawer
+         <Drawer
                 open={open}
                 anchor="left"
                 onClose={() => setOpen(false)}
+                sx={{marginTop:'100px',zIndex:'1'}}
 
 
             >
@@ -95,7 +96,7 @@ export const NavBar = ({ navVectLinks, navVectGestion1, navVectGestion2, navVect
                     NavLink={NavLink}
                     setOpen={setOpen} />
 
-            </Drawer>
+            </Drawer>  
 
         </>
     )

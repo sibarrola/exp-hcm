@@ -3,10 +3,18 @@ import axios from 'axios';
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Container, Paper, Box, Typography } from '@mui/material';
 import {Global} from '../../../helpers/Global';
 import ConfirmDialog from '../ConfirmDialog';
-
+import CustomAlert from '../CustomAlert';
+import useAuth from "../../../hooks/useAuth";
 const url = Global.url;
 const InstitucionesForm = () => {
-
+    const { auth } = useAuth();  // usuario logueado;
+    let token = auth.token;
+    const config = {
+        headers: {
+            "Content-Type": "application/json",
+            "x-token": token
+        }
+    }
     // estados
     const [instituciones, setInstituciones] = useState([]);
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -17,7 +25,10 @@ const [dialogOpen2, setDialogOpen2] = useState(false);
 const [isBorrando, setIsBorrando] = useState(false);
 const [borraInstitucion, setBorraInstitucion] = useState(null);
 const [nombre, setNombre] = useState("");
-
+// alerta-----------------
+const [avisoOpen, setAvisoOpen] = useState(false);
+const [mensaje,setMensaje] = useState("");
+//-------------------------------------------------------
     const fetchInstituciones = async () => {
         try {
             const res = await axios.get(`${url}/instituciones`);
@@ -58,8 +69,15 @@ const [nombre, setNombre] = useState("");
         setDialogOpen2(true)
     };
     const deleteInstitucion = async id => {
-        await axios.delete(`${url}/instituciones/${id}`);
-        setInstituciones(instituciones.filter(m => m._id !== id));
+        try{
+            await axios.delete(`${url}/instituciones/${id}`,config);
+            setInstituciones(instituciones.filter(m => m._id !== id));
+        
+    } catch (error) {
+        console.error('Error', error);
+        setAvisoOpen(true);
+        setMensaje(error.response.data.msg);
+    }
     };
 
     useEffect(() => {
@@ -103,6 +121,10 @@ const handleDialogConfirm2 = () => {
     setBorraInstitucion(null)
     handleDialogClose2();
 };
+const handleAvisoClose= () => {
+    setAvisoOpen(false);
+    setMensaje("");
+};
     return (
         <>
 
@@ -127,6 +149,13 @@ const handleDialogConfirm2 = () => {
                             titulo_color='black'
                             context_fondo='yellowlight'
                             context_color='secondary'
+                        />
+                         <CustomAlert
+                            open={avisoOpen}
+                            onClose={handleAvisoClose}
+                            severity="warning"
+                            message=  {mensaje}
+                          
                         />
                     <Table>
                         <TableHead

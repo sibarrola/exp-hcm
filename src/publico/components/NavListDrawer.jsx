@@ -55,7 +55,7 @@ export const NavListDrawer = ( ) => {
                                
                                 sx={{
                                     ":hover": {
-                                        bgColor: '#e0e0e0'
+                                        bgColor: '#40c4ff'
                                     }
                                 }}
                              >

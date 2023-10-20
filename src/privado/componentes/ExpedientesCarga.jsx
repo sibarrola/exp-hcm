@@ -701,7 +701,7 @@ const ExpedientesCarga = ({ titulo, expedienteSeleccionado, estadoCarga,  setExp
                             /* error={!!errors.dni}
                             helperText={errors.dni}   */
                             fullWidth
-                            inputRef={dniRef}
+                           
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>

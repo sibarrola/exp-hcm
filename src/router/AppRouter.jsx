@@ -27,6 +27,7 @@ const AppRouter = () => {
             <Route path='/privado/ingresos'element={ <CargaExpedientes /> } />
             <Route path='/privado/edicion'element={ <ListaEdicionExpedientes/> } />
             <Route path='/privado/pases'element={ <CargaPases/> } />
+      {/*       <Route path='/privado/informes/pases'element={ <InformesPasesExp/> } /> */}
        
             {/* Login y Registro......................................... */}
             <Route path='/auth/login' element={<LoginPage />} />

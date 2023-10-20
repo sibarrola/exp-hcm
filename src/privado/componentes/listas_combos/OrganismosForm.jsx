@@ -3,9 +3,19 @@ import axios from 'axios';
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Container, Paper, Box, Typography } from '@mui/material';
 import {Global} from '../../../helpers/Global';
 import ConfirmDialog from '../ConfirmDialog';
+import CustomAlert from '../CustomAlert';
 const url=Global.url; 
-const OrganismosForm = () => {
+import useAuth from "../../../hooks/useAuth";
 
+const OrganismosForm = () => {
+    const { auth } = useAuth();  // usuario logueado;
+    let token = auth.token;
+    const config = {
+        headers: {
+            "Content-Type": "application/json",
+            "x-token": token
+        }
+    }
     // estados
     const [organizaciones, setOrganizaciones] = useState([]);
     const [dialogOpen, setDialogOpen] = useState(false);
@@ -15,7 +25,11 @@ const OrganismosForm = () => {
 const [dialogOpen2, setDialogOpen2] = useState(false);
 const [isBorrando, setIsBorrando] = useState(false);
 const [borraOrganismo, setBorraOrganismo] = useState(null);
-
+//------------------------------------------------------------
+// alerta-----------------
+const [avisoOpen, setAvisoOpen] = useState(false);
+const [mensaje,setMensaje] = useState("");
+//-------------------------------------------------------------
 const [nombre, setNombre] = useState("");
     const fetchOrganismos = async () => {
         try {
@@ -58,8 +72,16 @@ const OpenDeleteOrganizacion = (id,nombre) => {
 };
  
     const deleteOrganismo = async id => {
-        await axios.delete(`${url}/organizaciones/${id}`);
-        setOrganizaciones(organizaciones.filter(m => m._id !== id));
+        try{
+            await axios.delete(`${url}/organizaciones/${id}`,config);
+            setOrganizaciones(organizaciones.filter(m => m._id !== id));
+        
+    } catch (error) {
+        console.error('Error', error);
+        setAvisoOpen(true);
+        setMensaje(error.response.data.msg);
+    }
+      
     };
 
     useEffect(() => {
@@ -103,6 +125,10 @@ const OpenDeleteOrganizacion = (id,nombre) => {
         setBorraOrganismo(null)
         handleDialogClose2();
     };
+    const handleAvisoClose= () => {
+        setAvisoOpen(false);
+        setMensaje("");
+    };
 
     return (
         <>
@@ -126,6 +152,13 @@ const OpenDeleteOrganizacion = (id,nombre) => {
                             titulo_color='black'
                             context_fondo='yellowlight'
                             context_color='secondary'
+                        />
+                         <CustomAlert
+                            open={avisoOpen}
+                            onClose={handleAvisoClose}
+                            severity="warning"
+                            message=  {mensaje}
+                          
                         />
                     <Table>
                     <TableHead

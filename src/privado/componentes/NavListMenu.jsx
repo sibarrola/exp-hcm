@@ -10,47 +10,47 @@ export const NavListMenu = ({ navVectLinks, navVectGestion1, navVectGestion2, na
 
 
     return (
-
-        <Box sx={{ backgroundColor:'lightyellow', height: '100vh', width: '180px' }} > 
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center', boxSizing: 'border-box', color: 'black' }} >
+        <Box sx={{ backgroundColor: '#eceff1', height: '80vh', width: '180px', }} >
+            {/*  <Box sx={{ backgroundColor:'lightyellow', height: '100vh', width: '180px' }} >  */}
+            {/*    <Box sx={{ display: 'flex', justifyContent: 'center', alignContent: 'center', boxSizing: 'border-box', color: 'black' }} >
                 <img src={logo1} alt="logo" height={80} />
-            </Box>
-            <Typography sx={{ display: 'flex', justifyContent: 'center', fontWeight: 900 }}>HCM</Typography>
+            </Box> */}
+            <Typography sx={{ display: 'flex', justifyContent: 'center', fontWeight: 900, marginTop: '130px', color: 'blue', fontSize: '12px' }}>Honorable Concejo Municipal</Typography>
             <Divider />
-            <ListItem disablePadding sx={{mt:5}}>
+            <ListItem disablePadding sx={{ mt: 5 }}>
 
-<ListItemButton
-    color="inherit"
-    component={NavLink}
-    to="/privado/menu"
-    onClick={() => setOpen(false)}
-    sx={{
-        ":hover": {
-            backgroundColor: 'bisque'
-        }
-    }}
->
-<HomeIcon />
- 
-    <Typography variant='subtitle1' sx={{ marginLeft: 2 }}  >
-        Inicio
-    </Typography>
-</ListItemButton  >
-</ListItem>
+                <ListItemButton
+                    color="inherit"
+                    component={NavLink}
+                    to="/privado/menu"
+                    onClick={() => setOpen(false)}
+                    sx={{
+                        ":hover": {
+                            backgroundColor: 'bisque'
+                        }
+                    }}
+                >
+                    <HomeIcon />
 
-            <List sx={{m:1 }}>
+                    <Typography variant='subtitle1' sx={{ marginLeft: 2 }}  >
+                        Inicio
+                    </Typography>
+                </ListItemButton  >
+            </ListItem>
+
+            <List sx={{ m: 1 }}>
 
                 <Accordion>
                     <AccordionSummary
                         expandIcon={<GridExpandMoreIcon />}
                         aria-controls="panel1a-content"
                         id="panel1a-header"
-                        sx={{ backgroundColor: 'bisque'}}
+                        sx={{ backgroundColor: '#cfd8dc' }}
                     >
-                        <Typography variant="body1" fontWeight="bold" sx={{ mt: 2, ml: 1, mr: 1, justifyContent: 'center' }} >Entidades</Typography>
+                        <Typography variant="body1" fontWeight="bold" sx={{ mt: 1, ml: 1, mr: 1, justifyContent: 'center' }} >Entidades</Typography>
                     </AccordionSummary>
                     <AccordionDetails sx={{
-                        backgroundColor: 'lightyellow'
+                        backgroundColor: '#f1f8e9'
                     }} >
                         <List>
 
@@ -65,7 +65,7 @@ export const NavListMenu = ({ navVectLinks, navVectGestion1, navVectGestion2, na
                                         onClick={() => setOpen(false)}
                                         sx={{
                                             ":hover": {
-                                                backgroundColor: 'bisque'
+                                                backgroundColor: '#e0e0e0'
                                             }
                                         }}
                                     >
@@ -78,9 +78,9 @@ export const NavListMenu = ({ navVectLinks, navVectGestion1, navVectGestion2, na
 
                             ))
                             }
-                       
-                       </List> 
-                      
+
+                        </List>
+
                     </AccordionDetails>
                 </Accordion>
 
@@ -92,13 +92,13 @@ export const NavListMenu = ({ navVectLinks, navVectGestion1, navVectGestion2, na
                             expandIcon={<GridExpandMoreIcon />}
                             aria-controls="panel1a-content"
                             id="panel1a-header"
-                            sx={{ backgroundColor: 'bisque'}}
+                            sx={{ backgroundColor: '#cfd8dc' }}
                         >
-                            <Typography variant="body1" fontWeight="bold" sx={{ mt: 3, ml: 1, mr: 1, justifyContent: 'center' }} >Expedientes</Typography>
+                            <Typography variant="body1" fontWeight="bold" sx={{ mt: 1, ml: 1, mr: 1, justifyContent: 'center' }}>Expedientes</Typography>
                         </AccordionSummary>
                         <AccordionDetails sx={{
 
-backgroundColor: 'lightyellow'            
+                            backgroundColor: '#f1f8e9'
 
                         }} >
                             <List>
@@ -114,7 +114,7 @@ backgroundColor: 'lightyellow'
 
                                             sx={{
                                                 ":hover": {
-                                                    Color: '#e1bee7'
+                                                    backgroundColor: '#e0e0e0'
                                                 }
                                             }}
                                         >
@@ -128,66 +128,66 @@ backgroundColor: 'lightyellow'
                                 ))
                                 }
                             </List>
-                          
+
                         </AccordionDetails>
                     </Accordion>
-               </List>
-{/*  menu 3-------------------------------- */}
-<List>
+                </List>
+                {/*  menu 3-------------------------------- */}
+                <List>
 
-<Accordion>
-    <AccordionSummary
-        expandIcon={<GridExpandMoreIcon />}
-        aria-controls="panel1a-content"
-        id="panel1a-header"
-        sx={{ backgroundColor: 'bisque'}}
-    >
-        <Typography variant="body1" fontWeight="bold" sx={{ mt: 3, ml: 1, mr: 1, justifyContent: 'center' }} >Informes</Typography>
-    </AccordionSummary>
-    <AccordionDetails sx={{
+                    <Accordion>
+                        <AccordionSummary
+                            expandIcon={<GridExpandMoreIcon />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
+                            sx={{ backgroundColor: '#cfd8dc' }}
+                        >
+                            <Typography variant="body1" fontWeight="bold" sx={{ mt: 1, ml: 1, mr: 1, justifyContent: 'center' }} >Informes</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails sx={{
 
-        backgroundColor: '#ede7f6'
+                            backgroundColor: '#f1f8e9'
 
-    }} >
-        <List>
+                        }} >
+                            <List>
 
 
-            {navVectGestion3.map((item) => (
-                <ListItem disablePadding key={item.title}>
+                                {navVectGestion3.map((item) => (
+                                    <ListItem disablePadding key={item.title}>
 
-                    <ListItemButton
-                        color="inherit"
-                        key={item.title}
-                        component={NavLink}
-                        to={item.path}
-                        onClick={() => setOpen(false)}
+                                        <ListItemButton
+                                            color="inherit"
+                                            key={item.title}
+                                            component={NavLink}
+                                            to={item.path}
+                                            onClick={() => setOpen(false)}
 
-                        sx={{
-                            ":hover": {
-                                backgroundColor: 'bisque'
-                            }
-                        }}
-                    >
-                        {item.icon}
-                        <Typography variant='body1' sx={{ marginLeft: 2 }}  >
-                            {item.title}
-                        </Typography>
-                    </ListItemButton  >
-                </ListItem>
+                                            sx={{
+                                                ":hover": {
+                                                    backgroundColor: '#e0e0e0'
+                                                }
+                                            }}
+                                        >
+                                        {/*     {item.icon} */}
+                                            <Typography variant='body1' sx={{ marginLeft: 2 }}  >
+                                                {item.title}
+                                            </Typography>
+                                        </ListItemButton  >
+                                    </ListItem>
 
-            ))
-            }
-        </List>
-    
-    </AccordionDetails>
-</Accordion>
-</List>
+                                ))
+                                }
+                            </List>
 
-{/* ----------------------------------------------- */}
- 
+                        </AccordionDetails>
+                    </Accordion>
+                </List>
 
-                    {/* desde aq2ui */}
-                  {/*   {navVectGestion1.map((item) => (
+                {/* ----------------------------------------------- */}
+
+
+                {/* desde aq2ui */}
+                {/*   {navVectGestion1.map((item) => (
                         <ListItem disablePadding key={item.title}>
 
                             <ListItemButton
@@ -265,35 +265,35 @@ backgroundColor: 'lightyellow'
                     <Toolbar />
                   */}
 
-                  {/*hasta aqui  */}
-                    <Box sx={{ display: { xs: 'block', sm: 'block', md: 'none' }, bgcolor: "#e8eaf6" }}>
-                        <Typography variant="body1" fontWeight="bold" sx={{ mt: 3, ml: 1, mr: 1, justifyContent: 'center' }} ></Typography>
-                        {navVectLinks.slice(1).map((item) => (
-                            <ListItem disablePadding key={item.title}>
+                {/*hasta aqui  */}
+                <Box sx={{ display: { xs: 'block', sm: 'block', md: 'none' }, bgcolor: "#e8eaf6" }}>
+                    <Typography variant="body1" fontWeight="bold" sx={{ mt: 1, ml: 1, mr: 1, justifyContent: 'center' }} ></Typography>
+                    {navVectLinks.slice(1).map((item) => (
+                        <ListItem disablePadding key={item.title}>
 
-                                <ListItemButton
-                                    color="inherit"
-                                    key={item.title}
-                                    component={NavLink}
-                                    to={item.path}
-                                    onClick={() => setOpen(false)}
-                                    sx={{
-                                        ":hover": {
-                                            bgColor: '#e0e0e0'
-                                        }
-                                    }}
-                                >
-                                    {item.icon}
-                                    <Typography variant='body2' sx={{ marginLeft: 1 }}  >
-                                        {item.title}
-                                    </Typography>
-                                </ListItemButton  >
-                            </ListItem>
-                        ))
+                            <ListItemButton
+                                color="inherit"
+                                key={item.title}
+                                component={NavLink}
+                                to={item.path}
+                                onClick={() => setOpen(false)}
+                                sx={{
+                                    ":hover": {
+                                        bgColor: '#e0e0e0'
+                                    }
+                                }}
+                            >
+                              {/*   {item.icon} */}
+                                <Typography variant='body2' sx={{ marginLeft: 1 }}  >
+                                    {item.title}
+                                </Typography>
+                            </ListItemButton  >
+                        </ListItem>
+                    ))
 
-                        }
-                    </Box> 
-                </List>
+                    }
+                </Box>
+            </List>
         </Box>
 
     )

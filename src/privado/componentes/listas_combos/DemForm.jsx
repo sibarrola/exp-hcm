@@ -4,10 +4,18 @@ import axios from 'axios';
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Container, Paper, Box, Typography } from '@mui/material';
  import {Global} from '../../../helpers/Global';
 import ConfirmDialog from '../ConfirmDialog';
- 
+ import CustomAlert from '../CustomAlert';
+  import useAuth from "../../../hooks/useAuth";
 const url=Global.url; 
 const FormularioDem = () => {
-
+    const { auth } = useAuth();  // usuario logueado;
+    let token = auth.token;
+    const config = {
+        headers: {
+            "Content-Type": "application/json",
+            "x-token": token
+        }
+    }
     // estados
     const [dems, setDems] = useState([]);
     const [nombre, setNombre] = useState("");
@@ -16,7 +24,11 @@ const FormularioDem = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [dialogOpen2, setDialogOpen2] = useState(false); // la ventana de carga 
     const [isBorrando, setIsBorrando] = useState(false);
-const [borraDem, setBorraDem] = useState(null);
+   const [borraDem, setBorraDem] = useState(null);
+// alerta--------------------------------------------------
+ const [avisoOpen, setAvisoOpen] = useState(false);
+ const [mensaje,setMensaje] = useState("");
+
     //----------------------------------------------------------------------
     const fetchDems = async () => {
         try {
@@ -64,8 +76,17 @@ const [borraDem, setBorraDem] = useState(null);
         setDialogOpen2(true)
     };
     const deleteDem = async id => {
-        await axios.delete(`${url}/dems/${id}`);
-        setDems(dems.filter(m => m._id !== id));
+        try{
+            await axios.delete(`${url}/dems/${id}`,config);
+            setDems(dems.filter(m => m._id !== id));
+
+        }
+
+        catch(error){
+            setAvisoOpen(true);
+            setMensaje(error.response.data.msg);
+            console.log(error)
+        }
     };
 
    
@@ -106,6 +127,10 @@ const [borraDem, setBorraDem] = useState(null);
         setBorraDem(null)
         handleDialogClose2();
     };
+    const handleAvisoClose= () => {
+        setAvisoOpen(false);
+        setMensaje("");
+    };
 
     return (
         <>
@@ -129,6 +154,13 @@ const [borraDem, setBorraDem] = useState(null);
                             titulo_color='black'
                             context_fondo='yellowlight'
                             context_color='secondary'
+                        />
+                         <CustomAlert
+                            open={avisoOpen}
+                            onClose={handleAvisoClose}
+                            severity="warning"
+                            message=  {mensaje}
+                          
                         />
                     <Table>
                     <TableHead

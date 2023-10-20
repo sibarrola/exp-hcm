@@ -124,14 +124,16 @@ const VistaPases =  () => {
         setModo("Editar")
     }
 
-    const onGuardar = async (expedienteNuevo) => {
+    const onGuardar = async (expedienteNuevo,sanc) => {
+        console.log(sanc);
         let token = auth.token;
         let method = "PUT";
        /*  let expediente_guardar = expedienteNuevo; */
        console.log("expedient guardar en onGuardar",expedienteNuevo)
         setPaseAEditar(nuevo_pase);
         setModo("Cargar");
-        let url2 = `${url}/expedientes/${expedienteNuevo._id}`;
+        let url2 = `${url}/expedientes/${expedienteNuevo._id}/${sanc}`;
+        
         // llamo a la funcion executeRequest del useFetchAxios()------------ 
         await executeRequest(url2, method, expedienteNuevo, token);
           handleExpedienteSelect(expedienteNuevo);
@@ -162,9 +164,13 @@ const VistaPases =  () => {
              
           } */
          const updatedPases = vectorPases.filter((pase) => pase._id !== paseId); 
-         const paseBorro = vectorPases.filter((pase) => pase._id === paseId); 
-         if(paseBorro.estacion=="Sanción" && !!expedienteNuevo.sancion){
-            publicId=expedienteNuevo.sancion.public_id;
+         const paseBorro = vectorPases.filter((pase) => pase._id === paseId)[0]; 
+         console.log("expediente nuevo 166,sancion",expedienteNuevo.sancion);
+        let sanc=0;
+         if(paseBorro.estacion=="Sanción"   ){
+            sanc=1;
+            publicId=expedienteNuevo.sancion?.public_id;
+            
          }
        updatedPases.map((pase) => {
         console.log("recorreo vector pases")
@@ -200,13 +206,13 @@ const VistaPases =  () => {
         expedienteNuevo.pases = updatedPases;
         
        
-          if(!!publicId){
-            console.log("publicID");
+          if(publicId){
+            console.log("publicID",publicId);
             await onLimpioSancion(publicId);
-            expedienteNuevo.sancion={};
+            
          }
          console.log("EXPEDIENTE NUEVO",expedienteNuevo)
-         await onGuardar(expedienteNuevo);
+         await onGuardar(expedienteNuevo,sanc);
         
 
     };

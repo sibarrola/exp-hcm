@@ -67,11 +67,9 @@ const navVectGestion1 = [
 
 ]
 const navVectGestion3 = [
+    
     {
-        title: "ListaxEstado", path: "/privado/listae", icon: <PlaylistAddIcon />
-    },
-    {
-        title: "Estacion", path: "/privado/estacion", icon: <RunCircleIcon />
+        title: "x Estacion", path: "/privado/informes/estacion", icon: <RunCircleIcon />
     },
     {
         title: "Estadistica", path: "/privado/estadistica", icon: <TransferWithinAStationIcon />
@@ -87,7 +85,8 @@ const navVectGestion3 = [
     return (
       
         /*EL BOX ES COMO UN DIV  pongo un fondo amarillo "#e8e5cc"*/
-        <Box sx={{ display: 'flex' , height:'950px', backgroundColor:'antiquewhite' }}>
+        <Box sx={{ display: 'flex' ,  minHeight: '99vh', mt:'50px',      
+        overflow: 'auto' , backgroundColor:'antiquewhite' }}>
 
             <NavBar  navVectLinks={navVectLinks} navVectGestion1={navVectGestion1} navVectGestion2={navVectGestion2}  navVectGestion3={navVectGestion3}NavLink={NavLink} setOpen={setOpen} />
 

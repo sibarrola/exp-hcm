@@ -7,7 +7,7 @@ import CustomAlert from '../CustomAlert';
 const url=Global.url; 
 import useAuth from "../../../hooks/useAuth";
 
-const FormularioMotivos = () => {
+const EstacionesForm = () => {
     const { auth } = useAuth();  // usuario logueado;
     let token = auth.token;
     const config = {
@@ -16,26 +16,27 @@ const FormularioMotivos = () => {
             "x-token": token
         }
     }
+    //---------------------------------------------
     // estados
-    const [motivos, setMotivos] = useState([]);
+    const [estaciones, setEstaciones] = useState([]);
     const [dialogOpen, setDialogOpen] = useState(false);
-    const [editMotivo, setEditMotivo] = useState(null);
+    const [editEstacion, setEditEstacion] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
 // para los borrados--------------------------------------
 const [dialogOpen2, setDialogOpen2] = useState(false);
 const [isBorrando, setIsBorrando] = useState(false);
-const [borraMotivo, setBorraMotivo] = useState(null);
+const [borraEstacion, setBorraEstacion] = useState(null);
 const [nombre, setNombre] = useState("");
-//-------------------------------------------------------------
-
+// alerta--------------------------------------------------
 const [avisoOpen, setAvisoOpen] = useState(false);
 const [mensaje,setMensaje] = useState("");
-
-    const fetchMotivos = async () => {
+//-------------------------------------------------------------
+    const fetchEstacion= async () => {
         try {
-            const res = await axios.get(`${url}/motivos`);
-            if (Array.isArray(res.data.motivos)) {
-                setMotivos(res.data.motivos);
+            const res = await axios.get(`${url}/estaciones`);
+            if (Array.isArray(res.data.estaciones)) {
+                setEstaciones(res.data.estaciones);
+                console.log("estaciones",estaciones)
                 
             } else {
                 console.error('Server did not return an array');
@@ -45,32 +46,35 @@ const [mensaje,setMensaje] = useState("");
         }
     };
 
-    const createMotivo = async motivo => {
+    const createEstacion = async estacion => {
         try {
-            await axios.post(`${url}/motivos`, motivo);
-            fetchMotivos();  // Fetch latest list of 'motivos' after creating a new one
+           const resp= await axios.post(`${url}/estaciones`, estacion,config);
+            fetchEstacion();   
+            setAvisoOpen(true);
+            setMensaje( resp.data.msg);
+
         } catch (error) {
             console.error('Error', error);
+            setAvisoOpen(true);
+            setMensaje(error.response.data.msg);
         }
     };
     
-    const updateMotivo = async motivo => {
+    const updateEstacion = async estacion => {
+       
         try {
-            await axios.put(`${url}/motivos/${motivo._id}`, motivo);
-            fetchMotivos();  // Fetch latest list of 'motivos' after updating an existing one
+           const resp= await axios.put(`${url}/estaciones/${estacion._id}`, estacion,config);
+            fetchEstacion();  // Fetch latest list of 'estaciones' after updating an existing one
+            setAvisoOpen(true);
+            setMensaje( resp.data.msg);
+
         } catch (error) {
             console.error('Error', error);
+            setAvisoOpen(true);
+            setMensaje(error.response.data.msg);
         }
     };
-
 // borrar ---------------------------------------------------
-const OpenDeleteMotivo = (id,nombre) => {
-    setBorraMotivo(id);
-    setIsBorrando(true)
-    setNombre(nombre);
-    setDialogOpen2(true)
-};
- // borrar ---------------------------------------------------
 const OpenDeleteEstacion = (id,nombre) => {
     setBorraEstacion(id);
     setIsBorrando(true)
@@ -78,73 +82,74 @@ const OpenDeleteEstacion = (id,nombre) => {
     setDialogOpen2(true)
 };
  
-    const deleteMotivo = async id => {
-        try{
-            await axios.delete(`${url}/motivos/${id}`,config);
-            setMotivos(motivos.filter(m => m._id !== id));
+
+    const deleteEstacion = async id => {
+        try {
+           const resp= await axios.delete(`${url}/estaciones/${id}`,config);
+            setEstaciones(estaciones.filter(m => m._id !== id));
+         
         }
         catch(error){
             setAvisoOpen(true);
-                  setMensaje(error.response.data.msg);
+           setMensaje(error.response.data.msg);
             console.log(error)
         }
-     
+      
+    };
+
+    useEffect(() => {
+        fetchEstacion();
+    }, []);
+
+    useEffect(() => {
+        console.log("estaciones", estaciones);
+    }, [estaciones]);
+
+    const handleDialogOpen = (estacion = null) => {
+        setEditEstacion(estacion);
+        setIsEditing(!!estacion);
+        setDialogOpen(true);
+      
+    };
+
+    const handleDialogClose = () => {
+        setDialogOpen(false);
+        setEditEstacion(null);
+        setIsEditing(false);
+    };
+
+    const handleDialogConfirm = () => {
+        if (isEditing) {
+            updateEstacion(editEstacion);
+        } else {
+            createEstacion({ estacion: editEstacion ? editEstacion.estacion : '' });
+        }
+        handleDialogClose();
+    };
+    // ventana dialogo para confimar el borrado ---------------------------------
+    const handleDialogClose2= () => {
+        setDialogOpen2(false);
+        setBorraEstacion(null)
+    };
+    const handleDialogConfirm2 = () => {
+        if (isBorrando) {
+            deleteEstacion(borraEstacion); //envia el id almacenado en BorraDEm
+        }
+        setBorraEstacion(null)
+        handleDialogClose2();
     };
     const handleAvisoClose= () => {
         setAvisoOpen(false);
         setMensaje("");
     };
 
-    useEffect(() => {
-        fetchMotivos();
-    }, []);
-
-    useEffect(() => {
-        console.log("motivos", motivos);
-    }, [motivos]);
-
-    const handleDialogOpen = (motivo = null) => {
-        setEditMotivo(motivo);
-        setIsEditing(!!motivo);
-        setDialogOpen(true);
-        
-    };
-
-    const handleDialogClose = () => {
-        setDialogOpen(false);
-        setEditMotivo(null);
-        setIsEditing(false);
-    };
-
-    const handleDialogConfirm = () => {
-        if (isEditing) {
-            updateMotivo(editMotivo);
-        } else {
-            createMotivo({ motivo: editMotivo ? editMotivo.motivo : '' });
-        }
-        handleDialogClose();
-    };
-
-    // ventana dialogo para confimar el borrado ---------------------------------
-    const handleDialogClose2= () => {
-        setDialogOpen2(false);
-        setBorraMotivo(null)
-    };
-    const handleDialogConfirm2 = () => {
-        if (isBorrando) {
-            deleteMotivo(borraMotivo); //envia el id almacenado en BorraDEm
-        }
-        setBorraMotivo(null)
-        handleDialogClose2();
-    };
-
     return (
         <>
-           
-            <Container component={Paper} maxWidth="sm" sx={{ padding: 2 }}>
-            <Typography variant='h5'>TABLA DE MOTIVOS </Typography>
+   
+            <Container component={Paper} maxWidth="sm" sx={{ padding: 2 }}>  
+            <Typography variant='h5'>TABLA DE ESTACIONES </Typography>
             <hr/>
-            <Box sx={{m:'30px',textAlign:'right' }}>
+            <Box sx={{m:'30px',textAlign:'lefth' }}>
                 <Button variant="contained" color="primary" onClick={() => handleDialogOpen()}>
                     Nuevo
                 </Button>
@@ -170,7 +175,7 @@ const OpenDeleteEstacion = (id,nombre) => {
                         />
                     <Table>
                     <TableHead
-                            sx={{     // Cambia el color de fondo
+                            sx={{
                                 backgroundColor: '#cfd8dc', // Cambia el color de fondo
                                 '& .MuiTableCell-root': {   // Aplica el estilo a todas las celdas de la cabecera
                                  //   color: 'white',  // Cambia el color del texto
@@ -179,22 +184,22 @@ const OpenDeleteEstacion = (id,nombre) => {
                             }}
                         >
                             <TableRow>
-                                <TableCell>Motivo</TableCell>
-                                <TableCell>Editar</TableCell>
-                                <TableCell>Borrar</TableCell>
+                                <TableCell>Estacion</TableCell>
+                                <TableCell  width="20%">Editar</TableCell>
+                                <TableCell  width="20%">Borrar</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {motivos.map(motivo => (
-                                <TableRow key={motivo._id} sx={{height:'8px'}}>
-                                    <TableCell>{motivo.motivo}</TableCell>
+                            {estaciones.map(estacion => (
+                                <TableRow key={estacion._id}>
+                                    <TableCell>{estacion.estacion}</TableCell>
                                     <TableCell>
-                                        <Button size="small" variant="contained" color="primary" onClick={() => handleDialogOpen(motivo)}>
+                                        <Button size="small" variant="contained" color="primary" onClick={() => handleDialogOpen(estacion)}>
                                             Editar
                                         </Button>
                                     </TableCell>
                                     <TableCell>
-                                        <Button size="small" variant="contained" color="error" onClick={() => OpenDeleteMotivo(motivo._id,motivo.motivo)}>
+                                        <Button size="small" variant="contained" color="error" onClick={() => OpenDeleteEstacion(estacion._id,estacion.estacion)}>
                                             Borrar
                                         </Button>
                                     </TableCell>
@@ -216,31 +221,32 @@ const OpenDeleteEstacion = (id,nombre) => {
                         }
                     }}
                 >
-                    <DialogTitle>{isEditing ? 'Editar Motivo' : 'Nuevo Motivo'}</DialogTitle>
+                    <DialogTitle>{isEditing ? 'Editar Estacion' : 'Nueva Estacion'}</DialogTitle>
                     <DialogContent >
                         <DialogContentText>
-                            Ingrese el motivo
+                            Ingrese el estacion
                         </DialogContentText>
                         <TextField
                             autoFocus
                             margin="dense"
                             id="name"
-                            label="Motivo"
+                            label="Estación"
                             type="text"
                             fullWidth
-                            value={editMotivo ? editMotivo.motivo : ''}
-                            onChange={e => setEditMotivo({ ...editMotivo, motivo: e.target.value })}
+                            value={editEstacion ? editEstacion.estacion : ''}
+                            onChange={e => setEditEstacion({ ...editEstacion, estacion: e.target.value })}
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button size="small" variant="contained" color="primary" onClick={handleDialogConfirm}>Guardar</Button>
-                        <Button size="small" variant="contained" color="secondary" onClick={handleDialogClose}>Cancelar</Button>
-
+                    <Button   size="small" variant="contained" color="primary" onClick={handleDialogConfirm}>Guardar</Button>
+                        <Button   size="small" variant="contained" color="secondary" onClick={handleDialogClose}>Cancelar</Button>
+                       
                     </DialogActions>
                 </Dialog>
-            </Container>
+            </Container>  
+       
         </>
     );
 };
 
-export default FormularioMotivos;
+export default EstacionesForm;

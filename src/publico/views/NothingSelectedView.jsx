@@ -68,12 +68,15 @@ const NothingSelectedView = () => {
             Teléfonos útiles:</Typography>
             <hr color='blue' /><br/>
         <List sx={{ '& .MuiListItem-root': { padding: '3px 0',fontSize:'12px'  ,justifyContent:'start'}}}>  {/* Ajusta el espacio entre los renglones aquí */}
-            <ListItem  >Concejo: 123-456-789</ListItem>
-            <ListItem>Ejecutivo: 987-654-321</ListItem>
-            <ListItem>Policía: 456-789-012</ListItem>
-            <ListItem>Concejo: 123-456-789</ListItem>
-            <ListItem>Ejecutivo: 987-654-321</ListItem>
-            <ListItem>Policía: 456-789-012</ListItem>
+            <ListItem>Concejo:0342 497-0066</ListItem>
+            <ListItem>Correo: 0342 497-0123</ListItem>
+            <ListItem>Cementerio: 0342 497-1200</ListItem>
+            <ListItem>C.Lic.conducir: 0342 497-1539</ListItem>
+            <ListItem>Municipalidad: 342 497-1707</ListItem>
+            <ListItem>Policía: 0342 457-7022</ListItem>
+            <ListItem>SAMCO: 0342 457-7713</ListItem>
+            <ListItem>Remisse: 0342 497-0615</ListItem>
+           
         </List>
     </Box>
     

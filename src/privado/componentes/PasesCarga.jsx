@@ -38,7 +38,7 @@ const PasesCarga = ({ expediente, handleExpedienteSelect, paseAEditar, modo, set
     const [nuevoPase, setNuevoPase] = useState(paseAEditar);
     const [subir, setSubir]=useState([]);
     const today = new Date().toISOString().split('T')[0]; //esta va a ser la fecha máxima que me permitirá seleccionar (para que no carguen un pase hacia adelante)
-    console.log("alert", alert)
+   
     /* Si quisiera dar parmiso por 2 días hacia adelante: */
     /*  const currentDate = new Date();
       currentDate.setDate(currentDate.getDate() + 2);

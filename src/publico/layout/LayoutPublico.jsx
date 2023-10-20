@@ -44,10 +44,11 @@ export const LayoutPublico = ({ children }) => {
         <Box
             sx={{
                 display: 'flex',
-                backgroundColor: '#cfd8dc',
+               /*  backgroundColor: '#cfd8dc', */
+                backgroundColor: '#e3f2fd',
                 flexDirection: {
                     xs: 'column',
-                    md: 'row'
+                    md: 'row',
                 },
                 height: '99vh',       
                 overflow: 'auto' 

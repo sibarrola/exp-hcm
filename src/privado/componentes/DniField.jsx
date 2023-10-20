@@ -10,6 +10,7 @@ const DniField= (props)=> {
           mask="99.999.999"
           value={props.value}
           onChange={props.onChange}
+          inputRef={dniRef}
         >
           {(inputProps) => <TextField {...props} {...inputProps} />}
         </InputMask>
