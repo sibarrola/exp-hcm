@@ -35,3 +35,6 @@ dialogo {
        border:1px solid red;
        height:'20px';
     }
+    .selected-row{
+        background-color: aquamarine;
+    }  

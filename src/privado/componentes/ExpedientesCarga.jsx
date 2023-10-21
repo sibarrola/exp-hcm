@@ -697,7 +697,7 @@ const ExpedientesCarga = ({ titulo, expedienteSeleccionado, estadoCarga,  setExp
                             value={values.dni}
                             onChange={handleChange}
                             onKeyDown={handleKeyDown}
-
+                            inputRef={dniRef}
                             /* error={!!errors.dni}
                             helperText={errors.dni}   */
                             fullWidth

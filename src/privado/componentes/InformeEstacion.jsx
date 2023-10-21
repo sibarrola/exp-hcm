@@ -2,24 +2,27 @@ import React, { useState, useEffect } from 'react';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { Global } from '../../helpers/Global';
 import Peticiones from '../../helpers/Peticiones';
-import { formatearFecha, fechaReves } from '../../helpers/funcionesVarias';
+import { formatearFecha, fechaReves, calculaDias } from '../../helpers/funcionesVarias';
 import { Container, Paper, TextField, Box, Button, Fab } from '@mui/material';
-import RestartAlt from '@mui/icons-material/RestartAlt';
+
 import { PropTypes } from "prop-types";
-/* FALTA HACER ESTO!!!     no está armado, solo copie el codigo del datagrid pero tengo que armar otra consulta---------------------------------------------------------- */
-const InformesPases = ( ) => {
+ 
+// data grid
+ 
+const InformeEstacion = ({ handleExpedienteSelected, isEditing, setIsEditing, seleccionado, setSeleccionado, pases, setPases }) => {
     const [expedientes, setExpedientes] = useState([]);
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(10);
     const [totalExpedientes, setTotalExpedientes] = useState(0);
     const [estadoExp, setEstadoExp] = useState('Abierto');
-    const [titulo, setTitulo] = useState('Listado de Expedientes en Tratamiento');
-    console.log("TIPO",typeof handleExpedienteSelected);
-    const fetchExpedientes = async (page, pageSize) => {
-        /* le mando "Abierto", que no es un estado, pero que en el servidor interpreto como todos los estadoExp que no sean "Finalizado" */
+ 
 
-        /* ACA TENGO QUE ARMAR UNA CONSULTA QUE BUSQUE LOS PASES DE LOS EXPEDIENTES , FECHA ing estacion, estacion, días, LEGAJO NRO */
-        const url = `${Global.url}/expedientes/estadoExp/` + `${estadoExp}` + `?desde=${page * pageSize}&limite=${pageSize}`;
+
+    const [titulo, setTitulo] = useState('Listado de Expedientes en Tratamiento - Estación actual');
+
+    const fetchExpedientes = async (page, pageSize) => {
+      
+        const url = `${Global.url}/expedientes/porestacion/1`;
 
         try {
             const metodo = 'GET';
@@ -35,12 +38,23 @@ const InformesPases = ( ) => {
     useEffect(() => {
         fetchExpedientes(page, pageSize);
     }, [page, pageSize]);
+    useEffect(() => {
+        fetchExpedientes(page, pageSize);
+    }, []);
+    useEffect(() => {
+        if (!!isEditing == true) {
+            console.log("isEditing dataGrid cuando cambia", isEditing)
+             fetchExpedientes(page, pageSize);
+           
+        }
+        setIsEditing(false);
+    }, [isEditing]);
 
     useEffect(() => {
         fetchExpedientes(page, pageSize);
         switch (estadoExp) {
             case 'Abierto':
-                setTitulo("Listado de Expedientes en Tratamiento");
+                setTitulo("Estación Actual de expedientes en Tratamiento");
                 break;
 
             case 'Notificado':
@@ -53,69 +67,76 @@ const InformesPases = ( ) => {
         }
 
     }, [estadoExp]);
-
-    useEffect(() => {
-        if (!!isEditing == true) {
-            console.log("isEditing dataGrid cuando cambia", isEditing)
-             fetchExpedientes(page, pageSize);
-           
-        }
-        setIsEditing(false);
-    }, [isEditing]);
-
+ 
 
 
     const columns = [
-        { field: 'fechaIngreso', headerName: 'Fecha ing.', width: 100 },
-        { field: 'legajo', headerName: 'Legajo', width: 70 },
-        { field: 'folios', headerName: 'Folios', width: 50 },
-        { field: 'motivo', headerName: 'Motivo', width: 230 },
 
-        { field: 'solicitante', headerName: 'Solicitante', width: 160 },
-        { field: 'dni', headerName: 'DNI', width: 130 },
-        { field: 'apellido', headerName: 'Apellido', width: 130 },
-        { field: 'nombres', headerName: 'Nombres', width: 130 },
-        { field: 'comentario', headerName: 'Comentarios', width: 130 },
+        {field: 'estacion', headerName: 'Estación', width: 180 },
+        {field:'fecha_pase', headerName: 'Fecha pase', width: 100 },
+        {field:'dias', headerName: 'Dias', width: 70 },
+        { field: 'legajo', headerName: 'Exp.N°', width: 70 },
+       
+        { field: 'motivo', headerName: 'Motivo', width: 200 },
+       
 
-        { field: 'celular', headerName: 'Celular', width: 130 },
-        { field: 'domicilio', headerName: 'Domicilio', width: 130 },
-        /*   { field: 'id', headerName: 'Id', width: 130 }, */
+        { field: 'solicitante', headerName: 'Solicitante', width: 200 },
+      /*   { field: 'dni', headerName: 'DNI', width: 130 }, */
+        { field: 'responsable', headerName: 'Responsable', width: 200 },
+    /*     { field: 'nombres', headerName: 'Nombres', width: 100 }, */
+       /*  { field: 'comentario', headerName: 'Comentarios', width: 130 }, */
+
+       /*  { field: 'celular', headerName: 'Celular', width: 130 }, */
+     /*    { field: 'domicilio', headerName: 'Domicilio', width: 130 },  */ 
+        /*   { field: 'id', headerName: 'Id', width: 130 },  */ 
         /*  { field: 'categoria', headerName: 'Categoría', width: 100 }, */
     ];
 
     const rows = expedientes.map((expediente) => ({
-        fechaIngreso: fechaReves(formatearFecha(new Date(expediente.fechaIngreso))),
+         
+        fecha_pase: fechaReves(formatearFecha(new Date(expediente.fecha_pase))),
+        estacion:expediente.estacion,
+        dias:calculaDias(new Date(expediente.fecha_pase)),
         legajo: expediente.legajo,
-        folios: expediente.folios,
+        
         motivo: expediente.motivo,
         solicitante: expediente.solicitante,
-        dni: expediente.dni,
-        apellido: expediente.apellido,
-        nombres: expediente.nombres,
-        comentario: expediente.comentario,
+        
+        responsable: expediente.apellido+" "+expediente.nombres,
+        /* nombres: expediente.nombres, */
+        /* comentario: expediente.comentario,
         celular: expediente.celular,
-        domicilio: expediente.domicilio,
-        id: expediente._id,
-        categoria: expediente.categoria,
+        domicilio: expediente.domicilio, */
+         id: expediente._id,
+       /* categoria: expediente.categoria,
         sancion:expediente.sancion,
         pases: expediente.pases,
-        estadoExp: expediente.estadoExp,
+        estadoExp: expediente.estadoExp, */
     }));
 
-    const handleRowClick = ({ row }) => {
-        let expediente = row;
-        expediente._id = row.id;
-        expediente.pases.usuario_pase_nombre = row.pases.usuario_pase_nombre;
-        expediente.comentario = (expediente.comentario == null) ? " " : row.comentario;
-        expediente.domicilio = expediente.domicilio == null ? " " : row.domicilio;
-        const fechaISO = expediente.fechaIngreso.split('/').reverse().join('-');
-        expediente.fechaIngreso = fechaISO;
- 
-        handleExpedienteSelected(expediente); 
-        setSeleccionado(false);
-        /*  const pasesOrdenados = [...expediente.pases].sort((a, b) => new Date(a.fecha_pase) - new Date(b.fecha_pase)); */
-        /*  setPases(pasesOrdenados); */
-    };
+
+    const handleRowClick = async ({ row }) => {
+        const url = `${Global.url}/expedientes/${row.id}`;
+        try {
+            const metodo = 'GET';
+            let respuesta = await Peticiones(url, metodo);
+            console.log("respuesta",respuesta);
+            let expediente=respuesta.datos.expediente;
+            console.log("expediente elegido",expediente);
+            /* expediente.comentario = (expediente.comentario == null) ? " " : row.comentario;
+            expediente.domicilio = expediente.domicilio == null ? " " : row.domicilio; */
+            const fechaISO = expediente.fechaIngreso.split('/').reverse().join('-');
+            expediente.fechaIngreso = fechaISO;
+           
+            handleExpedienteSelected(expediente); 
+            setSeleccionado(false);
+        }
+        catch (error) {
+            console.error("Hubo un error al leer expedientes:", error);
+        }
+    }
+         
+
 
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -136,21 +157,10 @@ const InformesPases = ( ) => {
 
 
     return (
-        <Box component={Paper} sx={{ paddingLeft: 10, paddingRight: 10, border: 1, borderColor: 'blue', margin: '10px', boxShadow: "2" }}>
+        <Box component={Paper} sx={{ paddingLeft: 5, paddingRight: 5, border: 1, borderColor: 'blue', margin: '5px', boxShadow: "2" }}>
             <h3 style={{ width: '90%', textAlign: 'center' }}>{titulo} - (total: {totalExpedientes})  </h3>
             {/* ----------------------- */}
-            <div style={{ paddingTop: '0px', paddingRight: '20px', textAlign: 'end' }} >
-
-                {(estadoExp != 'Notificado') && <Button color="primary" aria-label="edit" variant='contained' onClick={() => { setEstadoExp('Notificado') }} sx={{ marginRight: '10px' }} size='small'>
-                    Finalizados
-                </Button>}
-                {(estadoExp != 'Archivado') && <Button color="secondary" aria-label="edit" variant='contained' onClick={() => { setEstadoExp('Archivado') }} sx={{ marginRight: '10px' }} size='small'>
-                    Archivados
-                </Button>}
-                {(estadoExp != 'Abierto') && <Button color="primary" aria-label="edit" variant='contained' onClick={() => { setEstadoExp('Abierto') }} sx={{ marginRight: '10px' }} size='small'>
-                    En tratamiento
-                </Button>}
-            </div>
+           
 
             {/* ------------------- */}
             <Box sx={{
@@ -185,16 +195,18 @@ const InformesPases = ( ) => {
                     setPageSize(params.pageSize);
                 }}
                 onRowClick={handleRowClick}
+                                
                 slots={{
                     Toolbar: GridToolbar,
                 }}
+                sx={{fontSize:'14px'}}
             />
         </Box>
     );
 }
-export default InformesPases
+export default InformeEstacion;
 
-ExpedientesDataGrid.propTypes = {
+InformeEstacion.propTypes = {
 
     handleExpedienteSelected: PropTypes.func,
     isEditing: PropTypes.bool,

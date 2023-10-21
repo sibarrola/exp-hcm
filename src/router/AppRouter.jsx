@@ -11,7 +11,8 @@ import ListaEdicionExpedientes from '../privado/pages/ListaEdicionExpedientes'
 import Tablas from '../privado/pages/Tablas'
 import CargaPases from '../privado/pages/CargaPases'
 import PaginaContacto from '../publico/pages/PaginaContacto'
- 
+ import InformesEstacionExp from '../privado/pages/InformesEstacionExp'
+
   
 const AppRouter = () => {
    
@@ -27,7 +28,7 @@ const AppRouter = () => {
             <Route path='/privado/ingresos'element={ <CargaExpedientes /> } />
             <Route path='/privado/edicion'element={ <ListaEdicionExpedientes/> } />
             <Route path='/privado/pases'element={ <CargaPases/> } />
-      {/*       <Route path='/privado/informes/pases'element={ <InformesPasesExp/> } /> */}
+            <Route path='/privado/informes/estacion'element={ <InformesEstacionExp/> } />  
        
             {/* Login y Registro......................................... */}
             <Route path='/auth/login' element={<LoginPage />} />

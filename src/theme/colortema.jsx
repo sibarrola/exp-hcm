@@ -82,7 +82,12 @@ export const colortema =createTheme({
               backgroundColor:'#E3F2FD',
               border: '2px solid #3e25fa', // Borde azul en la parte inferior de la fila de cabecera
             },
-            // Otros estilos personalizados si los necesitas
+            '& .MuiDataGrid-row:hover': {
+                backgroundColor: '#E3F2FD', // Color de fondo al pasar el cursor sobre la fila
+            },
+            '& .MuiDataGrid-row:focus': {
+                backgroundColor: '#e0e0e0', // Color de fondo al enfocar la fila
+            },
           },
         },
       },

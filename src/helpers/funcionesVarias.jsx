@@ -26,6 +26,19 @@ export const extractDigits = (value)=> {
      
   }
 
+  export const calculaDias =(fecha1)=> {
+    
+     const fechaHoy = new Date();
+
+const diferenciaEnMilisegundos = fechaHoy - fecha1;
+
+const milisegundosPorDia = 1000 * 60 * 60 * 24; // 1000 ms * 60 segundos * 60 minutos * 24 horas
+const dias = Math.floor(diferenciaEnMilisegundos / milisegundosPorDia);
+
+return dias; // Esto te mostrará el número de días de diferencia.
+
+  }
+
  /*  export const startUploadingFiles =(files=[])=>{
     console.log(files,"estoy en startuploadingfiles");
     

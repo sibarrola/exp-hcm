@@ -2,8 +2,8 @@
  
 import LayoutPrivado  from "../layout/LayoutPrivado"
 import { useState } from 'react';
-import ExpedientesDataGrid from "../../publico/components/ExpedientesDataGridPublico";
-const ListadoEstacion = () => {
+import VistaInformeEstacion from "../views/VistaInformeEstacion";
+const InformesEstacionExp = () => {
     
   const [isEditing, setIsEditing] = useState(false); 
     
@@ -11,12 +11,12 @@ const ListadoEstacion = () => {
  return (
    <LayoutPrivado>
       {/* <ElijoEstacion/>  */}
-      <InformePases/>
+      <VistaInformeEstacion/>
      
    </LayoutPrivado>
  )
 }
 
-export default ListadoEstacion
+export default InformesEstacionExp
 
 
