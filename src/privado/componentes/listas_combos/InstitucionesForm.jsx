@@ -128,15 +128,16 @@ const handleAvisoClose= () => {
     return (
         <>
 
-            <Container component={Paper} maxWidth="sm" sx={{ padding: 2 }}>
+            <Container component={Paper} maxWidth="md" sx={{ padding: 2 }}>
                 <Typography variant='h5'>TABLA DE INSTITUCIONES 
                 </Typography>
-                <hr />
-                <Box sx={{ m: '30px', textAlign: 'right' }}>
+             
+                <Box sx={{ m: '20px', textAlign: 'right' }}>
           
                     <Button variant="contained" color="primary" onClick={() => handleDialogOpen()}>
                         Nuevo
                     </Button>
+                    <hr />
                 </Box>
                 <TableContainer>
                 <ConfirmDialog
@@ -159,13 +160,13 @@ const handleAvisoClose= () => {
                         />
                     <Table>
                         <TableHead
-                            sx={{
-                                backgroundColor: '#d9d3a5', // Cambia el color de fondo
-                                '& .MuiTableCell-root': {   // Aplica el estilo a todas las celdas de la cabecera
-                                    //   color: 'white',  // Cambia el color del texto
-                                    fontWeight: '900'
-                                },
-                            }}
+                          sx={{     // Cambia el color de fondo
+                            backgroundColor: '#cfd8dc', // Cambia el color de fondo
+                            '& .MuiTableCell-root': {   // Aplica el estilo a todas las celdas de la cabecera
+                             //   color: 'white',  // Cambia el color del texto
+                             fontWeight:'900'
+                            },
+                        }}
                         >
                             <TableRow>
                                 <TableCell>Institucion</TableCell>
@@ -176,13 +177,14 @@ const handleAvisoClose= () => {
                         <TableBody>
                             {instituciones.map(institucion => (
                                 <TableRow key={institucion._id}>
-                                    <TableCell>{institucion.institucion}</TableCell>
-                                    <TableCell>
+                                     <TableCell sx={{ padding: '6px 16px' }}   >
+                                        {institucion.institucion}</TableCell>
+                                        <TableCell sx={{ padding: '6px 10px' }}   >
                                         <Button size="small" variant="contained" color="primary" onClick={() => handleDialogOpen(institucion)}>
                                             Editar
                                         </Button>
                                     </TableCell>
-                                    <TableCell>
+                                     <TableCell sx={{ padding: '6px 10px' }}   >
                                         <Button size="small" variant="contained" color="secondary" onClick={() => OpenDeleteInstitucion(institucion._id,institucion.institucion)}>
                                             Borrar
                                         </Button>

@@ -146,13 +146,14 @@ const OpenDeleteEstacion = (id,nombre) => {
     return (
         <>
    
-            <Container component={Paper} maxWidth="sm" sx={{ padding: 2 }}>  
+            <Container component={Paper} maxWidth="md" sx={{ padding: 2 }}>  
             <Typography variant='h5'>TABLA DE ESTACIONES </Typography>
-            <hr/>
-            <Box sx={{m:'30px',textAlign:'lefth' }}>
+       
+            <Box sx={{m:'30px',textAlign:'right' }}>
                 <Button variant="contained" color="primary" onClick={() => handleDialogOpen()}>
                     Nuevo
                 </Button>
+                <hr/>
             </Box>
                 <TableContainer>
                 <ConfirmDialog
@@ -192,13 +193,14 @@ const OpenDeleteEstacion = (id,nombre) => {
                         <TableBody>
                             {estaciones.map(estacion => (
                                 <TableRow key={estacion._id}>
-                                    <TableCell>{estacion.estacion}</TableCell>
-                                    <TableCell>
+                                              <TableCell sx={{ padding: '4px 16px' }}   >
+                                        {estacion.estacion}</TableCell>
+                                    <TableCell sx={{ padding: '4px 10px' }}   >
                                         <Button size="small" variant="contained" color="primary" onClick={() => handleDialogOpen(estacion)}>
                                             Editar
                                         </Button>
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell sx={{ padding: '4px 10px' }}   >
                                         <Button size="small" variant="contained" color="error" onClick={() => OpenDeleteEstacion(estacion._id,estacion.estacion)}>
                                             Borrar
                                         </Button>
@@ -238,9 +240,9 @@ const OpenDeleteEstacion = (id,nombre) => {
                         />
                     </DialogContent>
                     <DialogActions>
-                    <Button   size="small" variant="contained" color="primary" onClick={handleDialogConfirm}>Guardar</Button>
-                        <Button   size="small" variant="contained" color="secondary" onClick={handleDialogClose}>Cancelar</Button>
-                       
+                        <Button size="small" variant="contained" color="primary" onClick={handleDialogConfirm}>Guardar</Button>
+                        <Button size="small" variant="contained" color="secondary" onClick={handleDialogClose}>Cancelar</Button>
+
                     </DialogActions>
                 </Dialog>
             </Container>  

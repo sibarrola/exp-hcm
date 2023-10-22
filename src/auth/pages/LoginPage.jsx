@@ -10,7 +10,7 @@ import { useState } from 'react';
 /* import CustomAlert from '../../privado/componentes/CustomAlert'; */
 import CustomDialog from '../../privado/componentes/CustomDialog';
 import { useNavigate } from 'react-router-dom';
-
+ 
 const LoginPage = () => {
     const navigate = useNavigate();
    
@@ -75,6 +75,7 @@ const LoginPage = () => {
                         
                     });  
                     setFormState(formData);  
+
                     navigate('/privado/menu');   
                 
  

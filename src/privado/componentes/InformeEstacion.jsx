@@ -98,10 +98,8 @@ const InformeEstacion = ({ handleExpedienteSelected, isEditing, setIsEditing, se
         estacion:expediente.estacion,
         dias:calculaDias(new Date(expediente.fecha_pase)),
         legajo: expediente.legajo,
-        
         motivo: expediente.motivo,
         solicitante: expediente.solicitante,
-        
         responsable: expediente.apellido+" "+expediente.nombres,
         /* nombres: expediente.nombres, */
         /* comentario: expediente.comentario,

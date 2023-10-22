@@ -143,11 +143,11 @@ const OpenDeleteEstacion = (id,nombre) => {
            
             <Container component={Paper} maxWidth="sm" sx={{ padding: 2 }}>
             <Typography variant='h5'>TABLA DE MOTIVOS </Typography>
-            <hr/>
-            <Box sx={{m:'30px',textAlign:'right' }}>
+                   <Box sx={{m:'20px',textAlign:'right' }}>
                 <Button variant="contained" color="primary" onClick={() => handleDialogOpen()}>
                     Nuevo
                 </Button>
+                <hr/>
             </Box>
                 <TableContainer>
                 <ConfirmDialog
@@ -186,14 +186,14 @@ const OpenDeleteEstacion = (id,nombre) => {
                         </TableHead>
                         <TableBody>
                             {motivos.map(motivo => (
-                                <TableRow key={motivo._id} sx={{height:'8px'}}>
-                                    <TableCell>{motivo.motivo}</TableCell>
-                                    <TableCell>
+                                <TableRow key={motivo._id} sx={{height:'10px'}}>
+                                    <TableCell sx={{ padding: '4px 16px' }}   >{motivo.motivo}</TableCell>
+                                    <TableCell sx={{ padding: '8px 16px'  }}   >
                                         <Button size="small" variant="contained" color="primary" onClick={() => handleDialogOpen(motivo)}>
                                             Editar
                                         </Button>
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell sx={{ padding: '4px 16px'  }}    >
                                         <Button size="small" variant="contained" color="error" onClick={() => OpenDeleteMotivo(motivo._id,motivo.motivo)}>
                                             Borrar
                                         </Button>

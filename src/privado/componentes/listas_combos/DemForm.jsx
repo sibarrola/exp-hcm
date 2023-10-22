@@ -137,11 +137,12 @@ const FormularioDem = () => {
            
             <Container component={Paper} maxWidth="sm" sx={{ padding: 2 }}>
             <Typography variant='h5'>TABLA DE REPARTICIONES DEL D.E.M </Typography>
-            <hr/>
+         
             <Box sx={{m:'30px',textAlign:'right' }}>
                 <Button variant="contained" color="primary" onClick={() => handleDialogOpen()}>
                     Nuevo
                 </Button>
+                <hr/>
             </Box>
                 <TableContainer>
                 <ConfirmDialog
@@ -164,13 +165,13 @@ const FormularioDem = () => {
                         />
                     <Table>
                     <TableHead
-                            sx={{
-                                backgroundColor: '#cfd8dc', // Cambia el color de fondo
-                                '& .MuiTableCell-root': {   // Aplica el estilo a todas las celdas de la cabecera
-                                 //   color: 'white',  // Cambia el color del texto
-                                 fontWeight:'900'
-                                },
-                            }}
+                          sx={{     // Cambia el color de fondo
+                            backgroundColor: '#cfd8dc', // Cambia el color de fondo
+                            '& .MuiTableCell-root': {   // Aplica el estilo a todas las celdas de la cabecera
+                             //   color: 'white',  // Cambia el color del texto
+                             fontWeight:'900'
+                            },
+                        }}
                         >
                             <TableRow>
                                 <TableCell>D.E.M.</TableCell>
@@ -181,13 +182,14 @@ const FormularioDem = () => {
                         <TableBody>
                             {dems.map(dem => (
                                 <TableRow key={dem._id}>
-                                    <TableCell>{dem.dem}</TableCell>
-                                    <TableCell>
+                                       <TableCell sx={{ padding: '6px 16px' }}   >
+                                        {dem.dem}</TableCell>
+                                        <TableCell sx={{ padding: '6px 16px' }}   >
                                         <Button size="small" variant="contained" color="primary" onClick={() => handleDialogOpen(dem)}>
                                             Editar
                                         </Button>
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell sx={{ padding: '6px 16px' }}   >
                                         <Button size="small" variant="contained" color="error" onClick={() => OpenDeleteDem(dem._id,dem.dem)}>
                                             Borrar
                                         </Button>

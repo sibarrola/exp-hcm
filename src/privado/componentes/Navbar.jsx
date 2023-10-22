@@ -1,5 +1,5 @@
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Alert, AppBar, Box, Drawer, IconButton, Toolbar, Typography } from '@mui/material'
 import { NavListMenu } from './NavListMenu'
 import { LogoutOutlined, MenuOutlined } from '@mui/icons-material';
@@ -13,7 +13,20 @@ import useAuth from "../../hooks/useAuth";
 export const NavBar = ({ navVectLinks, navVectGestion1, navVectGestion2, navVectGestion3, NavLink }) => {
     const [open, setOpen] = useState(false);
     const { auth } = useAuth();
-    
+    //nuevo
+    let nombre=auth.nombre
+    const [userEstado,setUserEstado]=useState(auth.nombre);
+
+    useEffect(()=>{
+        const user = localStorage.getItem("usuario");
+        if(userEstado!=user.nombre){
+            setUserEstado(user.nombre); 
+            window.location.reload();    
+        } 
+
+        
+    },[])
+
     return (
         <>
 

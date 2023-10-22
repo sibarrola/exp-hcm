@@ -133,13 +133,14 @@ const OpenDeleteOrganizacion = (id,nombre) => {
     return (
         <>
    
-            <Container component={Paper} maxWidth="sm" sx={{ padding: 2 }}>  
+            <Container component={Paper} maxWidth="md" sx={{ padding: 2 }}>  
             <Typography variant='h5'>TABLA DE ORGANISMOS PUBLICOS </Typography>
-            <hr/>
+          
             <Box sx={{m:'30px',textAlign:'lefth' }}>
                 <Button variant="contained" color="primary" onClick={() => handleDialogOpen()}>
                     Nuevo
                 </Button>
+                <hr/>
             </Box>
                 <TableContainer>
                 <ConfirmDialog
@@ -162,13 +163,13 @@ const OpenDeleteOrganizacion = (id,nombre) => {
                         />
                     <Table>
                     <TableHead
-                            sx={{
-                                backgroundColor: '#cfd8dc', // Cambia el color de fondo
-                                '& .MuiTableCell-root': {   // Aplica el estilo a todas las celdas de la cabecera
-                                 //   color: 'white',  // Cambia el color del texto
-                                 fontWeight:'900'
-                                },
-                            }}
+                          sx={{     // Cambia el color de fondo
+                            backgroundColor: '#cfd8dc', // Cambia el color de fondo
+                            '& .MuiTableCell-root': {   // Aplica el estilo a todas las celdas de la cabecera
+                             //   color: 'white',  // Cambia el color del texto
+                             fontWeight:'900'
+                            },
+                        }}
                         >
                             <TableRow>
                                 <TableCell>Organismo</TableCell>
@@ -179,13 +180,14 @@ const OpenDeleteOrganizacion = (id,nombre) => {
                         <TableBody>
                             {organizaciones.map(organizacion => (
                                 <TableRow key={organizacion._id}>
-                                    <TableCell>{organizacion.organizacion}</TableCell>
-                                    <TableCell>
+                                        <TableCell sx={{ padding: '6px 16px' }}   >
+                                        {organizacion.organizacion}</TableCell>
+                                        <TableCell sx={{ padding: '6px 16px' }}   >
                                         <Button size="small" variant="contained" color="primary" onClick={() => handleDialogOpen(organizacion)}>
                                             Editar
                                         </Button>
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell sx={{ padding: '6px 16px' }}   >
                                         <Button size="small" variant="contained" color="error" onClick={() => OpenDeleteOrganizacion(organizacion._id,organizacion.organizacion)}>
                                             Borrar
                                         </Button>
