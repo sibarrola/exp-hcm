@@ -188,6 +188,7 @@ const OpenDeleteEstacion = (id,nombre) => {
                             {motivos.map(motivo => (
                                 <TableRow key={motivo._id} sx={{height:'10px'}}>
                                     <TableCell sx={{ padding: '4px 16px' }}   >{motivo.motivo}</TableCell>
+                                    
                                     <TableCell sx={{ padding: '8px 16px'  }}   >
                                         <Button size="small" variant="contained" color="primary" onClick={() => handleDialogOpen(motivo)}>
                                             Editar

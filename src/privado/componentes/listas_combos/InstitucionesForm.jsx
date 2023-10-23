@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Container, Paper, Box, Typography } from '@mui/material';
-import {Global} from '../../../helpers/Global';
+import { Global } from '../../../helpers/Global';
 import ConfirmDialog from '../ConfirmDialog';
 import CustomAlert from '../CustomAlert';
 import useAuth from "../../../hooks/useAuth";
@@ -20,15 +20,15 @@ const InstitucionesForm = () => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [editInstitucion, setEditInstitucion] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
-// para los borrados--------------------------------------
-const [dialogOpen2, setDialogOpen2] = useState(false);
-const [isBorrando, setIsBorrando] = useState(false);
-const [borraInstitucion, setBorraInstitucion] = useState(null);
-const [nombre, setNombre] = useState("");
-// alerta-----------------
-const [avisoOpen, setAvisoOpen] = useState(false);
-const [mensaje,setMensaje] = useState("");
-//-------------------------------------------------------
+    // para los borrados--------------------------------------
+    const [dialogOpen2, setDialogOpen2] = useState(false);
+    const [isBorrando, setIsBorrando] = useState(false);
+    const [borraInstitucion, setBorraInstitucion] = useState(null);
+    const [nombre, setNombre] = useState("");
+    // alerta-----------------
+    const [avisoOpen, setAvisoOpen] = useState(false);
+    const [mensaje, setMensaje] = useState("");
+    //-------------------------------------------------------
     const fetchInstituciones = async () => {
         try {
             const res = await axios.get(`${url}/instituciones`);
@@ -62,22 +62,22 @@ const [mensaje,setMensaje] = useState("");
         }
     };
 
-    const OpenDeleteInstitucion = (id,nombre) => {
+    const OpenDeleteInstitucion = (id, nombre) => {
         setBorraInstitucion(id);
         setIsBorrando(true)
         setNombre(nombre);
         setDialogOpen2(true)
     };
     const deleteInstitucion = async id => {
-        try{
-            await axios.delete(`${url}/instituciones/${id}`,config);
+        try {
+            await axios.delete(`${url}/instituciones/${id}`, config);
             setInstituciones(instituciones.filter(m => m._id !== id));
-        
-    } catch (error) {
-        console.error('Error', error);
-        setAvisoOpen(true);
-        setMensaje(error.response.data.msg);
-    }
+
+        } catch (error) {
+            console.error('Error', error);
+            setAvisoOpen(true);
+            setMensaje(error.response.data.msg);
+        }
     };
 
     useEffect(() => {
@@ -109,64 +109,64 @@ const [mensaje,setMensaje] = useState("");
         }
         handleDialogClose();
     };
-// ventana dialogo para confimar el borrado ---------------------------------
-const handleDialogClose2= () => {
-    setDialogOpen2(false);
-    setBorraInstitucion(null)
-};
-const handleDialogConfirm2 = () => {
-    if (isBorrando) {
-        deleteInstitucion(borraInstitucion); //envia el id almacenado en BorraDEm
-    }
-    setBorraInstitucion(null)
-    handleDialogClose2();
-};
-const handleAvisoClose= () => {
-    setAvisoOpen(false);
-    setMensaje("");
-};
+    // ventana dialogo para confimar el borrado ---------------------------------
+    const handleDialogClose2 = () => {
+        setDialogOpen2(false);
+        setBorraInstitucion(null)
+    };
+    const handleDialogConfirm2 = () => {
+        if (isBorrando) {
+            deleteInstitucion(borraInstitucion); //envia el id almacenado en BorraDEm
+        }
+        setBorraInstitucion(null)
+        handleDialogClose2();
+    };
+    const handleAvisoClose = () => {
+        setAvisoOpen(false);
+        setMensaje("");
+    };
     return (
         <>
 
             <Container component={Paper} maxWidth="md" sx={{ padding: 2 }}>
-                <Typography variant='h5'>TABLA DE INSTITUCIONES 
+                <Typography variant='h5'>TABLA DE INSTITUCIONES
                 </Typography>
-             
+
                 <Box sx={{ m: '20px', textAlign: 'right' }}>
-          
+
                     <Button variant="contained" color="primary" onClick={() => handleDialogOpen()}>
                         Nuevo
                     </Button>
                     <hr />
                 </Box>
                 <TableContainer>
-                <ConfirmDialog
-                            open={dialogOpen2}
-                            onClose={handleDialogClose2}
-                            title="Eliminación de la Institucion"
-                            contentText={`¿Estás seguro de que deseas borrar ${nombre} ?`}
-                            onConfirm={handleDialogConfirm2}
-                            titulo_fondo='#4dabf5'
-                            titulo_color='black'
-                            context_fondo='yellowlight'
-                            context_color='secondary'
-                        />
-                         <CustomAlert
-                            open={avisoOpen}
-                            onClose={handleAvisoClose}
-                            severity="warning"
-                            message=  {mensaje}
-                          
-                        />
+                    <ConfirmDialog
+                        open={dialogOpen2}
+                        onClose={handleDialogClose2}
+                        title="Eliminación de la Institucion"
+                        contentText={`¿Estás seguro de que deseas borrar ${nombre} ?`}
+                        onConfirm={handleDialogConfirm2}
+                        titulo_fondo='#4dabf5'
+                        titulo_color='black'
+                        context_fondo='yellowlight'
+                        context_color='secondary'
+                    />
+                    <CustomAlert
+                        open={avisoOpen}
+                        onClose={handleAvisoClose}
+                        severity="warning"
+                        message={mensaje}
+
+                    />
                     <Table>
                         <TableHead
-                          sx={{     // Cambia el color de fondo
-                            backgroundColor: '#cfd8dc', // Cambia el color de fondo
-                            '& .MuiTableCell-root': {   // Aplica el estilo a todas las celdas de la cabecera
-                             //   color: 'white',  // Cambia el color del texto
-                             fontWeight:'900'
-                            },
-                        }}
+                            sx={{     // Cambia el color de fondo
+                                backgroundColor: '#cfd8dc', // Cambia el color de fondo
+                                '& .MuiTableCell-root': {   // Aplica el estilo a todas las celdas de la cabecera
+                                    //   color: 'white',  // Cambia el color del texto
+                                    fontWeight: '900'
+                                },
+                            }}
                         >
                             <TableRow>
                                 <TableCell>Institucion</TableCell>
@@ -177,15 +177,15 @@ const handleAvisoClose= () => {
                         <TableBody>
                             {instituciones.map(institucion => (
                                 <TableRow key={institucion._id}>
-                                     <TableCell sx={{ padding: '6px 16px' }}   >
+                                    <TableCell sx={{ padding: '6px 16px' }}   >
                                         {institucion.institucion}</TableCell>
-                                        <TableCell sx={{ padding: '6px 10px' }}   >
+                                    <TableCell sx={{ padding: '6px 10px' }}   >
                                         <Button size="small" variant="contained" color="primary" onClick={() => handleDialogOpen(institucion)}>
                                             Editar
                                         </Button>
                                     </TableCell>
-                                     <TableCell sx={{ padding: '6px 10px' }}   >
-                                        <Button size="small" variant="contained" color="secondary" onClick={() => OpenDeleteInstitucion(institucion._id,institucion.institucion)}>
+                                    <TableCell sx={{ padding: '6px 10px' }}   >
+                                        <Button size="small" variant="contained" color="secondary" onClick={() => OpenDeleteInstitucion(institucion._id, institucion.institucion)}>
                                             Borrar
                                         </Button>
                                     </TableCell>
