@@ -26,7 +26,7 @@ const navVectLinks = [
     
  ];
 
-const navVectGestion1 = [
+const navVectGestion2 = [
   
 
     {
@@ -53,7 +53,7 @@ const navVectGestion1 = [
   
   ]
 
-  const navVectGestion2 = [
+  const navVectGestion1 = [
     {
         title: "Ingresos", path: "/privado/ingresos", icon: <PlaylistAddIcon />
     },
@@ -71,9 +71,9 @@ const navVectGestion3 = [
     {
         title: "x Estacion", path: "/privado/informes/estacion", icon: <RunCircleIcon />
     },
-    {
+   /*  {
         title: "Estadistica", path: "/privado/estadistica", icon: <TransferWithinAStationIcon />
-    }
+    } */
 
 ]
 

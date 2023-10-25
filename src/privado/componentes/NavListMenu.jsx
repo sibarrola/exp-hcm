@@ -47,7 +47,7 @@ export const NavListMenu = ({ navVectLinks, navVectGestion1, navVectGestion2, na
                         id="panel1a-header"
                         sx={{ backgroundColor: '#cfd8dc' }}
                     >
-                        <Typography variant="body1" fontWeight="bold" sx={{ mt: 1, ml: 1, mr: 1, justifyContent: 'center' }} >Entidades</Typography>
+                        <Typography variant="body1" fontWeight="bold" sx={{ mt: 1, ml: 1, mr: 1, justifyContent: 'center' }} >Expedientes</Typography>
                     </AccordionSummary>
                     <AccordionDetails sx={{
                         backgroundColor: '#f1f8e9'
@@ -94,7 +94,7 @@ export const NavListMenu = ({ navVectLinks, navVectGestion1, navVectGestion2, na
                             id="panel1a-header"
                             sx={{ backgroundColor: '#cfd8dc' }}
                         >
-                            <Typography variant="body1" fontWeight="bold" sx={{ mt: 1, ml: 1, mr: 1, justifyContent: 'center' }}>Expedientes</Typography>
+                            <Typography variant="body1" fontWeight="bold" sx={{ mt: 1, ml: 1, mr: 1, justifyContent: 'center' }}>Entidades</Typography>
                         </AccordionSummary>
                         <AccordionDetails sx={{
 

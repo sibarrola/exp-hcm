@@ -24,9 +24,13 @@ const useFetchAxios = () => {
                 case "POST":
                     response = await axios.post(url, data, config);
                     break;
-                case "PUT":
 
+                   case "PUT":
                     response = await axios.put(url, data, config);
+                    break;
+
+                    case "DELETE":
+                    response = await axios.delete(url, config);
                     break;
 
             }

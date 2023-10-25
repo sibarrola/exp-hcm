@@ -167,6 +167,13 @@ const ExpedientesCarga = ({ titulo, expediente, estadoCarga,  isEditing, setIsEd
             solicitante: selectedDem,
             dem: selectedDem,
         });
+        if (event.target.value=='Empleado del HCM'|| event.target.value=='Secretario del HCM'){
+           
+            setValues({
+                ...values,
+                solicitante: event.target.value,
+            });
+          }
     };
     const handleDemNuevo = (event) => {
         const selectedDemNuevo = event.target.value;
@@ -658,7 +665,7 @@ const ExpedientesCarga = ({ titulo, expediente, estadoCarga,  isEditing, setIsEd
                     <Grid item xs={12} sm={6}  >
 
                         <TextField
-
+                        required
                             label="Apellido"
                             name="apellido"
                             value={values.apellido}
@@ -690,7 +697,7 @@ const ExpedientesCarga = ({ titulo, expediente, estadoCarga,  isEditing, setIsEd
 
                         {/*   <DniField */}
                         <DniField
-                            required
+                          
                             label="DNI"
                             name="dni"
                             value={values.dni}

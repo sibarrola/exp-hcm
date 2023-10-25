@@ -23,13 +23,16 @@ import useFetchCombos from '../../hooks/useFetchCombos.jsx';
 import useAuth from "../../hooks/useAuth.jsx";
 import CelularField from "./CelularField.jsx";
 import DniField from "./DniField.jsx";
-import CustomAlert from '../../privado/componentes/CustomAlert';
+import CustomAlert from '../componentes/CustomAlert';
+import ConfirmDialog from '../componentes/ConfirmDialog.jsx';
 import useFetchAxios from "../../hooks/useFetchAxios.jsx";
 let url = Global.url;
 const ExpedientesCarga = ({ titulo, expedienteSeleccionado, estadoCarga,  setExpedienteSeleccionado,handleExpedienteSelected , isEditing, setIsEditing }) => {
 
     const [executeRequest, isSuccessful, setIsSuccessful, alert, setAlert,respuesta] = useFetchAxios();
- 
+    const [dialogOpen2, setDialogOpen2] = useState(false);
+    const [isBorrando, setIsBorrando] = useState(false);
+    const [borraExpediente, setBorraExpediente] = useState(null);
 
 
     let expedienteLimpio = {
@@ -120,6 +123,13 @@ const ExpedientesCarga = ({ titulo, expedienteSeleccionado, estadoCarga,  setExp
             ...values,
             [event.target.name]: event.target.value,
         });
+        if (event.target.value=='Empleado del HCM'|| event.target.value=='Secretario del HCM'){
+           
+            setValues({
+                ...values,
+                solicitante: event.target.value,
+            });
+          }
     }
     /*  cuando elije una institucion de la lista */
     const handleInstitucionChange = (event) => {
@@ -162,7 +172,7 @@ const ExpedientesCarga = ({ titulo, expedienteSeleccionado, estadoCarga,  setExp
 
     const handleDemChange = (event) => {
         const selectedDem = event.target.value;
-        console.log("selectedDem", selectedDem);
+   
         setValues({
             ...values,
             solicitante: selectedDem,
@@ -186,8 +196,30 @@ const ExpedientesCarga = ({ titulo, expedienteSeleccionado, estadoCarga,  setExp
             motivo: selectedMotivo,
         });
     };
+    const handleDialogConfirm2 = async() => {
+      
+               
+        let token = auth.token;
+        let method;
+        let url2;
+        let expediente_guardar=expedienteSeleccionado;
+            expediente_guardar.estado='false';
 
+           method = "PUT"
+            url2 = url + "/expedientes/"+values._id;;
+            await executeRequest(url2, method, expediente_guardar, token);
 
+      
+        setBorraExpediente(null)
+        handleDialogClose2();
+    };
+
+    const handleDialogClose2= () => {
+        setDialogOpen2(false);
+        setBorraExpediente(null)
+    };
+    /* borra el expedientes (solo un ADMINISTRADOR) */
+  
 
 
     const guardarExpedienteEnBD = async () => {
@@ -265,7 +297,7 @@ const ExpedientesCarga = ({ titulo, expedienteSeleccionado, estadoCarga,  setExp
         }
         // llamo a la funcion executeRequest del useFetchAxios()------------ 
       
-        await executeRequest(url2, method, expediente_guardar, token);
+        await executeRequest(url2, method, expedienteSeleccionado, token);
      
     }
     /* SUBMIT DEL FORMULARIO ----------------------------------------------------------- */
@@ -329,8 +361,7 @@ const ExpedientesCarga = ({ titulo, expedienteSeleccionado, estadoCarga,  setExp
                         await addOrganismo(values.nuevoOrganismo);
 
                     }
-
-                    break;
+                break;
                 default:
                     console.log("no es ninguna categoria para ampliar")
                 /*  setValues({
@@ -354,12 +385,17 @@ const ExpedientesCarga = ({ titulo, expedienteSeleccionado, estadoCarga,  setExp
     return (
         <Container component={Paper} sx={{ padding: 1, border: 1, borderColor: 'blue' }}>
             <form onSubmit={handleSubmit}>
-              {/*   <CustomDialog
-                    open={alert.open}
-                    onClose={() => setAlert({ ...alert, open: false })}
-                    severity={alert.severity}
-                    message={alert.message}
-                    title="Aviso de ingreso" /> */}
+            <ConfirmDialog
+                            open={dialogOpen2}
+                            onClose={handleDialogClose2}
+                            title="Eliminación de la Repartición"
+                            contentText={`¿Estás seguro de que deseas borrar ese expediente ?`}
+                            onConfirm={handleDialogConfirm2}
+                            titulo_fondo='#4dabf5'
+                            titulo_color='black'
+                            context_fondo='yellowlight'
+                            context_color='secondary'
+                        />
                      {open && (
             <CustomAlert 
                 open={alert.open}
@@ -659,7 +695,7 @@ const ExpedientesCarga = ({ titulo, expedienteSeleccionado, estadoCarga,  setExp
                     <Grid item xs={12} sm={6}  >
 
                         <TextField
-
+                           required
                             label="Apellido"
                             name="apellido"
                             value={values.apellido}
@@ -691,13 +727,13 @@ const ExpedientesCarga = ({ titulo, expedienteSeleccionado, estadoCarga,  setExp
 
                         {/*   <DniField */}
                         <DniField
-                            required
+                            
                             label="DNI"
                             name="dni"
                             value={values.dni}
                             onChange={handleChange}
                             onKeyDown={handleKeyDown}
-                            inputRef={dniRef}
+                         /*    inputRef={dniRef} */
                             /* error={!!errors.dni}
                             helperText={errors.dni}   */
                             fullWidth
@@ -744,7 +780,8 @@ const ExpedientesCarga = ({ titulo, expedienteSeleccionado, estadoCarga,  setExp
 
                         }
 
-                        <Button size="small" variant="contained" color="botonCancela" onClick={handleLimpio}>Cancelar</Button>
+                        <Button size="small" variant="contained" color="botonCancela" onClick={handleLimpio} style={{ marginRight: 20 }}>Cancelar</Button>
+                        <Button size="small" variant="contained" color="error" onClick={handleDialogConfirm2}>Borrar Exp</Button>
 
                     </Grid>
                 </Grid>
