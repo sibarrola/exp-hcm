@@ -45,7 +45,7 @@ const VistaEdicion = () => {
     return (
         <>
 
-            <Grid container direction="row" justifyContent="center"  sx={{mt:'1%'}} >
+            <Grid container direction="row" justifyContent="center"   >
 
          {/*        <Grid item xs={12}>
                     <Typography variant='h5' align='left' marginLeft='5%'>LISTA/EDICION DE EXPEDIENTES</Typography>

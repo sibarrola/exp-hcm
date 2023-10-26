@@ -92,7 +92,7 @@ const navVectGestion3 = [
 
             <Box
                 component='main'
-                sx={{ flexGrow: 1, p: 2 
+                sx={{ flexGrow: 1
                 }}
             >
      

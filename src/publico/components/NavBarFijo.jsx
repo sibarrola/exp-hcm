@@ -37,7 +37,7 @@ export const NavBarFijo = ({ navVectLinks, navVectCiudadanos, NavLink }) => {
                         color="inherit"
                         size="large"
                         onClick={() => setOpen(true)}
-                        sx={{ display: { xs: "flex",md:'none'} }}  /* quite el sm:"none" */
+                        sx={{ display: { xs: "flex",md:'flex',lg:'none'} }}  /* quite el sm:"none" */
                         edge="start">
 
                         <MenuOutlined sx={{ fontSize: '38px' }} />

@@ -4,7 +4,7 @@ import { Global } from '../../helpers/Global';
 import Peticiones from '../../helpers/Peticiones';
 import { formatearFecha, fechaReves } from '../../helpers/funcionesVarias';
 import { Container, Paper, TextField, Box, Button, Fab } from '@mui/material';
- 
+
 import { PropTypes } from "prop-types";
 
 const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, seleccionado, setSeleccionado, pases, setPases }) => {
@@ -63,19 +63,19 @@ const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, sele
 
 
     const columns = [
-        { field: 'fechaIngreso', headerName: 'Fecha ing.', width: 100 },
+        { field: 'fechaIngreso', headerName: 'Fecha ing.', width: 115 },
         { field: 'legajo', headerName: 'Expediente', width: 100 },
-        { field: 'folios', headerName: 'Folios', width: 50 },
-        { field: 'motivo', headerName: 'Motivo', width: 230 },
 
-        { field: 'solicitante', headerName: 'Solicitante', width: 160 },
+        { field: 'motivo', headerName: 'Motivo', width: 270 },
+
+        { field: 'solicitante', headerName: 'Solicitante', width: 200 },
         { field: 'dni', headerName: 'DNI', width: 130 },
         { field: 'apellido', headerName: 'Apellido', width: 130 },
         { field: 'nombres', headerName: 'Nombres', width: 130 },
         { field: 'comentario', headerName: 'Comentarios', width: 300 },
 
-      /*   { field: 'celular', headerName: 'Celular', width: 130 },
-        { field: 'domicilio', headerName: 'Domicilio', width: 130 }, */
+        /*   { field: 'celular', headerName: 'Celular', width: 130 },
+          { field: 'domicilio', headerName: 'Domicilio', width: 130 }, */
         /*   { field: 'id', headerName: 'Id', width: 130 }, */
         /*  { field: 'categoria', headerName: 'Categoría', width: 100 }, */
     ];
@@ -96,7 +96,7 @@ const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, sele
         categoria: expediente.categoria,
         pases: expediente.pases,
         estadoExp: expediente.estadoExp,
-        sancion:expediente.sancion,
+        sancion: expediente.sancion,
     }));
 
     const handleRowClick = ({ row }) => {
@@ -105,6 +105,7 @@ const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, sele
         expediente.pases.usuario_pase_nombre = row.pases.usuario_pase_nombre;
         expediente.comentario = (expediente.comentario == null) ? " " : row.comentario;
         expediente.domicilio = expediente.domicilio == null ? " " : row.domicilio;
+        expediente.folios = row.folios;
         const fechaISO = expediente.fechaIngreso.split('/').reverse().join('-');
         expediente.fechaIngreso = fechaISO;
         console.log(expediente, "expediente de handleRowClick")
@@ -133,33 +134,62 @@ const ExpedientesDataGrid = ({ onSelectExpediente, isEditing, setIsEditing, sele
 
 
     return (
-        <Box component={Paper} sx={{ paddingLeft: 10, paddingRight: 10, border: 1, borderColor: 'blue', margin: '10px', boxShadow: "2" }}>
+        <Box
+           component={Paper}
+            sx={{
+                m: { xs: '2px', md: '10px' },  // Margen general (todos los lados)
+                paddingLeft:{xs:'2px',md:'30px'},
+                paddingRight:{xs:'2px',md:'30px'},
+                mt: {xs:'60px',md:'15px'},
+                border: 1,
+                borderColor: 'blue',
+                boxShadow: 2
+            }}
+        >
             <h3 style={{ width: '90%', textAlign: 'center' }}>{titulo} - (total: {totalExpedientes})  </h3>
             {/* ----------------------- */}
-            <div style={{ paddingTop: '0px', paddingRight: '20px', textAlign: 'end' }} >
+            <div style={{ paddingTop: '0px', paddingRight: '20px', textAlign: 'end', marginBottom: { xs: '10px', md: '2px' } }} >
 
-                {(estadoExp != 'Notificado') && <Button color="primary" aria-label="edit" variant='contained' onClick={() => { setEstadoExp('Notificado') }} sx={{ marginRight: '10px' }} size='small'>
+                {(estadoExp != 'Notificado') && <Button color="primary" aria-label="edit" variant='contained' onClick={() => { setEstadoExp('Notificado') }} sx={{ marginRight: '10px', fontSize: { xs: '9px', md: '12px' } }} size='small'>
                     Finalizados
                 </Button>}
-                {(estadoExp != 'Archivado') && <Button color="secondary" aria-label="edit" variant='contained' onClick={() => { setEstadoExp('Archivado') }} sx={{ marginRight: '10px' }} size='small'>
+                {(estadoExp != 'Archivado') && <Button color="secondary" aria-label="edit" variant='contained' onClick={() => { setEstadoExp('Archivado') }} sx={{ marginRight: '10px', fontSize: { xs: '9px', md: '12px' } }} size='small'>
                     Archivados
                 </Button>}
-                {(estadoExp != 'Abierto') && <Button color="primary" aria-label="edit" variant='contained' onClick={() => { setEstadoExp('Abierto') }} sx={{ marginRight: '10px' }} size='small'>
+                {(estadoExp != 'Abierto') && <Button color="primary" aria-label="edit" variant='contained' onClick={() => { setEstadoExp('Abierto') }} sx={{ marginRight: '10px', fontSize: { xs: '9px', md: '12px' } }} size='small'>
                     En tratamiento
                 </Button>}
             </div>
 
             {/* ------------------- */}
             <Box sx={{
-                ml: '10px',
-                mb: '10px',
+
+                ml: { xs: '1px', md: '10px' },
+                mb: { xs: '5px', md: '10px' },
+                mt: { xs: '10px', md: '2px' },
+
 
             }} >
-                <TextField label="Buscar" value={searchTerm} onChange={handleSearchChange} sx={{ backgroundColor: 'amarillo.secondary', fontSize: '10px' }} />
-               
+                <TextField
+                    label="Buscar"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    sx={{
+                        backgroundColor: 'amarillo.secondary',
+                        padding: { xs: '2px', md: '5px' },
+                        '& .MuiInputLabel-root': {
+                            fontSize: { xs: '10px', md: '14px' },
+                        },
+                        '& .MuiInputBase-input': {
+                            fontSize: { xs: '10px', md: '14px' },
+                        },
+                    }}
+                />
+
             </Box>
 
             <DataGrid
+                sx={{ fontSize: { xs: '10px', md: '14px' } ,justifyContent:'center'  }}
                 rows={filteredRows}
                 columns={columns}
                 initialState={{

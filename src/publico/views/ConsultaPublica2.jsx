@@ -67,7 +67,7 @@ const ConsultaPublica = () => {
         <Grid container     sx={{ display: 'flex' ,ml:'2%',justifyContent:'center'     }}    > 
           
              {  seleccionado && (
-                   <Grid item xs={11}   >
+                   <Grid item xs={12} md={11}   >
                     <ExpedientesDataGridPublico onSelectExpediente={handleExpedienteSelect} isEditing={isEditing} setIsEditing={setIsEditing} seleccionado={seleccionado} setSeleccionado={setSeleccionado}
                  />
                 </Grid>

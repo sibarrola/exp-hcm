@@ -266,7 +266,7 @@ const ExpedientesCarga = ({ titulo, expediente, estadoCarga,  isEditing, setIsEd
                 
             }
 
-            url2 = url + "/expedientes/" + values._id;
+            url2 = url + "/expedientes/" + values._id+"/0";
             method = "PUT"
         }
         // llamo a la funcion executeRequest del useFetchAxios()------------ 

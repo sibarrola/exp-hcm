@@ -1,4 +1,4 @@
-/* ESTE ES EL FORMULARIO QUE VA PARA LA CARGA DE EXPEDIENTES */
+/* ESTE ES EL FORMULARIO QUE USO PARA EDITAR EL EXPEDIENTE*/
 
 import { useState, useRef, useEffect } from "react";
 
@@ -27,9 +27,9 @@ import CustomAlert from '../componentes/CustomAlert';
 import ConfirmDialog from '../componentes/ConfirmDialog.jsx';
 import useFetchAxios from "../../hooks/useFetchAxios.jsx";
 let url = Global.url;
-const ExpedientesCarga = ({ titulo, expedienteSeleccionado, estadoCarga,  setExpedienteSeleccionado,handleExpedienteSelected , isEditing, setIsEditing }) => {
+const ExpedientesCarga = ({ titulo, expedienteSeleccionado, estadoCarga, setExpedienteSeleccionado, handleExpedienteSelected, isEditing, setIsEditing }) => {
 
-    const [executeRequest, isSuccessful, setIsSuccessful, alert, setAlert,respuesta] = useFetchAxios();
+    const [executeRequest, isSuccessful, setIsSuccessful, alert, setAlert, respuesta] = useFetchAxios();
     const [dialogOpen2, setDialogOpen2] = useState(false);
     const [isBorrando, setIsBorrando] = useState(false);
     const [borraExpediente, setBorraExpediente] = useState(null);
@@ -59,12 +59,12 @@ const ExpedientesCarga = ({ titulo, expedienteSeleccionado, estadoCarga,  setExp
         estado: "true",
 
     };
- 
-   
+
+
     const [values, setValues] = useState(expedienteLimpio)
     const { auth } = useAuth();  // usuario logueado
- 
-    const [open, setOpen]=useState('false');
+
+    const [open, setOpen] = useState('false');
     const [errors, setErrors] = useState({});
 
     const {
@@ -91,25 +91,25 @@ const ExpedientesCarga = ({ titulo, expedienteSeleccionado, estadoCarga,  setExp
         console.log(values, "values");
     }
 
-     useEffect(() => {
-       
-        console.log("use effect expedienteSeleccionado",expedienteSeleccionado);
+    useEffect(() => {
+
         setValues(expedienteSeleccionado);
-    }, [expedienteSeleccionado]);  
+    }, [expedienteSeleccionado]);
 
 
     useEffect(() => {
         if (isSuccessful) {
+            console.log("respuesta")
             console.log(respuesta);
-            setValues(expedienteLimpio);
-            if(estadoCarga != "Carga"){
-                handleExpedienteSelected(respuesta)
-            }
-          
+            handleLimpio();
+            /*  if(estadoCarga != "Carga"){
+                 handleExpedienteSelected(respuesta)
+             } */
+
             setIsSuccessful(false);
         }
     }, [respuesta]);
-  
+
     /*  esto es para desactivar la tecla ENTER */
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
@@ -123,13 +123,13 @@ const ExpedientesCarga = ({ titulo, expedienteSeleccionado, estadoCarga,  setExp
             ...values,
             [event.target.name]: event.target.value,
         });
-        if (event.target.value=='Empleado del HCM'|| event.target.value=='Secretario del HCM'){
-           
+        if (event.target.value == 'Empleado del HCM' || event.target.value == 'Secretario del HCM') {
+
             setValues({
                 ...values,
                 solicitante: event.target.value,
             });
-          }
+        }
     }
     /*  cuando elije una institucion de la lista */
     const handleInstitucionChange = (event) => {
@@ -172,7 +172,7 @@ const ExpedientesCarga = ({ titulo, expedienteSeleccionado, estadoCarga,  setExp
 
     const handleDemChange = (event) => {
         const selectedDem = event.target.value;
-   
+
         setValues({
             ...values,
             solicitante: selectedDem,
@@ -196,35 +196,35 @@ const ExpedientesCarga = ({ titulo, expedienteSeleccionado, estadoCarga,  setExp
             motivo: selectedMotivo,
         });
     };
-    const handleDialogConfirm2 = async() => {
-      
-               
+    const handleDialogConfirm2 = async () => {
+
+
         let token = auth.token;
         let method;
         let url2;
-        let expediente_guardar=expedienteSeleccionado;
-            expediente_guardar.estado='false';
+        let expediente_guardar = expedienteSeleccionado;
+        expediente_guardar.estado = 'false';
 
-           method = "PUT"
-            url2 = url + "/expedientes/"+values._id;;
-            await executeRequest(url2, method, expediente_guardar, token);
+        method = "PUT"
+        url2 = url + "/expedientes/" + values._id + "/0";
+        await executeRequest(url2, method, expediente_guardar, token);
 
-      
+
         setBorraExpediente(null)
         handleDialogClose2();
     };
 
-    const handleDialogClose2= () => {
+    const handleDialogClose2 = () => {
         setDialogOpen2(false);
         setBorraExpediente(null)
     };
     /* borra el expedientes (solo un ADMINISTRADOR) */
-  
+
 
 
     const guardarExpedienteEnBD = async () => {
         let solicitanteg = (!values.solicitante || values.solicitante.length == 0) ? (values.apellido + " " + values.nombres) : values.solicitante
-       
+
         let motivog = (values.motivo && values.motivo == "Otro") ? values.nuevoMotivo : values.motivo;
 
         let dnig = extractDigits(values.dni);
@@ -234,7 +234,7 @@ const ExpedientesCarga = ({ titulo, expedienteSeleccionado, estadoCarga,  setExp
         let legajog = parseInt(values.legajo);
         let foliosg = parseInt(values.folios);
 
-       
+
         /* si el estadoCarga es Guardar lo guardo y si no lo actualizo */
         let token = auth.token;
         let method;
@@ -244,8 +244,8 @@ const ExpedientesCarga = ({ titulo, expedienteSeleccionado, estadoCarga,  setExp
         if (estadoCarga == "Carga") {
             method = "POST"
             url2 = url + "/expedientes";
-              expediente_guardar = {
-                
+            expediente_guardar = {
+
                 legajo: legajog,
                 folios: foliosg,
                 estadoExp: 'Estudio',
@@ -272,8 +272,8 @@ const ExpedientesCarga = ({ titulo, expedienteSeleccionado, estadoCarga,  setExp
             }
         }
         else {
-              expediente_guardar = {
-                
+            expediente_guardar = {
+
                 legajo: legajog,
                 folios: foliosg,
                 estadoExp: 'Estudio',
@@ -289,16 +289,17 @@ const ExpedientesCarga = ({ titulo, expedienteSeleccionado, estadoCarga,  setExp
                 domicilio: values.domicilio,
                 estado: "true",
                 usuario: auth.uid
-                
+
             }
 
-            url2 = url + "/expedientes/" + values._id;
+            url2 = url + "/expedientes/" + values._id + "/0";
             method = "PUT"
         }
         // llamo a la funcion executeRequest del useFetchAxios()------------ 
-      
-        await executeRequest(url2, method, expedienteSeleccionado, token);
-     
+
+        await executeRequest(url2, method, expediente_guardar, token);
+        setExpedienteSeleccionado(expediente_guardar);
+        setValues(expedienteLimpio);
     }
     /* SUBMIT DEL FORMULARIO ----------------------------------------------------------- */
     const handleSubmit = async (event) => {
@@ -361,7 +362,7 @@ const ExpedientesCarga = ({ titulo, expedienteSeleccionado, estadoCarga,  setExp
                         await addOrganismo(values.nuevoOrganismo);
 
                     }
-                break;
+                    break;
                 default:
                     console.log("no es ninguna categoria para ampliar")
                 /*  setValues({
@@ -383,30 +384,39 @@ const ExpedientesCarga = ({ titulo, expedienteSeleccionado, estadoCarga,  setExp
 
 
     return (
-        <Container component={Paper} sx={{ padding: 1, border: 1, borderColor: 'blue' }}>
+        <Container component={Paper} sx={{
+            // Margen general (todos los lados)
+            paddingLeft: { xs: '2px', md: '30px' },
+            paddingRight: { xs: '2px', md: '30px' },
+            paddingBottom: { xs: '2px', md: '20px' },
+            mt: { xs: '60px', md: '2px' },
+            border: 1,
+            borderColor: 'blue',
+            boxShadow: 2
+        }}>
             <form onSubmit={handleSubmit}>
-            <ConfirmDialog
-                            open={dialogOpen2}
-                            onClose={handleDialogClose2}
-                            title="Eliminación de la Repartición"
-                            contentText={`¿Estás seguro de que deseas borrar ese expediente ?`}
-                            onConfirm={handleDialogConfirm2}
-                            titulo_fondo='#4dabf5'
-                            titulo_color='black'
-                            context_fondo='yellowlight'
-                            context_color='secondary'
-                        />
-                     {open && (
-            <CustomAlert 
-                open={alert.open}
-                onClose={() => setAlert({ ...alert, open: false })}
-              /*   onClose={() => setOpen(false)} // opcional: para cerrar el me */
-                message={alert.message}
-            />
-                
-             
-        )}
-          
+                <ConfirmDialog
+                    open={dialogOpen2}
+                    onClose={handleDialogClose2}
+                    title="Eliminación de la Repartición"
+                    contentText={`¿Estás seguro de que deseas borrar ese expediente ?`}
+                    onConfirm={handleDialogConfirm2}
+                    titulo_fondo='#4dabf5'
+                    titulo_color='black'
+                    context_fondo='yellowlight'
+                    context_color='secondary'
+                />
+                {open && (
+                    <CustomAlert
+                        open={alert.open}
+                        onClose={() => setAlert({ ...alert, open: false })}
+                        /*   onClose={() => setOpen(false)} // opcional: para cerrar el me */
+                        message={alert.message}
+                    />
+
+
+                )}
+
                 <h3>{titulo}</h3>
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={4}>
@@ -695,7 +705,7 @@ const ExpedientesCarga = ({ titulo, expedienteSeleccionado, estadoCarga,  setExp
                     <Grid item xs={12} sm={6}  >
 
                         <TextField
-                           required
+                            required
                             label="Apellido"
                             name="apellido"
                             value={values.apellido}
@@ -727,17 +737,17 @@ const ExpedientesCarga = ({ titulo, expedienteSeleccionado, estadoCarga,  setExp
 
                         {/*   <DniField */}
                         <DniField
-                            
+
                             label="DNI"
                             name="dni"
                             value={values.dni}
                             onChange={handleChange}
                             onKeyDown={handleKeyDown}
-                         /*    inputRef={dniRef} */
+                            /*    inputRef={dniRef} */
                             /* error={!!errors.dni}
                             helperText={errors.dni}   */
                             fullWidth
-                           
+
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -773,13 +783,13 @@ const ExpedientesCarga = ({ titulo, expedienteSeleccionado, estadoCarga,  setExp
                     {/* ... falta poner el usuario que lo lee del req ... */}
 
                     <Grid item xs={12} marginTop="18px" marginRight='20px' alignContent="right">
-                        {(estadoCarga == "Carga") ? (
+                        {/*    {(estadoCarga == "Carga") ? (
                             <Button size="small" variant="contained" color="primary" type='submit' style={{ marginRight: 20 }}>Guardar</Button>) :
                             <Button size="small" variant="contained" color="primary" type='submit' style={{ marginRight: 20 }}>Actualizar</Button>
 
 
-                        }
-
+                        }  */}
+                        <Button size="small" variant="contained" color="primary" type='submit' style={{ marginRight: 20 }}>Actualizar</Button>
                         <Button size="small" variant="contained" color="botonCancela" onClick={handleLimpio} style={{ marginRight: 20 }}>Cancelar</Button>
                         <Button size="small" variant="contained" color="error" onClick={handleDialogConfirm2}>Borrar Exp</Button>
 
@@ -804,12 +814,11 @@ ExpedientesCarga.defaultProps = {
 
 
 ExpedientesCarga.propTypes = {
-    titulo:PropTypes.string,
+    titulo: PropTypes.string,
     expedienteSeleccionado: PropTypes.object,
-    estadoCarga:PropTypes.string,
-    setExpedienteSeleccionado:PropTypes.func,
-    handleExpedienteSelected:PropTypes.func,
-    isEditing:PropTypes.bool,
-    setIsEditing:PropTypes.func
+    estadoCarga: PropTypes.string,
+    setExpedienteSeleccionado: PropTypes.func,
+    handleExpedienteSelected: PropTypes.func,
+    isEditing: PropTypes.bool,
+    setIsEditing: PropTypes.func
 }
- 

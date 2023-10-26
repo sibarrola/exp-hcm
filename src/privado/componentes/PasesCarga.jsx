@@ -200,8 +200,8 @@ const PasesCarga = ({ expediente, handleExpedienteSelect, paseAEditar, modo, set
  
         setModo("Cargar");
         setNuevoPase(formData);
-       //----------------------put expediente-------------------
-        let url2 = `${url}/expedientes/${expediente._id}`;
+       //----------------------put expediente--------LE PONGO UN 0 como bandera que avisa que no tiene que eliminar la sancion-----------
+        let url2 = `${url}/expedientes/${expediente._id}/0`;
         // llamo a la funcion executeRequest del useFetchAxios()------------ 
         await executeRequest(url2, method, expediente_guardar, token);
        

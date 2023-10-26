@@ -14,7 +14,7 @@ const ExpedientesDataGrid = ({ handleExpedienteSelected, isEditing, setIsEditing
     const [totalExpedientes, setTotalExpedientes] = useState(0);
     const [estadoExp, setEstadoExp] = useState('Abierto');
     const [titulo, setTitulo] = useState('Listado de Expedientes en Tratamiento');
-    console.log("TIPO",typeof handleExpedienteSelected);
+   
     const fetchExpedientes = async (page, pageSize) => {
         /* le mando "Abierto", que no es un estado, pero que en el servidor interpreto como todos los estadoExp que no sean "Finalizado" */
         const url = `${Global.url}/expedientes/estadoExp/` + `${estadoExp}` + `?desde=${page * pageSize}&limite=${pageSize}`;
@@ -67,13 +67,14 @@ const ExpedientesDataGrid = ({ handleExpedienteSelected, isEditing, setIsEditing
         { field: 'fechaIngreso', headerName: 'Fecha ing.', width: 100 },
         { field: 'legajo', headerName: 'Legajo', width: 70 },
         { field: 'folios', headerName: 'Folios', width: 50 },
-        { field: 'motivo', headerName: 'Motivo', width: 230 },
-
-        { field: 'solicitante', headerName: 'Solicitante', width: 160 },
+        { field: 'motivo', headerName: 'Motivo', width: 270 },
+        { field: 'comentario', headerName: 'Comentarios', width: 200 },
+        { field: 'solicitante', headerName: 'Solicitante', width: 200 },
+     
         { field: 'dni', headerName: 'DNI', width: 130 },
         { field: 'apellido', headerName: 'Apellido', width: 130 },
         { field: 'nombres', headerName: 'Nombres', width: 130 },
-        { field: 'comentario', headerName: 'Comentarios', width: 130 },
+       
 
         { field: 'celular', headerName: 'Celular', width: 130 },
         { field: 'domicilio', headerName: 'Domicilio', width: 130 },
@@ -86,11 +87,12 @@ const ExpedientesDataGrid = ({ handleExpedienteSelected, isEditing, setIsEditing
         legajo: expediente.legajo,
         folios: expediente.folios,
         motivo: expediente.motivo,
+        comentario: expediente.comentario,
         solicitante: expediente.solicitante,
         dni: expediente.dni,
         apellido: expediente.apellido,
         nombres: expediente.nombres,
-        comentario: expediente.comentario,
+       
         celular: expediente.celular,
         domicilio: expediente.domicilio,
         id: expediente._id,
@@ -134,7 +136,18 @@ const ExpedientesDataGrid = ({ handleExpedienteSelected, isEditing, setIsEditing
 
 
     return (
-        <Box component={Paper} sx={{ paddingLeft: 10, paddingRight: 10, border: 1, borderColor: 'blue', margin: '10px', boxShadow: "2" }}>
+        <Box
+        component={Paper}
+         sx={{
+             m: '2px' ,  // Margen general (todos los lados)
+             paddingLeft:{xs:'2px',md:'30px'},
+             paddingRight:{xs:'2px',md:'30px'},
+             mt: {xs:'60px', md:'9px'},
+             border: 1,
+             borderColor: 'blue',
+             boxShadow: 2
+         }}
+     >
             <h3 style={{ width: '90%', textAlign: 'center' }}>{titulo} - (total: {totalExpedientes})  </h3>
             {/* ----------------------- */}
             <div style={{ paddingTop: '0px', paddingRight: '20px', textAlign: 'end' }} >
