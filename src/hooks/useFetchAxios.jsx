@@ -48,9 +48,9 @@ const useFetchAxios = () => {
                 // Aquí manejas errores del backend
               /*   let errores = response.data.errors.errors.map(error => error.msg).join(" "); */
                let errores=response.data.errors.errors[0].msg;  
-             console.log(response);
+             console.log("response",response);
             
-              console.log(errores);
+              console.log("errores",errores);
                 setAlert({
                     open: true,
                     severity: 'error',
@@ -58,15 +58,13 @@ const useFetchAxios = () => {
                 });
             }
         } catch (error) {
-            let errores="paso por aqui"
-            // Aquí manejas errores de la petición
-            
-            console.log(error);
-            let mens = (error.response.status === '401') ? error.data.msg : error.message;
+             
+            let errores=error.response.data.errors.errors[0].msg;
+           /*  let mens = (error.response.status === '401') ? error.data.msg : error.message; */
             setAlert({
                 open: true,
                 severity: 'error',
-                message: `ERROR! ${mens}`
+                message: `ERROR! ${errores}`
             });
         }
     }

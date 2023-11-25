@@ -370,7 +370,8 @@ const ExpedientesCarga = ({ titulo, expediente, estadoCarga,  isEditing, setIsEd
             <CustomAlert 
                 open={alert.open}
                 onClose={() => setAlert({ ...alert, open: false })}
-              /*   onClose={() => setOpen(false)} // opcional: para cerrar el me */
+                severity='error'
+
                 message={alert.message}
             />
                 

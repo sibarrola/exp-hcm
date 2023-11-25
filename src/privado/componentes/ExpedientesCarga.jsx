@@ -410,8 +410,9 @@ const ExpedientesCarga = ({ titulo, expedienteSeleccionado, estadoCarga, setExpe
                     <CustomAlert
                         open={alert.open}
                         onClose={() => setAlert({ ...alert, open: false })}
-                        /*   onClose={() => setOpen(false)} // opcional: para cerrar el me */
+                        severity='success'
                         message={alert.message}
+
                     />
 
 

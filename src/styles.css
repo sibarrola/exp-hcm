@@ -21,13 +21,10 @@ dialogo {
     margin-right: 'auto';}
 
     .grid-layout{
-      
+               
         display:flex-Grow;
-       
-        margin-top:50px ;
-         
         height: 600px;
-         
+        margin-top:50px ;
          
         
     }
