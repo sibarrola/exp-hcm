@@ -42,7 +42,7 @@ export const NavBar = ({ navVectLinks, navVectGestion1, navVectGestion2, navVect
                   </Box>
                     <IconButton
                         color="inherit"
-                        
+                   
                         onClick={() => setOpen(!open)}
                         sx={{ display: { xs: "flex" } }}
                         edge="start">

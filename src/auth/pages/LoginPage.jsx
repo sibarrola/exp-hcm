@@ -1,10 +1,11 @@
 /* ver como hacerlo */
 
 import { Link as RouterLink} from 'react-router-dom';  /* le pongo un alias al link para que nos entre en conflicto con el Link de material */
-import {  Button, Grid, Link, TextField, Typography } from '@mui/material';
+import {  Button, Grid, Link, TextField, Typography,Box } from '@mui/material';
 import { Google } from '@mui/icons-material';
 import LayoutAutentica from '../layout/LayoutAutentica';
 
+ 
 import { Global } from '../../helpers/Global.jsx'
 import { useState } from 'react';
 /* import CustomAlert from '../../privado/componentes/CustomAlert'; */
@@ -23,7 +24,7 @@ const LoginPage = () => {
  
     const [formState, setFormState] = useState(formData);
     const [ingreso,setIngreso]=useState(false);
-
+    const [passwordShown, setPasswordShown] = useState(false);
     const onInputChange = ({ target }) => {
         const { name, value } = target;
         setFormState({
@@ -36,7 +37,11 @@ const LoginPage = () => {
         severity: 'success',
         message: '',
     });
-
+    const togglePassword = () => {
+        setPasswordShown(!passwordShown);
+      };
+      
+     
     const loginUser = async (e) => {
         e.preventDefault();
 
@@ -101,11 +106,11 @@ const LoginPage = () => {
         }
  
     return (
-        <LayoutAutentica title='Login'>
+        <LayoutAutentica title='Ingreso al Sist.de Gestión (Login)'>
             
             <form onSubmit={loginUser}>
                 <Grid container>
-
+                 
                 
               {/*   <CustomAlert
                     open={alert.open}
@@ -138,13 +143,17 @@ const LoginPage = () => {
                     <TextField
                         label="Contraseña"
                         name="password"
-                        type="password"
+                        type={passwordShown ? "text" : "password"}
                         placeholder='Contraseña'
                         onChange={onInputChange}
                         value={formState.password}
                         fullWidth />
 
                 </Grid>
+                <Grid item xs={12} sx={{ mt: 2 }}>
+                <Button   onClick={togglePassword} >{passwordShown ? "Ocultar" : "Mostrar"}</Button> 
+                    </Grid>
+                    <br/><br/>
                 <Grid container spacing={2} sx={{ mb: 2, mt: 1 }}>
                     <Grid item xs={12} sm={6}>
                         <Button type="submit" variant='contained' fullWidth color="primary"  >
@@ -160,16 +169,16 @@ const LoginPage = () => {
                 </Grid>
 
            
-                <Grid container direction='row' justifyContent='space-between'>
+                <Grid container direction='row' justifyContent='end'>
                 
-                    <Link
+                  {/*   <Link
                         component={RouterLink}
                         color='inherit'
                         to="/privado/menu"
                         sx={{ fontSize: '18px', color: 'blue' }}>
                         Pagina Privada
 
-                    </Link> 
+                    </Link>  */}
                     
                     <Link
                         component={RouterLink}
